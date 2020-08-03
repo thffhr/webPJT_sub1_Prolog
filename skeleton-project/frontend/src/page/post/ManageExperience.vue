@@ -21,14 +21,14 @@
 
 
       <!-- 경험목록 -->
-      <div class="row row-custom" >
-        <div class="col-lg-12"  v-for="(experience,exid) in experiences" :key="experience.exid">
+      <div class="row row-custom" style="display: table" >
+        <div class="col-lg-12" v-for="(experience,exid) in experiences" :key="experience.exid">
         <div v-if="showProject(experience)">
           <div v-bind:style = "mystyle" class="img-circle">
             <div class="content">
               <ul>
                 <div>
-                  <li v-for="experienceTag in experience.tags" :key="experienceTag.tid" style="display: inline-block">
+                  <li v-for="experienceTag in experience.tags" :key="experienceTag.tid">
                        #{{experienceTag.tagName}}
           
                    </li>
@@ -339,6 +339,9 @@ export default {
       text-align: center;
     }
 
+ .row-custom{
+   padding-left: 10% ;
+ }
 
 
 </style>
