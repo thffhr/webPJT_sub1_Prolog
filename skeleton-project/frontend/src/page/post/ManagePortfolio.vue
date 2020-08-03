@@ -1,8 +1,9 @@
 <template>
   <div>
     <h1>포트폴리오 관리 페이지</h1>
-    <h2>태그들 보여줘야해</h2> 
-    <button @click="showNotagProject">태그없는 프로젝트 보여주기/숨기기</button>
+    <h2>태그들 보여줘야해</h2>
+    <button v-if="isIncludeNoTag" @click="showNotagProject">태그없는 프로젝트 숨기기</button>
+    <button v-else @click="showNotagProject">태그없는 프로젝트 보여주기</button>
     <!-- <ul>
       <li v-for="tag in tags" :key="tag.tid" style="display: inline-block;" class="m-1">#{{ tag.tag_Name }}</li>
     </ul> -->
@@ -208,6 +209,7 @@ export default {
               response.data.object.start_date = startdate;
               response.data.object.end_date = startdate;
               response.data.object.state = false;
+              response.data.object.tag = [];
               this.portfolios.push(response.data.object);
             })
             .catch((error) => {
