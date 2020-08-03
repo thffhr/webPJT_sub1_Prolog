@@ -131,7 +131,6 @@
 
 <script>
 import constants from "../../lib/constants";
-import "../../assets/css/user.scss";
 import axios from "axios";
 
 //const SERVER_URL = "http://localhost:8080";

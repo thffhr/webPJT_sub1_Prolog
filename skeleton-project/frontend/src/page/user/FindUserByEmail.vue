@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import "../../assets/css/user.scss";
 import constants from "../../lib/constants.js";
 import axios from "axios";
 

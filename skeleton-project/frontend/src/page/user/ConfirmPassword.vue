@@ -17,14 +17,14 @@
         </b-col>
       </b-row>
       <div @click="$bvModal.hide('confirmPassword')">
-        <button class="btn btn--back btn--login" @click="confirmPassword">확인</button>
+        <b-button class="mt-1" @click="confirmPassword" pill>확인</b-button>
+        <!-- <button class="btn btn--back btn--login" @click="confirmPassword">확인</button> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import "../../assets/css/user.scss";
 import constants from "../../lib/constants.js";
 
 export default {
