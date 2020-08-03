@@ -106,14 +106,14 @@ export default {
 /* #tag {
   background-color: #747474;
 } */
-.current {
-  background-color: #ffcabd;
-}
 
 .Project-Image {
   -webkit-filter: grayscale(100%);
 }
 .current .Project-Image {
   -webkit-filter: grayscale(0%);
+}
+.current {
+  background-color: #ffcabd;
 }
 </style>
