@@ -21,10 +21,10 @@
 
 
       <!-- 경험목록 -->
-      <div class="row">
-        <div v-for="(experience,exid) in experiences" :key="experience.exid">
+      <div class="row row-custom" >
+        <div class="col-lg-12"  v-for="(experience,exid) in experiences" :key="experience.exid">
         <div v-if="showProject(experience)">
-          <div v-bind:style = "mystyle" v-on:mouseover = "changebgcolor" v-on:mouseout = "originalcolor" class="img-circle">
+          <div v-bind:style = "mystyle" class="img-circle">
             <div class="content">
               <ul>
                 <div>
@@ -121,10 +121,10 @@ export default {
         // alert(this.$SERVER_URL + `/experience/Tags`);
        console.log(response.data.object);
        //
-       this.tags = response.data.object;
-        Array.prototype.forEach.call(this.tags, t =>
-        Object.assign(t, {imgsrc:"icons8-circled-x-16.png"}),
-        )
+        this.tags = response.data.object;
+          Array.prototype.forEach.call(this.tags, t =>
+          Object.assign(t, {imgsrc:"icons8-circled-x-16.png"}),
+          )
 
         Array.prototype.forEach.call(this.tags, tag => 
           this.selectedTags.push(tag.tid)
@@ -152,8 +152,10 @@ export default {
         this.experiences = response.data.object;
         console.log(response.data.object[0].portfolioTags);
 
-        //
-        this.experiences = response.data.object;
+        Array.prototype.forEach.call(this.experiences, t =>
+          Object.assign(t, {mystyle: this.mystyle}),
+          )
+
         
       })
       .catch((error) => {
@@ -211,21 +213,25 @@ export default {
       var selectedTags = this.selectedTags
       // console.log(selectedTags)
       var cnt = 0
-      experience.tags.forEach(function(tag) {
-        if (selectedTags.includes(tag.tid)) {
-          cnt ++;
-        };
-        return cnt;
-      });
+        experience.tags.forEach(function(tag) {
+
+              if (selectedTags.includes(tag.tid)) {
+                cnt ++;
+            };
+              return cnt;
+          
+        });
+      
   
   
-      if (cnt>0 || (experience.tags.length==0 && this.isIncludeNoTag)) {
-        // console.log('yes!')
-        return true
-      } else {
-        // console.log("no!")
-        return false
-      }
+        if (cnt>0 || (experience.tags.length==0 && this.isIncludeNoTag)) {
+          // console.log('yes!')
+          return true
+        } else {
+          // console.log("no!")
+          return false
+        }
+                                                                                                                                                                                                                                                                                                                                                     ;
   
     },
 
@@ -266,6 +272,7 @@ export default {
         //alert(response.data.object.title);
         response.data.object.startdate = startdate;
         response.data.object.enddate = startdate;
+        response.data.object.tags = [];
         this.experiences.push(response.data.object);
           
       })
@@ -331,5 +338,7 @@ export default {
       margin-right: auto;
       text-align: center;
     }
+
+
 
 </style>
