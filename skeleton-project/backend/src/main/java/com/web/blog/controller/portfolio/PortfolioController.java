@@ -40,11 +40,11 @@ public class PortfolioController {
         return portfolioService.readAll(uid);
     }
 
-    // @GetMapping("/portfolio/{pid}")
-    // @ApiOperation(value = "특정 포트폴리오의 값을 보여줌")
-    // public ResponseEntity<BasicResponse> readOne(@PathVariable("pid") int pid) {
-    // return portfolioService.readOne(pid);
-    // }
+    @GetMapping("/portfolio/{pid}")
+    @ApiOperation(value = "특정 포트폴리오의 값을 보여줌")
+    public ResponseEntity<BasicResponse> readOne(@PathVariable("pid") int pid) {
+        return portfolioService.readOne(pid);
+    }
 
     @GetMapping("/portfolio/Tags")
     @ApiOperation(value = "유저의 프로젝트가 가지고 있는 태그 모두 출력")
@@ -61,8 +61,8 @@ public class PortfolioController {
 
     @PutMapping("/portfolio")
     @ApiOperation(value = "포트폴리오 수정하기")
-    public ResponseEntity<BasicResponse> updatePortfolio(@PathVariable("pid") int pid,
-            @Valid @RequestBody PortfolioUpdateRequest updateRequest) throws Exception {
+    public ResponseEntity<BasicResponse> updatePortfolio(@Valid @RequestBody PortfolioUpdateRequest updateRequest)
+            throws Exception {
 
         return portfolioService.updatePortfolio(updateRequest);
     }
