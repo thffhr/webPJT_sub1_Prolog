@@ -414,4 +414,8 @@ export default {
 .DuplicationCheck:hover {
   cursor: pointer;
 }
+
+.DuplicationCheck:hover {
+  cursor: pointer;
+}
 </style>

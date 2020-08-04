@@ -71,9 +71,9 @@ CREATE TABLE `ex_tag` (
   PRIMARY KEY (`extid`),
   KEY `exid` (`exid`),
   KEY `tid` (`tid`),
-  CONSTRAINT `ex_tag_ibfk_1` FOREIGN KEY (`exid`) REFERENCES `experience` (`exid`),
-  CONSTRAINT `ex_tag_ibfk_2` FOREIGN KEY (`tid`) REFERENCES `tag` (`tid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `ex_tag_ibfk_1` FOREIGN KEY (`exid`) REFERENCES `experience` (`exid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `ex_tag_ibfk_2` FOREIGN KEY (`tid`) REFERENCES `tag` (`tid`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `p_tag` (
   `ptid` int(11) NOT NULL AUTO_INCREMENT,
