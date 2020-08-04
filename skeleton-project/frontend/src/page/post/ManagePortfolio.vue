@@ -1,16 +1,18 @@
 <template>
   <div>
-    <h1>포트폴리오 관리 페이지</h1>
-    <h2>태그들 보여줘야해</h2> 
-    <button v-if="isIncludeNoTag" @click="showNotagProject">태그없는 프로젝트 숨기기</button>
-    <button v-else @click="showNotagProject">태그없는 프로젝트 보여주기</button>
+    <h1 style="text-align: center;">포트폴리오 관리 페이지</h1>
+    <h2 style="text-align: center;">태그들 보여줘야해</h2> 
+
 
     <!-- <ul>
       <li v-for="tag in tags" :key="tag.tid" style="display: inline-block;" class="m-1">#{{ tag.tag_Name }}</li>
     </ul> -->
 
     <!-- 여기부터 -->
+    <div class="tagButtons">
       <b-button-group size="sm">
+        <button v-if="isIncludeNoTag" @click="showNotagProject">태그없는 프로젝트 숨기기</button>
+        <button v-else @click="showNotagProject">태그없는 프로젝트 보여주기</button>
         <b-button
           v-for="(tag, idx) in tags"
           :key="idx"
@@ -23,11 +25,12 @@
           #{{ tag.tag_Name }}
         </b-button>
       </b-button-group>
+    </div>
     <!-- 여기까지 -->
     <!-- <button @click="allTagOnOff">태그 전체 켜기/끄기</button> -->
 
     <hr />
-    <h2>내 포트폴리오 보여줘야해</h2>
+    <h2 style="text-align: center;">내 포트폴리오</h2>
 
     <!-- <div
       v-for="portfolio in portfolios"
@@ -94,7 +97,7 @@
 
       <!-- (+) 버튼 -->
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-button-custom">
             <div>
               <b-img v-on:click="addProject" :src="require(`@/assets/img/icons8-plus-50.png`)" width="60px" v-bind:style = "buttonStyle" v-on:mouseover = "change_button" v-on:mouseout = "origin_button"></b-img>
             </div>
@@ -275,5 +278,13 @@ export default {
 </script>
 
 <style>
-
+.tagButtons{
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.col-button-custom{
+  margin-left: auto;
+  margin-right: auto;  
+}
 </style>
