@@ -8,9 +8,8 @@
       @keyup.enter="FindUserByEmail"
       type="text"
     ></b-form-input>
-
-    <button class="btn btn--back btn--login" @click="FindUid">아이디 찾기</button>
-    <button class="btn btn--back btn--login" @click="FindPassword">비밀번호 찾기</button>
+    <b-button class="mr-2" pill @click="FindUid">아이디 찾기</b-button>
+    <b-button pill @click="FindPassword">비밀번호 찾기</b-button>
   </div>
 </template>
 

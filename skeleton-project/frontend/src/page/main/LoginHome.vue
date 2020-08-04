@@ -1,5 +1,5 @@
 <template>
-  <div class="text-align-left">
+  <div class="loginHome text-align-left">
     <carousel-3d :width="400" :height="320">
       <div v-for="(num, i) in slidesLength" :key="i">
         <!-- 클릭하면 포트폴리오 디테일 페이지로 이동 -->
@@ -95,6 +95,9 @@ export default {
 </script>
 
 <style>
+.loginHome {
+  margin-top: 50px;
+}
 #carousel_card {
   border: none;
   border-radius: 5px;

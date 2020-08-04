@@ -1,30 +1,34 @@
 <template>
   <div id="header" v-if="isHeader && constants.IS_LOGED_IN">
-    <h1 id="blog_name">
-      <!-- 여기도 로그인시랑 비로그인시 다르게 -->
+    <h1 id="blogLogo">
+      <!-- 로그인 시에만 블로그 로고 보이기 -->
       <router-link
-        v-if="!constants.IS_LOGED_IN"
-        v-bind:to="{ name: constants.URL_TYPE.MAIN.NOLOGINHOME }"
+        v-if="constants.IS_LOGED_IN"
+        v-bind:to="{ name: constants.URL_TYPE.MAIN.LOGINHOME }"
       >
-        <!-- 로그인 안하면 header에 로고 없고 대신 하단(메인)에 크게 삽입 -->
-      </router-link>
-      <router-link v-else v-bind:to="{ name: constants.URL_TYPE.MAIN.LOGINHOME }">
-        <!-- 로고 이미지 삽입 -->
+        <!-- 로고 이미지 -->
         <b-img :src="require(`@/assets/img/top_logo.jpg`)" width="150"></b-img>
       </router-link>
     </h1>
-    <div class="right" v-if="constants.IS_LOGED_IN">
-      <b-dropdown id="dropdown-1" variant="text" toggle-class="text-decoration-none" class="m-md-2">
-        <template v-slot:button-content>
-          <!-- 사용자의 프로필사진 url 첨부 -->
+    <!-- 로그인 시에만 사용자 메뉴 보이기 -->
+    <div id="userMenue">
+      <b-dropdown
+        id="dropdown"
+        right
+        text="Right align"
+        variant="text"
+        toggle-class="text-decoration-none"
+      >
+        <template v-slot:button-content v-if="constants.IS_LOGED_IN">
+          <!-- 사용자의 프로필 사진 -->
           <img
-            class="HeaderImage mr-2"
-            ref="HeaderImage"
-            src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png"
+            class="headerProfile mr-2"
+            ref="headerProfile"
+            :src="profileImgsrc"
             style="width: 2rem; height: 2rem;"
           />
-          <div id="small_profile" :uid="uid">{{ uid }}</div>님, 환영합니다.
-          <!-- <span class="sr-only">Search</span> -->
+
+          <div id="userName" :uid="uid">{{ uid }}</div>님, 환영합니다.
         </template>
 
         <b-dropdown-item href="#" @click="logout">로그아웃</b-dropdown-item>
@@ -53,32 +57,38 @@ export default {
   props: ["isHeader"],
   computed: {},
   watch: {},
-  created() {
-    let HeaderImage = this.$refs.HeaderImage; //img dom 접근
-
-    axios
-      .get(this.$SERVER_URL + `/account/ckprofile/${localStorage["uid"]}`)
-      .then((response) => {
-        if (response.data.status) {
-          console.log(response);
-          if (response.data.object != null) {
-            console.log("등록된 프로필 이미지가 있습니다.");
-            HeaderImage.src =
-              this.$SERVER_URL + `/account/profile/${localStorage["uid"]}`;
-          } else {
-            console.log("등록된 프로필 이미지가 없습니다.");
-          }
-        } else {
-          console.log("프로필 이미지 가져오는 중 에러 발생");
-          console.log(response);
-        }
-      });
-  },
   data: function () {
     return {
       constants,
       uid: localStorage["uid"],
+      profileImgsrc:
+        "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png",
     };
+  },
+  created() {
+    console.log(constants.IS_PROFILEIMG_UPLOAD);
+    if (constants.IS_LOGED_IN) {
+      // profileImgsrc = localStorage["profileImg"];
+      axios
+        .get(this.$SERVER_URL + `/account/ckprofile/${localStorage["uid"]}`)
+        .then((response) => {
+          if (response.data.status) {
+            console.log(response);
+            if (response.data.object == null) {
+              console.log("등록된 프로필 이미지가 없습니다.");
+              // profileImgsrc =
+              //   "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png";
+            } else {
+              console.log("등록된 프로필 이미지가 있습니다.");
+              this.profileImgsrc =
+                this.$SERVER_URL + `/account/profile/${localStorage["uid"]}`;
+            }
+          } else {
+            console.log("프로필 이미지 가져오는 중 에러 발생");
+            console.log(response);
+          }
+        });
+    }
   },
   methods: {
     logout() {
@@ -95,18 +105,31 @@ export default {
 
 <style>
 #header {
-  padding: 0px;
+  display: block;
+  /* position: absolute; */
+  top: 0;
+  /* padding: 0px; */
   background-color: #eee;
+  height: 65px;
 }
-#blog_name {
-  padding: 14px 40px;
+#blogLogo {
+  position: absolute;
+
+  padding: 5px 40px;
+  margin: 0;
 }
-#small_profile {
-  display: inline;
+#userMenue {
+  position: absolute;
+  right: 0;
+  padding: 10px;
+  /* float: right; */
 }
-.HeaderImage {
+.headerProfile {
   border-radius: 50%;
   border-color: #ffcabd;
   background-color: white;
+}
+#userName {
+  display: inline;
 }
 </style>
