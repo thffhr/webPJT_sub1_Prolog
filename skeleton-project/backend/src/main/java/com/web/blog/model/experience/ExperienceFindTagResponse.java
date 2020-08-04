@@ -37,8 +37,10 @@ public class ExperienceFindTagResponse{
     private String contents;
     private List<Tag> tags;
 
+    private boolean clicked;
+
     @Builder
-    public ExperienceFindTagResponse(int exid, String uid, String title, Date startdate, Date enddate, String contents, List<Tag> tags){
+    public ExperienceFindTagResponse(int exid, String uid, String title, Date startdate, Date enddate, String contents, List<Tag> tags, boolean clicked){
         this.exid = exid;
         this.uid = uid;
         this.title = title;
@@ -46,5 +48,6 @@ public class ExperienceFindTagResponse{
         this.enddate = enddate;
         this.contents = contents;
         this.tags = tags;
+        this.clicked = clicked;
     }
 }

@@ -9,9 +9,9 @@
                 #No태그 여부 <b-img  @click="exeptNoTagClickE(isIncludeNoTag)" :pressed.sync="NoTagImgSrcT" style="cursor:pointer" v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)" width="20px"></b-img>
             </div>
         </div><!-- /.col-lg-2 -->
-        <div class="col-lg-2"  v-for="tag in tags" :key="tag.tid">
+        <div class="col-lg-2"   v-for="tag in tags" :key="tag.tid">
             
-            <div>
+            <div v-if="showTag(tag)">
                 #{{tag.tag_Name}}  <b-img @click="filtering(tag)" :pressed.sync="tag.state"  variant="primary" style="cursor:pointer" v-bind:src="require(`@/assets/img/${tag.imgsrc}`)" width="20px"></b-img>
             </div>
               
@@ -19,12 +19,13 @@
       </div><!-- /.row -->
 
 
-
-      <!-- 경험목록 -->
-      <div class="row row-custom" style="display: table" >
-        <div class="col-lg-12" v-for="(experience,exid) in experiences" :key="experience.exid">
-        <div v-if="showProject(experience)">
-          <div v-bind:style = "mystyle" class="img-circle">
+       <!-- 경험목록 -->
+      <div v-for="(experience,exid) in experiences" :key="experience.exid">
+      <div class="row row-custom"  >
+        <div class="col-custom " style="display:inline-flex"  v-if="showProject(experience)">
+           
+           <!-- 동그라미 -->
+          <div   v-bind:style = "mystyle" class="img-circle col-md-2">
             <div class="content">
               <ul>
                 <div>
@@ -37,13 +38,59 @@
               </ul>
             </div>
           </div>
-          <h2>{{experience.title}}</h2>
-          <small>{{experience.startdate}} ~ {{experience.enddate}}</small>
-          <div class="txt_line"><p>{{experience.contents}}</p></div>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+
+          <div  class="col-md-9 col-cotents">
+          <!-- 제목 -->
+                <p v-if="experience.clicked" >
+                <input  v-model = "experience.title"
+                  @blur= "experience.clicked = true; $emit('update')"
+                    @keyup.enter = "$emit('update')">
+                </p>
+                  <div v-else>
+                    <h2>{{experience.title}}</h2>
+                </div>
+
+
+              <!-- 날짜 -->
+                <p v-if="experience.clicked" >
+                <input class="txt_line" placeholder="2020-00-00" v-model = "experience.startdate"
+                  @blur= "experience.clicked = true; $emit('update')"
+                    @keyup.enter = "$emit('update')">
+                    ~
+                    <input class="txt_line"  placeholder="2020-00-00" v-model = "experience.enddate"
+                  @blur= "experience.clicked = true; $emit('update')"
+                    @keyup.enter = "$emit('update')">
+                </p>
+                  <div class="date-align" v-else>
+                  <small>{{experience.startdate}} ~ {{experience.enddate}}</small>
+                </div>
+              <!-- 내용 -->
+              <p v-if="experience.clicked" >
+              <textarea style="width:100%" value="기본내용" placeholder="Contents" v-model = "experience.contents"
+                  @blur= "experience.clicked = true; $emit('update')"
+                    @keyup.enter = "$emit('update')">
+              </textarea>
+                </p>
+                <div v-else>
+            <p class="txt_line"> {{experience.contents}} </p>
+           </div>
+          </div>
+
+      <!--버튼-->
+      <div class="col-md-1">
+           <p class="icon-right" style="margin-bottom: 0;">
+              <b-img  @click="clickeEdit(experience)" :pressed.sync="experience.clicked" style="cursor:pointer" v-bind:src="require(`@/assets/img/${experience.imgsrc}`)" width="15px"></b-img>
+              <b-img  @click="deleteE(exid, experience)" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
+            </p>
+      </div>
+        
         </div><!-- /.col-lg-4 -->
         </div>
       </div><!-- /.row -->
+
+
+
+
 
       <!-- (+) 버튼 -->
       <div class="row">
@@ -69,11 +116,12 @@
       </div>
 
       <hr class="featurette-divider">
-
     
       
       <hr class="featurette-divider">
     </div>
+
+    
 
 </template>
 
@@ -87,6 +135,7 @@ export default {
   name: "ManageExperience",
   data: () => {
     return {
+
       tags: [],
       uid : localStorage["uid"],
       experiences: [],
@@ -110,8 +159,140 @@ export default {
     };
   },
   beforeCreate () {
+  axios
+      .get(this.$SERVER_URL + `/experience/Tags`, {
+        params: {
+          uid: localStorage["uid"],
+        },
+      })
+      .then((response) => {
+        // alert(this.$SERVER_URL + `/experience/Tags`);
+       console.log(response.data.object);
+       //
+        this.tags = response.data.object;
+          Array.prototype.forEach.call(this.tags, t =>
+          Object.assign(t, {imgsrc:"icons8-circled-x-16.png"}),
+          )
+
+        Array.prototype.forEach.call(this.tags, tag => 
+          this.selectedTags.push(tag.tid)
+        )
+        
+       console.log(this.tags);
+       
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("실패");
+      });
+   
+   }
+   ,
+  created() {
+    //alert(this.$SERVER_URL + `/portfolio/all`);
+    if (!constants.IS_LOGED_IN) {
+      this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
+    };
+
+    
+
+      axios
+      .get(this.$SERVER_URL + `/experience/all`, {
+        params: {
+          uid: localStorage["uid"],
+        },
+      })
+      .then((response) => {
+        
+        console.log(response);
+        console.log(response.data.object);
+        this.experiences = response.data.object;
+        console.log(response.data.object[0].portfolioTags);
+
+          Array.prototype.forEach.call(this.experiences, t =>
+          Object.assign(t, {imgsrc:"icons8-pencil-24.png"}),
+          )
+        
+      })
+      .catch((error) => {
+        console.log(error);   
+          this.experiences = [];
+      });
+    
+  },
+   methods: {
+    editTodo: function(todo) {
+      this.editedTodo = todo;
+    },
+    changebgcolor: function() {
+      this.mystyle.opacity = "0.7";
+    },
+    originalcolor: function() {
+      this.mystyle.opacity = "0.6";
+    },
+    change_button: function(){
+      this.buttonStyle.opacity = "1";
+      this.buttonStyle.width = "61px";
+    },
+    origin_button: function(){
+      this.buttonStyle.opacity = "0.6";
+        this.buttonStyle.width = "60px";
+    },
+
+    exeptNoTagClickE: function(isIncludeNoTag){
+      //alert("바뀔 값" + isIncludeNoTag);
+       this.isIncludeNoTag = !this.isIncludeNoTag;
+
+    },
+
+
+    addOrDeleteTagClickE: function(taginput){
+          if(!taginput.state){//불포함 상태
+            taginput.imgsrc = "icons8-joyent-64.png";
+          }
+          else {//포함 상태
+            taginput.imgsrc = "icons8-circled-x-16.png";
+          }
+          taginput.state = !taginput.state;
+          console.log("값들" + this.isIncluedTag);
+          console.log(taginput.tid +" - " +taginput.state + " - " + taginput.imgsrc);
+    },
+
+    showTag(tag){
   
-   axios
+        if (tag.tag_Name == null){
+          return false
+        } else {
+          return true
+        }
+      },
+
+    showProject(experience) {
+      var selectedTags = this.selectedTags
+      var cnt = 0
+        experience.tags.forEach(function(tag) {
+
+              if (selectedTags.includes(tag.tid)) {
+                cnt ++;
+            };
+              return cnt;
+          
+        });
+      
+  
+  
+        if (cnt>0 || (experience.tags.length==0 && this.isIncludeNoTag)) {
+          return true
+        } else {
+          return false
+        }
+                                                                                                                                                                                                                                                                                                                                                     ;
+  
+    },
+
+
+    getTag(){
+      axios
       .get(this.$SERVER_URL + `/experience/Tags`, {
         params: {
           uid: localStorage["uid"],
@@ -138,103 +319,7 @@ export default {
         console.log(error);
         //alert("실패");
       });
-
-      axios
-      .get(this.$SERVER_URL + `/experience/all`, {
-        params: {
-          uid: localStorage["uid"],
-        },
-      })
-      .then((response) => {
-        
-        console.log(response);
-        console.log(response.data.object);
-        this.experiences = response.data.object;
-        console.log(response.data.object[0].portfolioTags);
-
-        Array.prototype.forEach.call(this.experiences, t =>
-          Object.assign(t, {mystyle: this.mystyle}),
-          )
-
-        
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-   }
-   ,
-  created() {
-    //alert(this.$SERVER_URL + `/portfolio/all`);
-    if (!constants.IS_LOGED_IN) {
-      this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
-    }
-    
-  },
-   methods: {
-    changebgcolor: function() {
-      this.mystyle.opacity = "0.7";
     },
-    originalcolor: function() {
-      this.mystyle.opacity = "0.6";
-    },
-    change_button: function(){
-      this.buttonStyle.opacity = "1";
-      this.buttonStyle.width = "61px";
-    },
-    origin_button: function(){
-      this.buttonStyle.opacity = "0.6";
-        this.buttonStyle.width = "60px";
-    },
-
-    exeptNoTagClickE: function(isIncludeNoTag){
-      //alert("바뀔 값" + isIncludeNoTag);
-       this.isIncludeNoTag = !this.isIncludeNoTag;
-
-    },
-
-
-    addOrDeleteTagClickE: function(taginput){
-        //alert("선택 " +taginput.tid);
-          if(!taginput.state){//불포함 상태
-            taginput.imgsrc = "icons8-joyent-64.png";
-           // this.tags.splice(taginput.tid,1);
-          }
-          else {//포함 상태
-            taginput.imgsrc = "icons8-circled-x-16.png";
-            //this.tags.push(taginput);
-          }
-          taginput.state = !taginput.state;
-          //alert("값들" + this.isIncluedTag)
-          console.log("값들" + this.isIncluedTag);
-          console.log(taginput.tid +" - " +taginput.state + " - " + taginput.imgsrc);
-    },
-
-    showProject(experience) {
-      var selectedTags = this.selectedTags
-      // console.log(selectedTags)
-      var cnt = 0
-        experience.tags.forEach(function(tag) {
-
-              if (selectedTags.includes(tag.tid)) {
-                cnt ++;
-            };
-              return cnt;
-          
-        });
-      
-  
-  
-        if (cnt>0 || (experience.tags.length==0 && this.isIncludeNoTag)) {
-          // console.log('yes!')
-          return true
-        } else {
-          // console.log("no!")
-          return false
-        }
-                                                                                                                                                                                                                                                                                                                                                     ;
-  
-    },
-
   
     
     filtering(tag) {
@@ -268,16 +353,64 @@ export default {
         title:"제목",uid:this.uid, 
       })
       .then((response) => {
-        //alert("성공");
-        //alert(response.data.object.title);
         response.data.object.startdate = startdate;
         response.data.object.enddate = startdate;
-        response.data.object.tags = [];
-        this.experiences.push(response.data.object);
+        response.data.object.imgsrc = "icons8-pencil-24.png";
+
+        if(response.data.status == false){ experiences = response.data.object}
+        else {
+            response.data.object.tags = [];
+          this.experiences.push(response.data.object);
+          } 
           
       })
       .catch((error) => {
         //alert("실패");
+        console.log(error); 
+      });
+    },
+
+    deleteE: function(exid,experience){      
+    
+        axios
+      .delete(this.$SERVER_URL + `/experience/${experience.exid}`)
+      .then((response) => {
+        this.$delete(this.experiences, exid);
+        this.getTag();
+        //alert("삭제완료 " + experience.exid);
+      })
+      .catch((error) => {
+        console.log(error); 
+      });
+    },
+
+
+    clickeEdit:function(experience){
+      experience.clicked = !experience.clicked;
+      //저장하기
+      if(!experience.clicked){ 
+        this.editE(experience);
+        experience.imgsrc = "icons8-pencil-24.png";
+        }
+      //수정하기
+      else{ 
+        experience.imgsrc = "icons8-save-close-64.png";
+        
+        }
+      //alert(experience.clicked);
+    },
+
+    editE: function(experience){      
+        axios
+      .put(this.$SERVER_URL + `/experience`, {
+        id:experience.exid, title:experience.title, uid:this.uid, contents:experience.contents,
+        startdate:experience.startdate, enddate:experience.enddate
+      })
+      .then((response) => {
+        alert("성공");
+          
+      })
+      .catch((error) => {
         console.log(error); 
       });
     },
@@ -327,21 +460,46 @@ export default {
 
     .txt_line p{
         overflow: hidden;
-       text-overflow: ellipsis;
+       text-overflow: ellipsis; 
       width: 250px;
 
-      white-space: normal;
+       white-space: normal;
       line-height: 1.2;
-      max-height: 2.4em;
+      max-height: 2.4em; 
 
       margin-left: auto;
       margin-right: auto;
       text-align: center;
     }
 
+  .icon-right{
+      text-align: end;
+    margin-right: 10%;
+  }
+
  .row-custom{
-   padding-left: 10% ;
+   margin-top: 4% ;
+   margin-bottom: 4% ;
+   
  }
 
+ .col-custom{
+   width: 100%;
+       margin-left: 8%;
+    margin-right: 8%;
+ }
+
+.col-cotents{
+    text-align: left;
+}
+
+.col-cotents h2{
+    text-align: center;
+}
+
+
+.date-align{
+    text-align: right ;
+}
 
 </style>
