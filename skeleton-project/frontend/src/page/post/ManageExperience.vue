@@ -27,15 +27,13 @@
            <!-- 동그라미 -->
           <div   v-bind:style = "mystyle" class="img-circle col-md-2">
             <div class="content">
-              <ul>
-                <div>
-                  <li v-for="experienceTag in experience.tags" :key="experienceTag.tid">
+              
+                <div v-for="experienceTag in experience.tags" :key="experienceTag.tid">
                        #{{experienceTag.tagName}}
           
-                   </li>
-                   
+               
                 </div>
-              </ul>
+              
             </div>
           </div>
 
@@ -94,7 +92,7 @@
 
       <!-- (+) 버튼 -->
       <div class="row">
-        <div class="col-lg-12">
+        <div class=" col-button-custom">
             <div>
                <b-img v-on:click="addExp" :src="require(`@/assets/img/icons8-plus-50.png`)" width="60px" v-bind:style = "buttonStyle" v-on:mouseover = "change_button" v-on:mouseout = "origin_button"></b-img>
             </div>
@@ -450,6 +448,7 @@ export default {
 .img-circle .content{
       width: 65%;
       height: 65%;
+      text-align: center;
          position: relative;
          transform: translate(25%, 30%);
          font-size:15px;
@@ -500,6 +499,12 @@ export default {
 
 .date-align{
     text-align: right ;
+}
+
+.col-button-custom{
+  margin-left: auto;
+ margin-right: auto;
+   
 }
 
 </style>
