@@ -39,7 +39,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
     @Autowired
     private PortfolioDao portfolioDao;
 
-    public void FileUploadDownloadService(FileUploadProperties prop) {
+    public FileUploadDownloadServiceImpl(FileUploadProperties prop) {
         this.fileLocation = Paths.get(prop.getUploadDir()).toAbsolutePath().normalize();
 
         try {
