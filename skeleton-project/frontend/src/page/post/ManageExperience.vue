@@ -21,8 +21,8 @@
 
        <!-- 경험목록 -->
       <div v-for="(experience,exid) in experiences" :key="experience.exid">
-      <div class="row row-custom"  >
-        <div class="col-custom " style="display:inline-flex"  v-if="showProject(experience)">
+      <div class="row"  >
+        <div class="col-custom row-custom" style="display:inline-flex"  v-if="showProject(experience)">
            
            <!-- 동그라미 -->
           <div   v-bind:style = "mystyle" class="img-circle col-md-2">
