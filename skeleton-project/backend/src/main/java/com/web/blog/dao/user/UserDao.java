@@ -14,10 +14,12 @@ public interface UserDao extends JpaRepository<User, String> {
     Optional<User> findUserByEmailAndPassword(String email, String password);
 
     Optional<User> findUserByUidAndPassword(String uid, String password);
-   
-   Optional<User> findUserByEmail(String email);
 
-   Optional<User> findUserByUid(String uid);
+    Optional<User> findUserByEmail(String email);
+
+    Optional<User> findUserByUid(String uid);
+
+    Optional<User> findUserByNickname(String nickname);
 
     User getUserByUid(String uid);
 

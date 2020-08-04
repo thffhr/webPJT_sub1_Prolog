@@ -81,6 +81,13 @@ public class AccountController {
         return userService.nicknamecheck(nickname);
     }
 
+    @PostMapping("/account/signup/idcheck")
+    @ApiOperation(value = "가입시 아이디 중복 확인")
+    public Object idcheck(@RequestParam(required = true) final String uid) throws Exception {
+
+        return userService.idcheck(uid);
+    }
+
     @GetMapping("/account/findUserByEmail")
     @ApiOperation(value = "이메일로 유저정보 찾기(id찾기 pw찾기 가능)")
     public Object findPassByEmail(@RequestParam(required = true) final String email) throws Exception {
