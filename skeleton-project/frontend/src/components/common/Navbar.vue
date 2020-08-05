@@ -1,7 +1,7 @@
 <template>
-  <div class="navigationBar">
+  <div id="navigationBar">
     <b-collapse id="collapse_navbar" v-if="constants.IS_LOGED_IN">
-      <b-navbar id="navigationBar" type="ligth" variant="#ffcabd">
+      <b-navbar id="pageMenue" type="ligth" variant="#ffcabd">
         <b-navbar-nav class="ml-auto mr-auto">
           <b-nav-item class="mr-5" href="#">
             <router-link :to="{ name: constants.URL_TYPE.POST.MANAGEEXPERIENCE}">📝경험 관리</router-link>
@@ -15,7 +15,7 @@
       </b-navbar>
     </b-collapse>
     <b-icon-arrow-up-circle-fill
-      class="navBtn"
+      id="navBtn"
       v-b-toggle.collapse_navbar
       v-if="constants.IS_LOGED_IN"
     ></b-icon-arrow-up-circle-fill>
@@ -35,20 +35,26 @@ export default {
 
 <style>
 #navigationBar {
+  position: fixed;
+  margin: 0 auto;
+  top: 0;
+  /* right: auto; */
+  left: 50%;
+  transform: translate(-50%, 0%);
+  width: 60%;
+  border: 0;
+}
+#pageMenue {
   border-bottom-right-radius: 4px;
   background-color: #ffcabd;
 }
-.navigationBar {
-  position: fixed;
-  margin: 0 auto;
-  left: 0;
-  right: 0;
-  width: 60%;
+#navBtn {
+  position: relative;
+  top: 2px;
+  left: 50%;
+  transform: translate(-50%, 0%);
 }
 .navBtn:hover {
   transform: scale(1.2, 1.2);
 }
-/* .show.navBtn {
-  transform: rotate(180deg);
-} */
 </style>
