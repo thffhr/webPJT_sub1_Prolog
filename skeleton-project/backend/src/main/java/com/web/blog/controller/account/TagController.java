@@ -22,7 +22,7 @@ public class TagController {
     TagService tagService;
 
     @PostMapping("/tag")
-    @ApiOperation(value = "작성한 태그가 있는지 확인해서 있으면 fail, 없으면 success(새로생성)")
+    @ApiOperation(value = "(없어도 됨..)작성한 태그가 있는지 확인해서 있으면 fail, 없으면 success(새로생성)")
     public ResponseEntity<BasicResponse> readAll(@Valid @RequestBody TagCreateRequest request) throws Exception {
         return tagService.createTag(request);
     }

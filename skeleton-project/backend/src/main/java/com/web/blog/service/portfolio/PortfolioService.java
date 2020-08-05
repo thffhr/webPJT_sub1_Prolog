@@ -1,7 +1,6 @@
 package com.web.blog.service.portfolio;
 
 import com.web.blog.model.BasicResponse;
-import com.web.blog.model.portfolio.PTagCreateRequest;
 import com.web.blog.model.portfolio.PortfolioRequest;
 import com.web.blog.model.portfolio.PortfolioUpdateRequest;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +25,8 @@ public interface PortfolioService {
     ResponseEntity<BasicResponse> deletePortfolio(int pid);
 
     // // 포트폴리오 하나 리턴
-     ResponseEntity<BasicResponse> readOne(int pid);
+    ResponseEntity<BasicResponse> readOne(int pid);
 
     // 포트폴리오 태그 생성
-    ResponseEntity<BasicResponse> createPTag(final PTagCreateRequest request) throws Exception;
+    ResponseEntity<BasicResponse> createPTag(int pid, String tag);
 }

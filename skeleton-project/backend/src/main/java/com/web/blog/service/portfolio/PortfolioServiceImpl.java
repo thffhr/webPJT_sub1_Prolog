@@ -12,7 +12,6 @@ import com.web.blog.dao.tag.TagDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.join.PortfolioTag;
 import com.web.blog.model.portfolio.PTag;
-import com.web.blog.model.portfolio.PTagCreateRequest;
 import com.web.blog.model.portfolio.Portfolio;
 import com.web.blog.model.portfolio.PortfolioRequest;
 import com.web.blog.model.portfolio.PortfolioUpdateRequest;
@@ -20,6 +19,7 @@ import com.web.blog.model.portfolio.UploadFile;
 import com.web.blog.model.portfolio.PortfolioTags;
 import com.web.blog.model.portfolio.PortfolioTagsFiles;
 import com.web.blog.model.tag.Tag;
+import com.web.blog.model.tag.TagCreateRequest;
 import com.web.blog.model.tag.TagPortfolioTagResponse;
 import com.web.blog.property.FileUploadProperties;
 
@@ -90,7 +90,6 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Override
     public ResponseEntity<BasicResponse> getTagAll(String uid) {
 
-        System.out.println(uid);
         List<Portfolio> list = portfolioDao.findPortfolioByUid(uid);
         HashSet<TagPortfolioTagResponse> hs = new HashSet<>();
 
@@ -100,10 +99,7 @@ public class PortfolioServiceImpl implements PortfolioService {
             for (PortfolioTag j : portfolioTags) {
                 hs.add(TagPortfolioTagResponse.builder().tid(j.getTag().getTid()).tag_Name(j.getTag().getTagName())
                         .state(false).build());
-
-                System.out.println(j.getTag());
             }
-            System.out.println();
         }
 
         /*
@@ -164,7 +160,6 @@ public class PortfolioServiceImpl implements PortfolioService {
         try {
             Portfolio portfolio = portfolioDao.findPortfolioByPid(pid);
 
-            // System.out.println(fileLocation);
             // 프로젝트에 포함되어있는 파일 삭제
             // - pid가 pid인 파일리스트를 불러와서 for문으로 filename으로 파일스토리지에서 삭제하고 db에서 삭제
             List<UploadFile> fileList = portfolio.getFiles();
@@ -172,7 +167,6 @@ public class PortfolioServiceImpl implements PortfolioService {
                 String fileName = uploadFile.getFileName();
                 int fileId = uploadFile.getId();
                 File file = new File(fileLocation + "\\" + fileName);
-                System.out.println(file.toString());
                 if (file.exists()) {
                     if (file.delete()) {
                         // 지워졌으면 db에서 파일의 정보를 지워야해
@@ -212,7 +206,6 @@ public class PortfolioServiceImpl implements PortfolioService {
         PortfolioTagsFiles ptf = PortfolioTagsFiles.builder().pid(p.getPid()).uid(p.getUid()).title(p.getTitle())
                 .start_date(p.getStartDate()).end_date(p.getEndDate()).contents(p.getContents()).tag(tagList)
                 .files(p.getFiles()).build();
-        System.out.println(p.getFiles());
 
         if (ptf != null) {
             result.status = true;
@@ -230,27 +223,44 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public ResponseEntity<BasicResponse> createPTag(PTagCreateRequest request) throws Exception {
+    public ResponseEntity<BasicResponse> createPTag(int pid, String tag) {
 
-        // p_tag 테이블에서 pid, uid 가 같으면 중복
-        final Optional<PTag> ptagOpt = ptagDao.getTagByPidAndTid(request.getPid(), request.getTid());
+        // tag table에 존재하지 않으면 tagName을 tag table에 만들고 그 tid를 pid와 연결한다.
+        Optional<Tag> tagOpt = tagDao.getTagByTagName(tag);
+        if (!tagOpt.isPresent()) {
+            TagCreateRequest tagCreateRequest = new TagCreateRequest();
+            tagCreateRequest.setTagName(tag);
 
-        if (ptagOpt.isPresent()) {
-            result.status = false;
-            result.data = "포트폴리오 태그 생성 실패(중복, 실패)";
-            result.object = ptagOpt.get().toResEntity();// 중복되면 그놈 쓰세요! -> 중복되면 추가할 수 없음
-            response = new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            PTag resultOpt = ptagDao.save(request.toEntity());
+            Tag tagSave = tagDao.save(tagCreateRequest.toEntity());
+            int tid = tagSave.getTid();
+
+            PTag pTagSave = ptagDao.save(PTag.builder().pid(pid).tid(tid).build());
 
             result.status = true;
             result.data = "포트폴리오 태그 생성 성공";
-            result.object = resultOpt.toResEntity(); // 중복안되서 새로 만들어진 애
+            result.object = pTagSave.toResEntity();
 
             response = new ResponseEntity<>(result, HttpStatus.OK);
-            return response;
-        }
+        } else {
+            // 태그 이름을 확인해서 이미 tag table에 존재하면 그 tag의 tid와 pid의 연결상태를 확인한다.
+            int tid = tagOpt.get().getTid();
+            Optional<PTag> ptagOpt = ptagDao.getTagByPidAndTid(pid, tid);
+            // 연결되어있으면 태그연결 실패(이미 연결됨)
+            if (ptagOpt.isPresent()) {
+                result.status = false;
+                result.data = "이미 연결된 태그";
+                result.object = "";
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            } else {
+                // 연결되어있지 않으면 태그 연결
+                PTag pTagSave = ptagDao.save(PTag.builder().pid(pid).tid(tid).build());
 
+                result.status = true;
+                result.data = "이미 존재하는 태그에 연결";
+                result.object = pTagSave.toResEntity();
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        }
         return response;
     }
 }
