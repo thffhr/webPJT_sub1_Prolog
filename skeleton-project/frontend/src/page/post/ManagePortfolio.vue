@@ -65,15 +65,16 @@
     <!-- 위랑 동일 / 카드 형태만 다름 -->
     <b-container>
       <b-row align-v="start" align-h="center">
-        
         <div
           v-for="portfolio in portfolios"
           :key="portfolio.pid"
-          style="display: inline-block; max-width: 20rem; min-height: 17rem;"
-          class="m-1"
+          style="display: inline-block;"
+          class="columns is-multiline"
         >
-          <b-card class="mb-2" v-if="showProject(portfolio)" cols="4">
-            <div class="m-3" style="border: solid;">
+
+          <b-card v-if="showProject(portfolio)" class="column is-one-third m-1" style="background: #ffcabd;">
+            <div>
+              <b-img align-h="end"  @click="deleteP(portfolio)" style="cursor:pointer;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
               <h2>{{ portfolio.title }}</h2>
               <small>{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
               <p
@@ -92,6 +93,7 @@
             </div>
           </b-card>        
           <hr>
+
         </div>
       </b-row>
 
@@ -137,6 +139,7 @@ export default {
       this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
     };
 
+    
     axios
       .get(this.$SERVER_URL + `/portfolio/Tags`, {
         params: {
@@ -167,8 +170,6 @@ export default {
       .catch((error) => {
         console.log(error);
       });
-
-
   },
   methods: {
     addProject() {
@@ -265,16 +266,59 @@ export default {
               tag.state = true
             )
       }
-    }
+    },
+
+    deleteP: function(portfolio){      
+        axios
+      .delete(this.$SERVER_URL + `/portfolio/${portfolio.pid}`)
+      .then((response) => {
+        this.$delete(this.portfolios, portfolio);
+        // this.getTag();
+        //alert("삭제완료 " + experience.exid);
+        axios
+      .get(this.$SERVER_URL + `/portfolio/Tags`, {
+        params: {
+          uid: localStorage["uid"],
+        },
+      })
+      .then((response) => {
+        this.tags = response.data.object;
+
+        Array.prototype.forEach.call(this.tags, tag => 
+          this.selectedTags.push(tag.tid)
+        )
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      axios
+      .get(this.$SERVER_URL + `/portfolio/all`, {
+        params: {
+          uid: localStorage["uid"],
+        },
+      })
+      .then((response) => {
+        console.log(response.data.object);
+        this.portfolios = response.data.object;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      })
+      .catch((error) => {
+        console.log(error); 
+      });
+    },
   },
   // 버튼
   computed: {
     tagStates() {
         return this.tags.map(tag => tag.state)
       },
-    
   },
-};
+}
+
 </script>
 
 <style>
