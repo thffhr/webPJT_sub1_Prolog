@@ -12,6 +12,7 @@ import com.web.blog.dao.tag.TagDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.join.PortfolioTag;
 import com.web.blog.model.portfolio.PTag;
+import com.web.blog.model.portfolio.PTagCreateRequest;
 import com.web.blog.model.portfolio.Portfolio;
 import com.web.blog.model.portfolio.PortfolioRequest;
 import com.web.blog.model.portfolio.PortfolioUpdateRequest;
@@ -261,6 +262,25 @@ public class PortfolioServiceImpl implements PortfolioService {
                 response = new ResponseEntity<>(result, HttpStatus.OK);
             }
         }
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<BasicResponse> deletePtag(PTagCreateRequest request) {
+        Optional<PTag> pTagOpt = ptagDao.getTagByPidAndTid(request.getPid(), request.getTid());
+        if (pTagOpt.isPresent()) {
+            ptagDao.deletePTagByPtid(pTagOpt.get().getPtid());
+            result.status = true;
+            result.data = "태그 연결 해제";
+            result.object = pTagOpt;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            result.status = false;
+            result.data = "태그 연결 실패 - 존재하지 않는 연결";
+            result.object = pTagOpt;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
         return response;
     }
 }

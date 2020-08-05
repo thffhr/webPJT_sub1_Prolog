@@ -11,6 +11,7 @@ import lombok.*;
 
 @Entity
 @NoArgsConstructor
+@Getter
 @Table(name = "p_tag")
 public class PTag {
 

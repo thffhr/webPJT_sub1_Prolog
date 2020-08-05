@@ -3,6 +3,7 @@ package com.web.blog.controller.portfolio;
 import javax.validation.Valid;
 
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.portfolio.PTagCreateRequest;
 import com.web.blog.model.portfolio.PortfolioRequest;
 import com.web.blog.model.portfolio.PortfolioUpdateRequest;
 import com.web.blog.service.portfolio.PortfolioService;
@@ -85,5 +86,11 @@ public class PortfolioController {
     public ResponseEntity<BasicResponse> createPortfolioTag(@RequestParam(required = true) int pid,
             @RequestParam(required = true) String tag) {
         return portfolioService.createPTag(pid, tag);
+    }
+
+    @DeleteMapping("/tag")
+    @ApiOperation(value = "포트폴리오에 태그 연결해제")
+    public ResponseEntity<BasicResponse> deletePtag(@RequestBody PTagCreateRequest request) {
+        return portfolioService.deletePtag(request);
     }
 }
