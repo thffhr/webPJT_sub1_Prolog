@@ -3,6 +3,8 @@ package com.web.blog.controller.experience;
 import javax.validation.Valid;
 
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.experience.ETagCreateRequest;
+import com.web.blog.model.experience.ETagDeleteRequest;
 import com.web.blog.model.experience.ExperienceCreateRequest;
 import com.web.blog.model.experience.ExperienceUpdateRequest;
 import com.web.blog.service.experience.ExperienceService;
@@ -58,5 +60,20 @@ public class ExperienceController {
         return experienceService.getTagAll(uid);
     }
 
+    @PostMapping("/experience/tag")
+    @ApiOperation(value = "ex_tag 테이블에 새로운 경험 태그 추가")
+    public ResponseEntity<BasicResponse> createPortfolio(@Valid @RequestBody ETagCreateRequest request)
+            throws Exception {
+
+        return experienceService.createETag(request);
+    }
+
+    @DeleteMapping("/experience/tag")
+    @ApiOperation(value = "유저의 경험 삭제")
+    public ResponseEntity<BasicResponse> deleteTagFromEx(@Valid @RequestBody ETagDeleteRequest request){
+        return experienceService.deleteTagFromEx(request);
+    }
+
+    
 
 }
