@@ -16,7 +16,11 @@ public interface ETagDao extends JpaRepository<ETag, Integer> {
     Optional<ETag> getTagByExidAndTid(int exid, int tid);
 
     //ex_tag 삭제
-    void deleteByExidAndTid(@Param("exid") int exid, @Param("tid") int tid);
+    void deleteByExidAndTid(int exid, int tid);
+
+    Optional<ETag> findByExidAndTid(int exid, int tid);
+
+    
 
 
 }

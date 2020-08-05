@@ -12,6 +12,7 @@ import lombok.*;
 
 @Entity
 @NoArgsConstructor
+@Getter
 @Table(name = "ex_tag")
 public class ETag {
 

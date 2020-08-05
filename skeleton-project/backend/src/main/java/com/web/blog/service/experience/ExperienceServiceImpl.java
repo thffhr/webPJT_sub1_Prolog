@@ -188,11 +188,14 @@ public class ExperienceServiceImpl implements ExperienceService {
     public ResponseEntity<BasicResponse> deleteTagFromEx(ETagDeleteRequest request){
          try{
              System.out.println(request.getExid() + " - " + request.getTid());
-              etagDao.deleteByExidAndTid(request.getExid(), request.getTid());
-              result.status = true;
-              result.data = "경험에서 태그 삭제 성공";
-              result.object = null;
-              response = new ResponseEntity<>(result, HttpStatus.OK);
+              //etagDao.deleteByExidAndTid(request.getExid(), request.getTid());
+              Optional<ETag> opt = etagDao.findByExidAndTid(request.getExid(), request.getTid());
+                etagDao.deleteById(opt.get().getExtid());
+                result.status = true;
+                result.data = "경험에서 태그 삭제 성공";
+                result.object = null;
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+              
           } catch(Exception e) {         
               result.status = false;
               result.data = "경험 태그 삭제 실패";
