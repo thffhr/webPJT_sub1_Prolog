@@ -1,12 +1,7 @@
 package com.web.blog;
 
-import com.web.blog.dao.join.PortfolioTagDao;
-import com.web.blog.dao.portfolio.PortfolioDao;
-import com.web.blog.dao.tag.TagDao;
-
 import com.web.blog.property.FileUploadProperties;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,15 +13,6 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 @SpringBootApplication
 @EnableConfigurationProperties({ FileUploadProperties.class })
 public class WebBlogApplication implements CommandLineRunner {
-
-	@Autowired
-	private PortfolioDao pr;
-
-	@Autowired
-	private TagDao tr;
-
-	@Autowired
-	private PortfolioTagDao ptr;
 
 	public static void main(final String[] args) {
 
