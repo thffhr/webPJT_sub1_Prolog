@@ -6,7 +6,6 @@ import com.web.blog.model.BasicResponse;
 import com.web.blog.model.portfolio.PTagCreateRequest;
 import com.web.blog.model.portfolio.PortfolioRequest;
 import com.web.blog.model.portfolio.PortfolioUpdateRequest;
-import com.web.blog.model.tag.TagCreateRequest;
 import com.web.blog.service.portfolio.PortfolioService;
 import com.web.blog.service.tag.TagService;
 

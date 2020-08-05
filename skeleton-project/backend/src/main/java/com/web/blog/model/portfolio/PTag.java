@@ -1,18 +1,11 @@
 package com.web.blog.model.portfolio;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.web.blog.model.join.ExperienceTag;
-import com.web.blog.model.join.PortfolioTag;
 
 import lombok.*;
 
@@ -25,31 +18,25 @@ public class PTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ptid")
     private int ptid;
-    
-    @Column(name ="pid")
+
+    @Column(name = "pid")
     private int pid;
 
-    @Column(name ="tid")
+    @Column(name = "tid")
     private int tid;
 
     // @OneToMany(mappedBy = "tag")
     // private List<PortfolioTag> portfolioTags = new ArrayList<>();
-  
-   
 
     @Builder
-    public PTag(int ptid, int pid, int tid){
+    public PTag(int ptid, int pid, int tid) {
         this.ptid = ptid;
         this.pid = pid;
         this.tid = tid;
     }
 
-    public PTagCreateResponse toResEntity(){
-        return PTagCreateResponse.builder()
-                .ptid(ptid)
-                .pid(pid)
-                .tid(tid)
-                    .build();
+    public PTagCreateResponse toResEntity() {
+        return PTagCreateResponse.builder().ptid(ptid).pid(pid).tid(tid).build();
     }
 
 }

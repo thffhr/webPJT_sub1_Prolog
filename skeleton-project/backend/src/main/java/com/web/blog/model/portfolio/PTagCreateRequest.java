@@ -4,8 +4,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.Column;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
