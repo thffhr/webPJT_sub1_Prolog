@@ -1,58 +1,38 @@
 <template>
   <div class="nologinHome">
     <b-container>
-      <b-row align-v="start">
-        <b-col align-self="stretch" class="m-5">
-          <!-- 로고 -->
+      <b-row align-v="center">
+        <b-col cols="12" lg="6">
           <b-img :src="require(`@/assets/img/logo.jpg`)" contain width="538" class="mt-4 mb-1"></b-img>
-          <!-- 설명 -->
-          <b-col class="m-5">
+          <div class="m-5">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
             perspiciatis suscipit quidem illum nihil quas perferendis omnis,
             dignissimos ab recusandae sunt aspernatur maiores architecto dolor
             at similique animi facere incidunt!
-          </b-col>
+          </div>
         </b-col>
-        <b-col class="m-5" align-v="end" align-self="stretch">
-          <b-card class="card mt-5">
-            <b-card-text>
-              <!-- 정렬 수정 필요__가운데 정렬 -->
-              <b-container>
-                <b-row class="my-1" align-h="center" align-v="end">
-                  <b-col role="group" cols="9">
-                    <b-form-input
-                      v-model="emailOrUid"
-                      id="emailOrUid"
-                      placeholder="이메일 혹은 아이디를 입력해주세요"
-                      type="text"
-                    ></b-form-input>
-                  </b-col>
-                </b-row>
-                <b-row class="my-1" align-h="center">
-                  <b-col role="group" cols="9">
-                    <b-form-input
-                      @keyup.enter="login"
-                      v-model="password"
-                      type="password"
-                      placeholder="영문, 숫자 혼용 8자 이상"
-                    ></b-form-input>
-                  </b-col>
-                </b-row>
-                <b-row class="my-1" align-h="center">
-                  <div class="mt-2">
-                    <b-button class="mr-2" @click="login">로그인</b-button>
-                    <router-link :to="{ name: constants.URL_TYPE.USER.JOIN }">
-                      <b-button>회원가입</b-button>
-                    </router-link>
-                  </div>
-                </b-row>
-              </b-container>
-            </b-card-text>
-          </b-card>
-          <h6
+        <!-- <div class="w-100"></div> -->
+        <b-col cols="12" lg="6">
+          <b-form-input
+            v-model="emailOrUid"
+            id="emailOrUid"
+            placeholder="이메일 혹은 아이디를 입력해주세요"
+            type="text"
+          ></b-form-input>
+          <b-form-input
+            @keyup.enter="login"
+            v-model="password"
+            type="password"
+            placeholder="영문, 숫자 혼용 8자 이상"
+          ></b-form-input>
+          <b-button class="mr-2" @click="login">로그인</b-button>
+          <router-link :to="{ name: constants.URL_TYPE.USER.JOIN }">
+            <b-button>회원가입</b-button>
+          </router-link>
+          <button
             class="findUser text-secondary m-1"
             @click="$bvModal.show('findUserModal')"
-          >아이디 또는 비밀번호를 잊으셨나요?</h6>
+          >아이디 또는 비밀번호를 잊으셨나요?</button>
           <b-modal id="findUserModal" hide-footer>
             <template v-slot:modal-title>아이디 찾기</template>
             <div class="d-block text-center">
@@ -62,6 +42,9 @@
         </b-col>
       </b-row>
     </b-container>
+
+
+
   </div>
 </template>
 
