@@ -59,7 +59,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
 
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String fileName = FilenameUtils.getBaseName(file.getOriginalFilename()) + "_" + now + "." + extension;
-        System.out.println(fileName);
+        // System.out.println(fileLocation);
 
         Portfolio portfolio = portfolioDao.findPortfolioByPid(pid);
 
@@ -105,7 +105,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
         String fileName = fileDAO.findUploadFileById(id).getFileName();
         // 파일스토리지에서 파일을 지워야해
         File file = new File(fileLocation + "\\" + fileName);
-        System.out.println(file.toString());
+        // System.out.println(file.toString());
         if (file.exists()) {
             if (file.delete()) {
                 // 지워졌으면 db에서 파일의 정보를 지워야해

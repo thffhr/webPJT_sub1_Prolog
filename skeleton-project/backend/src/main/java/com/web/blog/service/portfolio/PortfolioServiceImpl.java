@@ -1,7 +1,11 @@
 package com.web.blog.service.portfolio;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
+import com.web.blog.dao.portfolio.FileDAO;
 import com.web.blog.dao.portfolio.PTagDao;
 import com.web.blog.dao.portfolio.PortfolioDao;
 import com.web.blog.dao.tag.TagDao;
@@ -12,11 +16,12 @@ import com.web.blog.model.portfolio.PTagCreateRequest;
 import com.web.blog.model.portfolio.Portfolio;
 import com.web.blog.model.portfolio.PortfolioRequest;
 import com.web.blog.model.portfolio.PortfolioUpdateRequest;
+import com.web.blog.model.portfolio.UploadFile;
 import com.web.blog.model.portfolio.PortfolioTags;
 import com.web.blog.model.portfolio.PortfolioTagsFiles;
-// import com.web.blog.model.portfolio.PortfolioTagsFiles;
 import com.web.blog.model.tag.Tag;
 import com.web.blog.model.tag.TagPortfolioTagResponse;
+import com.web.blog.property.FileUploadProperties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +42,14 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     // @Autowired
     // private PortfolioTagDao portfolioTagDao;
+    @Autowired
+    FileDAO fileDAO;
+
+    private Path fileLocation;
+
+    public PortfolioServiceImpl(FileUploadProperties prop) {
+        this.fileLocation = Paths.get(prop.getUploadDir()).toAbsolutePath().normalize();
+    }
 
     // 요청과 응답
     final BasicResponse result = new BasicResponse();
@@ -149,6 +162,28 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Override
     public ResponseEntity<BasicResponse> deletePortfolio(int pid) {
         try {
+            Portfolio portfolio = portfolioDao.findPortfolioByPid(pid);
+
+            // System.out.println(fileLocation);
+            // 프로젝트에 포함되어있는 파일 삭제
+            // - pid가 pid인 파일리스트를 불러와서 for문으로 filename으로 파일스토리지에서 삭제하고 db에서 삭제
+            List<UploadFile> fileList = portfolio.getFiles();
+            for (UploadFile uploadFile : fileList) {
+                String fileName = uploadFile.getFileName();
+                int fileId = uploadFile.getId();
+                File file = new File(fileLocation + "\\" + fileName);
+                System.out.println(file.toString());
+                if (file.exists()) {
+                    if (file.delete()) {
+                        // 지워졌으면 db에서 파일의 정보를 지워야해
+                        fileDAO.deleteById(fileId);
+                    }
+                }
+            }
+            // 프로젝트와 연결되어있는 태그연결 삭제 - cascading
+
+            // 삭제할 프로젝트만 연결되어있던(연결된 프로젝트가 없는) 태그 삭제 - 아직 유지
+            // 프로젝트 삭제
             portfolioDao.deleteById(pid);
             result.status = true;
             result.data = "포트폴리오 삭제 성공";
@@ -165,33 +200,33 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Override
     public ResponseEntity<BasicResponse> readOne(int pid) {
 
-    Portfolio p = portfolioDao.findPortfolioByPid(pid);
+        Portfolio p = portfolioDao.findPortfolioByPid(pid);
 
-    List<Tag> tagList = new ArrayList<>();
-    List<PortfolioTag> ptList = p.getPortfolioTags();
-    for (PortfolioTag pt : ptList) {
-    Tag tag = pt.getTag();
-    tagList.add(tag);
-    }
+        List<Tag> tagList = new ArrayList<>();
+        List<PortfolioTag> ptList = p.getPortfolioTags();
+        for (PortfolioTag pt : ptList) {
+            Tag tag = pt.getTag();
+            tagList.add(tag);
+        }
 
-    PortfolioTagsFiles ptf = PortfolioTagsFiles.builder().pid(p.getPid()).uid(p.getUid()).title(p.getTitle())
-    .start_date(p.getStartDate()).end_date(p.getEndDate()).contents(p.getContents()).tag(tagList)
-    .files(p.getFiles()).build();
-    System.out.println(p.getFiles());
+        PortfolioTagsFiles ptf = PortfolioTagsFiles.builder().pid(p.getPid()).uid(p.getUid()).title(p.getTitle())
+                .start_date(p.getStartDate()).end_date(p.getEndDate()).contents(p.getContents()).tag(tagList)
+                .files(p.getFiles()).build();
+        System.out.println(p.getFiles());
 
-    if (ptf != null) {
-    result.status = true;
-    result.data = "pid가 " + pid + "인 포트폴리오의 정보입니다.";
-    result.object = ptf;
-    response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
-    } else {
-    result.status = false;
-    result.data = "포트폴리오 실패(비어있거나 실패)";
-    result.object = null;
-    response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
-    return response;
-    }
-    return response;
+        if (ptf != null) {
+            result.status = true;
+            result.data = "pid가 " + pid + "인 포트폴리오의 정보입니다.";
+            result.object = ptf;
+            response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
+        } else {
+            result.status = false;
+            result.data = "포트폴리오 실패(비어있거나 실패)";
+            result.object = null;
+            response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
+            return response;
+        }
+        return response;
     }
 
     @Override
