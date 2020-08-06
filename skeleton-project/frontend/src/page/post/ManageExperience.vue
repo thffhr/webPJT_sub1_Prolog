@@ -72,6 +72,33 @@
                 <div v-else>
             <p class="txt_line"> {{experience.contents}} </p>
            </div>
+
+
+
+             
+
+              <!-- 태그 -->
+              <div class="editor_tag"  v-if="experience.clicked" >
+
+              <!-- exid도잇어야함 -->
+              <div v-for="experienceTag in experience.tags" :key="experienceTag.tid">
+                <span class="txt_tag">
+                  <span>#</span>
+                  <span>{{experienceTag.tagName}}</span>
+                  <b-img @click="deleteTag(experience.tags, experienceTag, experience.exid)" style="width:18px; height:18px; cursor:pointer"  v-bind:src="require(`@/assets/img/icons8-close-window-50.png`)">
+                    <span>삭제</span>
+                  </b-img>
+                </span>
+              </div>
+
+
+                <span class="inp_tag">
+                  <span>#</span>
+                  <div style="inline-block" value="태그" placeholder="Tag입력"> 
+                      <input type="text" class="tf_g" name="tagText" placeholder="태그입력" style="box-sizing: content-box; width: 50px;">
+                  </div>
+                </span>
+              </div>
           </div>
 
       <!--버튼-->
@@ -186,6 +213,13 @@ export default {
    
    }
    ,
+
+   computed: {
+    uidState(tag) {
+      return this.uid.length > 0 ? true : false;
+    },
+  
+  },
   created() {
     //alert(this.$SERVER_URL + `/portfolio/all`);
     if (!constants.IS_LOGED_IN) {
@@ -413,6 +447,22 @@ export default {
       });
     },
 
+    deleteTag: function(tags,tag,exid){
+          axios
+      .delete(this.$SERVER_URL + `/experience/${tag.tid}/${exid}`)
+      .then((response) => {
+
+        alert("삭제성공");
+        tags.splice(tags.indexOf(tag.tid), 1)
+        //this.$delete( tags, tag.tid);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(tag.tid + " - " + exid);
+        alert("삭제실패");
+      });
+    }
+
   },
 };
 </script>
@@ -505,6 +555,62 @@ export default {
   margin-left: auto;
  margin-right: auto;
    
+}
+.tag-custom{
+  width:30%;
+  display:flex;
+}
+
+.txt_tag {
+    display: flex;
+    position: relative;
+    margin: 16px 26px 0 0;
+    font-size: 13px;
+    vertical-align: top;
+    
+    white-space: nowrap;
+    
+}
+
+.editor_tag {
+    display: flex;
+    width: 100%;
+    min-height: 50px;
+    margin: 0 auto;
+    padding: 0 0 5px;
+    box-sizing: border-box;
+    font-size: 0;
+}
+
+.inp_tag {
+    display: flex;
+    margin: 16px 26px 0 0;
+    font-size: 13px;
+    color: #909090;
+    vertical-align: top;
+}
+
+.inp_tag .tf_g {
+    display: inline-block;
+    margin: 0;
+    border: 0;
+    font-size: 13px;
+    color: #333;
+    vertical-align: top;
+    outline: none;
+    background: #eeeeee;
+}
+
+.txt_tag  .tf_g {
+     display: inline-block;
+    margin: 0;
+    border: 0;
+    font-size: 13px;
+    color: #333;
+    vertical-align: top;
+    outline: none;
+    background: #eeeeee;
+    
 }
 
 </style>
