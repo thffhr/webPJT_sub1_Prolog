@@ -1,9 +1,7 @@
 package com.web.blog.dao.portfolio;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.web.blog.model.portfolio.PTag;
 import com.web.blog.model.portfolio.Portfolio;
 
 import org.springframework.data.jpa.repository.JpaRepository;

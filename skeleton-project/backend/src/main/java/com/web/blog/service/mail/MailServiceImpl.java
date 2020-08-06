@@ -33,7 +33,6 @@ public class MailServiceImpl implements MailService {
     final BasicResponse result = new BasicResponse();
     ResponseEntity response = null;
 
-
     public String MailMakeCode() {
 
         final int codeLength = 8;
@@ -95,7 +94,6 @@ public class MailServiceImpl implements MailService {
     public ResponseEntity<BasicResponse> compareEmailCode(final String code, final String email) {
 
         final Optional<Mail> Opt = mailDao.findMailByEmailAndCode(email, code);
-        ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
         if (Opt.isPresent()) { // 인증코드가 일치
@@ -151,18 +149,17 @@ public class MailServiceImpl implements MailService {
             final String AuthSubject = "유저 정보 찾기 서비스";
             final SimpleMailMessage message = new SimpleMailMessage();
 
-            //이메일 보내기
+            // 이메일 보내기
             message.setFrom(from);
             message.setTo(request.getToEmail());
             message.setSubject(AuthSubject + " : " + request.getSubject());
             message.setText("고객님이 찾고자 하는 정보는  [ " + request.getText() + " ] 입니다.");
             mailSender.send(message);
-        
-     
+
             result.status = true;
             result.data = "이메일 보내기 성공";
             response = new ResponseEntity<>(result, HttpStatus.OK);
-        
+
         } catch (final Exception e) {
             e.printStackTrace();
             result.status = false;
@@ -173,6 +170,5 @@ public class MailServiceImpl implements MailService {
 
         return response;
     }
-
 
 }

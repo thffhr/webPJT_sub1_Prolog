@@ -156,11 +156,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<BasicResponse> nicknamecheck(final String uid) throws Exception {
-        final Optional<User> userUidOpt = userDao.findUserByUid(uid);
+    public ResponseEntity<BasicResponse> nicknamecheck(final String nickname) throws Exception {
+        final Optional<User> userNicknameOpt = userDao.findUserByNickname(nickname);
         final BasicResponse result = new BasicResponse();
 
-        if (userUidOpt.isPresent()) {
+        if (userNicknameOpt.isPresent()) {
             result.status = false;
             result.data = "이미 존재하는 닉네임입니다.";
         } else {
@@ -269,6 +269,21 @@ public class UserServiceImpl implements UserService {
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public ResponseEntity<BasicResponse> idcheck(String uid) throws Exception {
+        final Optional<User> userUidOpt = userDao.findUserByUid(uid);
+        final BasicResponse result = new BasicResponse();
+
+        if (userUidOpt.isPresent()) {
+            result.status = false;
+            result.data = "이미 존재하는 아이디입니다.";
+        } else {
+            result.status = true;
+            result.data = "사용 가능한 아이디입니다.";
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

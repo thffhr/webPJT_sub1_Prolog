@@ -6,7 +6,6 @@ import com.web.blog.model.BasicResponse;
 import com.web.blog.model.portfolio.PTagCreateRequest;
 import com.web.blog.model.portfolio.PortfolioRequest;
 import com.web.blog.model.portfolio.PortfolioUpdateRequest;
-import com.web.blog.model.tag.TagCreateRequest;
 import com.web.blog.service.portfolio.PortfolioService;
 import com.web.blog.service.tag.TagService;
 
@@ -40,11 +39,11 @@ public class PortfolioController {
         return portfolioService.readAll(uid);
     }
 
-    // @GetMapping("/portfolio/{pid}")
-    // @ApiOperation(value = "특정 포트폴리오의 값을 보여줌")
-    // public ResponseEntity<BasicResponse> readOne(@PathVariable("pid") int pid) {
-    // return portfolioService.readOne(pid);
-    // }
+    @GetMapping("/portfolio/{pid}")
+    @ApiOperation(value = "특정 포트폴리오의 값을 보여줌")
+    public ResponseEntity<BasicResponse> readOne(@PathVariable("pid") int pid) {
+        return portfolioService.readOne(pid);
+    }
 
     @GetMapping("/portfolio/Tags")
     @ApiOperation(value = "유저의 프로젝트가 가지고 있는 태그 모두 출력")
@@ -61,8 +60,8 @@ public class PortfolioController {
 
     @PutMapping("/portfolio")
     @ApiOperation(value = "포트폴리오 수정하기")
-    public ResponseEntity<BasicResponse> updatePortfolio(@PathVariable("pid") int pid,
-            @Valid @RequestBody PortfolioUpdateRequest updateRequest) throws Exception {
+    public ResponseEntity<BasicResponse> updatePortfolio(@Valid @RequestBody PortfolioUpdateRequest updateRequest)
+            throws Exception {
 
         return portfolioService.updatePortfolio(updateRequest);
     }
@@ -73,11 +72,25 @@ public class PortfolioController {
         return portfolioService.deletePortfolio(pid);
     }
 
-    @PostMapping("/portfolio/tag")
-    @ApiOperation(value = "p_tag 테이블에 새로운 포트폴리오 태그 추가")
-    public ResponseEntity<BasicResponse> createPortfolio(@Valid @RequestBody PTagCreateRequest request)
-            throws Exception {
+    // @PostMapping("/portfolio/tag")
+    // @ApiOperation(value = "p_tag 테이블에 새로운 포트폴리오 태그 추가")
+    // public ResponseEntity<BasicResponse> createPortfolio(@Valid @RequestBody
+    // PTagCreateRequest request)
+    // throws Exception {
 
-        return portfolioService.createPTag(request);
+    // return portfolioService.createPTag(request);
+    // }
+
+    @PostMapping("/portfolio/tag")
+    @ApiOperation(value = "포트폴리오에 태그 추가")
+    public ResponseEntity<BasicResponse> createPortfolioTag(@RequestParam(required = true) int pid,
+            @RequestParam(required = true) String tag) {
+        return portfolioService.createPTag(pid, tag);
+    }
+
+    @DeleteMapping("/tag")
+    @ApiOperation(value = "포트폴리오에 태그 연결해제")
+    public ResponseEntity<BasicResponse> deletePtag(@RequestBody PTagCreateRequest request) {
+        return portfolioService.deletePtag(request);
     }
 }

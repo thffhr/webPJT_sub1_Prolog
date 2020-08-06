@@ -25,9 +25,12 @@ public interface PortfolioService {
     // 포트폴리오 삭제
     ResponseEntity<BasicResponse> deletePortfolio(int pid);
 
-    // // 포트폴리오 하나 리턴
-     ResponseEntity<BasicResponse> readOne(int pid);
+    // 포트폴리오 하나 리턴
+    ResponseEntity<BasicResponse> readOne(int pid);
 
-    // 포트폴리오 태그 생성
-    ResponseEntity<BasicResponse> createPTag(final PTagCreateRequest request) throws Exception;
+    // 포트폴리오 태그 생성, 연결
+    ResponseEntity<BasicResponse> createPTag(int pid, String tag);
+
+    // 포트폴리오 태그 연결해제
+    ResponseEntity<BasicResponse> deletePtag(PTagCreateRequest request);
 }
