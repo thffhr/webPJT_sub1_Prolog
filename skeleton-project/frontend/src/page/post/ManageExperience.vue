@@ -85,7 +85,7 @@
                 <span class="txt_tag">
                   <span>#</span>
                   <span>{{experienceTag.tagName}}</span>
-                  <b-img @click="deleteTag(experienceTag, experience.exid)" style="width:18px; height:18px; cursor:pointer"  v-bind:src="require(`@/assets/img/icons8-close-window-50.png`)">
+                  <b-img @click="deleteTag(experience.tags, experienceTag, experience.exid)" style="width:18px; height:18px; cursor:pointer"  v-bind:src="require(`@/assets/img/icons8-close-window-50.png`)">
                     <span>삭제</span>
                   </b-img>
                 </span>
@@ -213,6 +213,13 @@ export default {
    
    }
    ,
+
+   computed: {
+    uidState(tag) {
+      return this.uid.length > 0 ? true : false;
+    },
+  
+  },
   created() {
     //alert(this.$SERVER_URL + `/portfolio/all`);
     if (!constants.IS_LOGED_IN) {
@@ -440,12 +447,14 @@ export default {
       });
     },
 
-    deleteTag: function(tag,exid){
+    deleteTag: function(tags,tag,exid){
           axios
-      .delete(this.$SERVER_URL + `/experience/tag`, {exid:exid, tid:tag.tid})
+      .delete(this.$SERVER_URL + `/experience/${tag.tid}/${exid}`)
       .then((response) => {
+
         alert("삭제성공");
-          
+        tags.splice(tags.indexOf(tag.tid), 1)
+        //this.$delete( tags, tag.tid);
       })
       .catch((error) => {
         console.log(error);

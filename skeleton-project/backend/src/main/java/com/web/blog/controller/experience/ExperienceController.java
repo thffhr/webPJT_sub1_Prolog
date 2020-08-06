@@ -68,10 +68,10 @@ public class ExperienceController {
         return experienceService.createETag(request);
     }
 
-    @DeleteMapping("/experience/tag")
+    @DeleteMapping("/experience/{tid}/{exid}")
     @ApiOperation(value = "유저의 경험 삭제")
-    public ResponseEntity<BasicResponse> deleteTagFromEx(@Valid @RequestBody ETagDeleteRequest request){
-        return experienceService.deleteTagFromEx(request);
+    public ResponseEntity<BasicResponse> deleteTagFromEx(@PathVariable("tid") final int tid, @PathVariable("exid") final int exid){
+        return experienceService.deleteTagFromEx(tid,exid);
     }
 
     

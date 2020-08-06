@@ -24,6 +24,6 @@ public interface ExperienceService {
 
     ResponseEntity<BasicResponse> createETag(ETagCreateRequest request) throws Exception;
 
-    ResponseEntity<BasicResponse> deleteTagFromEx(ETagDeleteRequest request);
+    ResponseEntity<BasicResponse> deleteTagFromEx(int tid, int exid);
 
 }
