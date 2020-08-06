@@ -80,11 +80,12 @@
               <!-- 태그 -->
               <div class="editor_tag"  v-if="experience.clicked" >
 
+              <!-- exid도잇어야함 -->
               <div v-for="experienceTag in experience.tags" :key="experienceTag.tid">
                 <span class="txt_tag">
                   <span>#</span>
                   <span>{{experienceTag.tagName}}</span>
-                  <b-img @click="deleteTag(experienceTag)" style="width:18px; height:18px"  v-bind:src="require(`@/assets/img/icons8-close-window-50.png`)">
+                  <b-img @click="deleteTag(experienceTag, experience.exid)" style="width:18px; height:18px; cursor:pointer"  v-bind:src="require(`@/assets/img/icons8-close-window-50.png`)">
                     <span>삭제</span>
                   </b-img>
                 </span>
@@ -439,15 +440,17 @@ export default {
       });
     },
 
-    deleteTag: function(tag){
+    deleteTag: function(tag,exid){
           axios
-      .put(this.$SERVER_URL + `/experience`, {})
+      .delete(this.$SERVER_URL + `/experience/tag`, {exid:exid, tid:tag.tid})
       .then((response) => {
-        alert("성공");
+        alert("삭제성공");
           
       })
       .catch((error) => {
-        console.log(error); 
+        console.log(error);
+        alert(tag.tid + " - " + exid);
+        alert("삭제실패");
       });
     }
 
