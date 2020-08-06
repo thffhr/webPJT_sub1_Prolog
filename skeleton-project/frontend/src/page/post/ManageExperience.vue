@@ -22,7 +22,7 @@
 
       <!-- 경험목록 -->
       <div class="row">
-        <div v-for="(experience,exid) in experiences" :key="experience.exid">
+        <div v-for="(experience) in experiences" :key="experience.exid">
         <div v-if="showProject(experience)">
           <div v-bind:style = "mystyle" v-on:mouseover = "changebgcolor" v-on:mouseout = "originalcolor" class="img-circle">
             <div class="content">
