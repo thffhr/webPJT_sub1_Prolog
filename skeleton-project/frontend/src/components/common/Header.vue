@@ -93,9 +93,9 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("uid");
-      localStorage.removeItem("password");
+      localStorage.removeItem("nickname");
       localStorage.removeItem("email");
-      localStorage.removeItem("createDate");
+      localStorage.removeItem("password");
       constants.IS_LOGED_IN = false;
       this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
     },
