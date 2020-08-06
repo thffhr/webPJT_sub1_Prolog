@@ -17,7 +17,8 @@ Vue.use(Carousel3d);
 // 서버 주소 전역 변수
 // EC - "/api"
 // 개발 - "http://localhost:8080/api" 
-Vue.prototype.$SERVER_URL =  "http://localhost:8080/api";
+//Vue.prototype.$SERVER_URL =  "http://localhost:8080/api";
+Vue.prototype.$SERVER_URL =  "/api";
 
 
 
