@@ -90,9 +90,9 @@ export default {
             //   console.log("response.data.object")
             // document.getElementById("closeBtn").click();
             localStorage.setItem("uid", response.data.object.uid);
-            localStorage.setItem("password", response.data.object.password);
+            localStorage.setItem("nickname", response.data.object.nickname);
             localStorage.setItem("email", response.data.object.email);
-            localStorage.setItem("createDate", response.data.object.createDate);
+            localStorage.setItem("password", response.data.object.password);
             constants.IS_LOGED_IN = true;
             alert("로그인 되었습니다!");
             // this.email = "";
