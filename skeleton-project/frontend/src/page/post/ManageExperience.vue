@@ -1,80 +1,176 @@
 <template>
-    <div class="container marketing">
-
-      <!-- Three columns of text below the carousel -->
-      <!-- 모든 태그들 -->
-      <div class="row box-table">
-        <div class="col-lg-2"><!-- #없는거 빼기 -->
-            <div>
-                #No태그 여부 <b-img  @click="exeptNoTagClickE(isIncludeNoTag)" :pressed.sync="NoTagImgSrcT" style="cursor:pointer" v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)" width="20px"></b-img>
-            </div>
-        </div><!-- /.col-lg-2 -->
-        <div class="col-lg-2"  v-for="tag in tags" :key="tag.tid">
-            
-            <div>
-                #{{tag.tag_Name}}  <b-img @click="filtering(tag)" :pressed.sync="tag.state"  variant="primary" style="cursor:pointer" v-bind:src="require(`@/assets/img/${tag.imgsrc}`)" width="20px"></b-img>
-            </div>
-              
-        </div><!-- /.col-lg-2 -->
-      </div><!-- /.row -->
-
-
-
-      <!-- 경험목록 -->
-      <div class="row">
-        <div v-for="(experience) in experiences" :key="experience.exid">
-        <div v-if="showProject(experience)">
-          <div v-bind:style = "mystyle" v-on:mouseover = "changebgcolor" v-on:mouseout = "originalcolor" class="img-circle">
-            <div class="content">
-              <ul>
-                <div>
-                  <li v-for="experienceTag in experience.tags" :key="experienceTag.tid" style="display: inline-block">
-                       #{{experienceTag.tagName}}
-          
-                   </li>
-                   
-                </div>
-              </ul>
-            </div>
-          </div>
-          <h2>{{experience.title}}</h2>
-          <small>{{experience.startdate}} ~ {{experience.enddate}}</small>
-          <div class="txt_line"><p>{{experience.contents}}</p></div>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        </div>
-      </div><!-- /.row -->
-
-      <!-- (+) 버튼 -->
-      <div class="row">
-        <div class="col-lg-12">
-            <div>
-               <b-img v-on:click="addExp" :src="require(`@/assets/img/icons8-plus-50.png`)" width="60px" v-bind:style = "buttonStyle" v-on:mouseover = "change_button" v-on:mouseout = "origin_button"></b-img>
-            </div>
-        </div><!-- /.col-lg-4 -->
-      </div><!-- /.row -->
-
-      <!-- START THE FEATURETTES -->
-
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-7">
-          <h2 class="featurette-heading"> 경험을 적어보세요~! <span class="text-muted">반드시 도움이 될거에요.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" src="https://t1.daumcdn.net/cfile/tistory/21151B4E53E83DAF2C" alt="Generic placeholder image">
+  <div class="container marketing">
+    <!-- Three columns of text below the carousel -->
+    <!-- 모든 태그들 -->
+    <div class="row box-table">
+      <div class="col-lg-2">
+        <!-- #없는거 빼기 -->
+        <div>
+          #No태그 여부
+          <b-img
+            @click="exeptNoTagClickE(isIncludeNoTag)"
+            :pressed.sync="NoTagImgSrcT"
+            style="cursor:pointer"
+            v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)"
+            width="20px"
+          ></b-img>
         </div>
       </div>
+      <!-- /.col-lg-2 -->
+      <div class="col-lg-2" v-for="tag in tags" :key="tag.tid">
+        <div v-if="showTag(tag)">
+          #{{tag.tag_Name}}
+          <b-img
+            @click="filtering(tag)"
+            :pressed.sync="tag.state"
+            variant="primary"
+            style="cursor:pointer"
+            v-bind:src="require(`@/assets/img/${tag.imgsrc}`)"
+            width="20px"
+          ></b-img>
+        </div>
+      </div>
+      <!-- /.col-lg-2 -->
+    </div>
+    <!-- /.row -->
 
-      <hr class="featurette-divider">
+    <!-- 경험목록 -->
+    <div v-for="(experience,exid) in experiences" :key="experience.exid">
+      <div class="row">
+        <div
+          class="col-custom row-custom"
+          style="display:inline-flex"
+          v-if="showProject(experience)"
+        >
+          <!-- 동그라미 -->
+          <div v-bind:style="mystyle" class="img-circle col-md-2">
+            <div class="content">
+              <div
+                v-for="experienceTag in experience.tags"
+                :key="experienceTag.tid"
+              >#{{experienceTag.tagName}}</div>
+            </div>
+          </div>
 
-    
-      
-      <hr class="featurette-divider">
+          <div class="col-md-9 col-cotents">
+            <!-- 제목 -->
+            <p v-if="experience.clicked">
+              <input
+                v-model="experience.title"
+                @blur="experience.clicked = true; $emit('update')"
+                @keyup.enter="$emit('update')"
+              />
+            </p>
+            <div v-else>
+              <h2>{{experience.title}}</h2>
+            </div>
+
+            <!-- 날짜 -->
+            <p v-if="experience.clicked">
+              <input
+                class="txt_line"
+                placeholder="2020-00-00"
+                v-model="experience.startdate"
+                @blur="experience.clicked = true; $emit('update')"
+                @keyup.enter="$emit('update')"
+              />
+              ~
+              <input
+                class="txt_line"
+                placeholder="2020-00-00"
+                v-model="experience.enddate"
+                @blur="experience.clicked = true; $emit('update')"
+                @keyup.enter="$emit('update')"
+              />
+            </p>
+            <div class="date-align" v-else>
+              <small>{{experience.startdate}} ~ {{experience.enddate}}</small>
+            </div>
+            <!-- 내용 -->
+            <p v-if="experience.clicked">
+              <textarea
+                style="width:100%"
+                value="기본내용"
+                placeholder="Contents"
+                v-model="experience.contents"
+                @blur="experience.clicked = true; $emit('update')"
+                @keyup.enter="$emit('update')"
+              ></textarea>
+            </p>
+            <div v-else>
+              <p class="txt_line">{{experience.contents}}</p>
+            </div>
+          </div>
+
+          <!--버튼-->
+          <div class="col-md-1">
+            <p class="icon-right" style="margin-bottom: 0;">
+              <b-img
+                @click="clickeEdit(experience)"
+                :pressed.sync="experience.clicked"
+                style="cursor:pointer"
+                v-bind:src="require(`@/assets/img/${experience.imgsrc}`)"
+                width="15px"
+              ></b-img>
+              <b-img
+                @click="deleteE(exid, experience)"
+                style="cursor:pointer"
+                v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
+                width="15px"
+              ></b-img>
+            </p>
+          </div>
+        </div>
+        <!-- /.col-lg-4 -->
+      </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- (+) 버튼 -->
+    <div class="row">
+      <div class="col-button-custom">
+        <div>
+          <b-img
+            v-on:click="addExp"
+            :src="require(`@/assets/img/icons8-plus-50.png`)"
+            width="60px"
+            v-bind:style="buttonStyle"
+            v-on:mouseover="change_button"
+            v-on:mouseout="origin_button"
+          ></b-img>
+        </div>
+      </div>
+      <!-- /.col-lg-4 -->
+    </div>
+    <!-- /.row -->
+
+    <!-- START THE FEATURETTES -->
+
+    <hr class="featurette-divider" />
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">
+          경험을 적어보세요~!
+          <span class="text-muted">반드시 도움이 될거에요.</span>
+        </h2>
+        <p
+          class="lead"
+        >Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+      </div>
+      <div class="col-md-5">
+        <img
+          class="featurette-image img-responsive center-block"
+          src="https://t1.daumcdn.net/cfile/tistory/21151B4E53E83DAF2C"
+          alt="Generic placeholder image"
+        />
+      </div>
     </div>
 
+    <hr class="featurette-divider" />
+
+    <hr class="featurette-divider" />
+  </div>
 </template>
 
 <script>
@@ -88,30 +184,29 @@ export default {
   data: () => {
     return {
       tags: [],
-      uid : localStorage["uid"],
+      uid: localStorage["uid"],
       experiences: [],
       noTagExperiences: [],
       selectedTags: [],
-      isIncludeNoTag  : true,
+      isIncludeNoTag: true,
       NoTagImgSrcT: "icons8-doorbell-50.png",
-      ex:[],
+      ex: [],
       experienceTags: {
         "": [],
       },
       mystyle: {
-        width :"",
-        height : "",
-        opacity: ""
+        width: "",
+        height: "",
+        opacity: "",
       },
-      buttonStyle:{
-        width :"",
-        opacity: ""
-      }
+      buttonStyle: {
+        width: "",
+        opacity: "",
+      },
     };
   },
-  beforeCreate () {
-  
-   axios
+  beforeCreate() {
+    axios
       .get(this.$SERVER_URL + `/experience/Tags`, {
         params: {
           uid: localStorage["uid"],
@@ -119,217 +214,319 @@ export default {
       })
       .then((response) => {
         // alert(this.$SERVER_URL + `/experience/Tags`);
-       console.log(response.data.object);
-       //
-       this.tags = response.data.object;
-        Array.prototype.forEach.call(this.tags, t =>
-        Object.assign(t, {imgsrc:"icons8-circled-x-16.png"}),
-        )
+        console.log(response.data.object);
+        //
+        this.tags = response.data.object;
+        Array.prototype.forEach.call(this.tags, (t) =>
+          Object.assign(t, { imgsrc: "icons8-circled-x-16.png" })
+        );
 
-        Array.prototype.forEach.call(this.tags, tag => 
+        Array.prototype.forEach.call(this.tags, (tag) =>
           this.selectedTags.push(tag.tid)
-        )
-      
-        
-       console.log(this.tags);
-       
+        );
+
+        console.log(this.tags);
       })
       .catch((error) => {
         console.log(error);
-        //alert("실패");
+        alert("실패");
       });
+  },
+  created() {
+    //alert(this.$SERVER_URL + `/portfolio/all`);
+    if (!constants.IS_LOGED_IN) {
+      this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
+    }
 
-      axios
+    axios
       .get(this.$SERVER_URL + `/experience/all`, {
         params: {
           uid: localStorage["uid"],
         },
       })
       .then((response) => {
-        
         console.log(response);
         console.log(response.data.object);
         this.experiences = response.data.object;
         console.log(response.data.object[0].portfolioTags);
 
-        //
-        this.experiences = response.data.object;
-        
+        Array.prototype.forEach.call(this.experiences, (t) =>
+          Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
+        );
       })
       .catch((error) => {
         console.log(error);
+        this.experiences = [];
       });
-   }
-   ,
-  created() {
-    //alert(this.$SERVER_URL + `/portfolio/all`);
-    if (!constants.IS_LOGED_IN) {
-      this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
-    }
-    
   },
-   methods: {
-    changebgcolor: function() {
+  methods: {
+    editTodo: function (todo) {
+      this.editedTodo = todo;
+    },
+    changebgcolor: function () {
       this.mystyle.opacity = "0.7";
     },
-    originalcolor: function() {
+    originalcolor: function () {
       this.mystyle.opacity = "0.6";
     },
-    change_button: function(){
+    change_button: function () {
       this.buttonStyle.opacity = "1";
       this.buttonStyle.width = "61px";
     },
-    origin_button: function(){
+    origin_button: function () {
       this.buttonStyle.opacity = "0.6";
-        this.buttonStyle.width = "60px";
+      this.buttonStyle.width = "60px";
     },
 
-    exeptNoTagClickE: function(isIncludeNoTag){
+    exeptNoTagClickE: function (isIncludeNoTag) {
       //alert("바뀔 값" + isIncludeNoTag);
-       this.isIncludeNoTag = !this.isIncludeNoTag;
-
+      this.isIncludeNoTag = !this.isIncludeNoTag;
     },
 
+    addOrDeleteTagClickE: function (taginput) {
+      if (!taginput.state) {
+        //불포함 상태
+        taginput.imgsrc = "icons8-joyent-64.png";
+      } else {
+        //포함 상태
+        taginput.imgsrc = "icons8-circled-x-16.png";
+      }
+      taginput.state = !taginput.state;
+      console.log("값들" + this.isIncluedTag);
+      console.log(
+        taginput.tid + " - " + taginput.state + " - " + taginput.imgsrc
+      );
+    },
 
-    addOrDeleteTagClickE: function(taginput){
-        //alert("선택 " +taginput.tid);
-          if(!taginput.state){//불포함 상태
-            taginput.imgsrc = "icons8-joyent-64.png";
-           // this.tags.splice(taginput.tid,1);
-          }
-          else {//포함 상태
-            taginput.imgsrc = "icons8-circled-x-16.png";
-            //this.tags.push(taginput);
-          }
-          taginput.state = !taginput.state;
-          //alert("값들" + this.isIncluedTag)
-          console.log("값들" + this.isIncluedTag);
-          console.log(taginput.tid +" - " +taginput.state + " - " + taginput.imgsrc);
+    showTag(tag) {
+      if (tag.tag_Name == null) {
+        return false;
+      } else {
+        return true;
+      }
     },
 
     showProject(experience) {
-      var selectedTags = this.selectedTags
-      // console.log(selectedTags)
-      var cnt = 0
-      experience.tags.forEach(function(tag) {
+      var selectedTags = this.selectedTags;
+      var cnt = 0;
+      experience.tags.forEach(function (tag) {
         if (selectedTags.includes(tag.tid)) {
-          cnt ++;
-        };
+          cnt++;
+        }
         return cnt;
       });
-  
-  
-      if (cnt>0 || (experience.tags.length==0 && this.isIncludeNoTag)) {
-        // console.log('yes!')
-        return true
+
+      if (cnt > 0 || (experience.tags.length == 0 && this.isIncludeNoTag)) {
+        return true;
       } else {
-        // console.log("no!")
-        return false
+        return false;
       }
-  
     },
 
-  
-    
+    getTag() {
+      axios
+        .get(this.$SERVER_URL + `/experience/Tags`, {
+          params: {
+            uid: localStorage["uid"],
+          },
+        })
+        .then((response) => {
+          // alert(this.$SERVER_URL + `/experience/Tags`);
+          console.log(response.data.object);
+          //
+          this.tags = response.data.object;
+          Array.prototype.forEach.call(this.tags, (t) =>
+            Object.assign(t, { imgsrc: "icons8-circled-x-16.png" })
+          );
+
+          Array.prototype.forEach.call(this.tags, (tag) =>
+            this.selectedTags.push(tag.tid)
+          );
+
+          console.log(this.tags);
+        })
+        .catch((error) => {
+          console.log(error);
+          //alert("실패");
+        });
+    },
+
     filtering(tag) {
-       
       if (this.selectedTags.includes(tag.tid)) {
-        this.selectedTags.splice(this.selectedTags.indexOf(tag.tid), 1)
-         tag.imgsrc = "icons8-joyent-64.png";
+        this.selectedTags.splice(this.selectedTags.indexOf(tag.tid), 1);
+        tag.imgsrc = "icons8-joyent-64.png";
       } else {
-        this.selectedTags.push(tag.tid)
+        this.selectedTags.push(tag.tid);
         tag.imgsrc = "icons8-circled-x-16.png";
       }
       tag.state = !tag.state;
-     
     },
 
-
-    addExp: function(){      
+    addExp: function () {
       var date = new Date();
       var year = date.getFullYear();
-      var month = date.getMonth()+1;
+      var month = date.getMonth() + 1;
       var day = date.getDate();
 
-      if(day<10) day = "0"+day;
-      if(month<10) month = "0"+month;
-       
-      var startdate = year+"-"+month+"-"+day;
-      
+      if (day < 10) day = "0" + day;
+      if (month < 10) month = "0" + month;
+
+      var startdate = year + "-" + month + "-" + day;
+
       //alert(this.uid);
-        axios
-      .post(this.$SERVER_URL + `/experience`, {
-        title:"제목",uid:this.uid, 
-      })
-      .then((response) => {
-        //alert("성공");
-        //alert(response.data.object.title);
-        response.data.object.startdate = startdate;
-        response.data.object.enddate = startdate;
-        this.experiences.push(response.data.object);
-          
-      })
-      .catch((error) => {
-        //alert("실패");
-        console.log(error); 
-      });
+      axios
+        .post(this.$SERVER_URL + `/experience`, {
+          title: "제목",
+          uid: this.uid,
+        })
+        .then((response) => {
+          response.data.object.startdate = startdate;
+          response.data.object.enddate = startdate;
+          response.data.object.imgsrc = "icons8-pencil-24.png";
+
+          if (response.data.status == false) {
+            experiences = response.data.object;
+          } else {
+            response.data.object.tags = [];
+            this.experiences.push(response.data.object);
+          }
+        })
+        .catch((error) => {
+          //alert("실패");
+          console.log(error);
+        });
     },
 
+    deleteE: function (exid, experience) {
+      axios
+        .delete(this.$SERVER_URL + `/experience/${experience.exid}`)
+        .then((response) => {
+          this.$delete(this.experiences, exid);
+          this.getTag();
+          //alert("삭제완료 " + experience.exid);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    clickeEdit: function (experience) {
+      experience.clicked = !experience.clicked;
+      //저장하기
+      if (!experience.clicked) {
+        this.editE(experience);
+        experience.imgsrc = "icons8-pencil-24.png";
+      }
+      //수정하기
+      else {
+        experience.imgsrc = "icons8-save-close-64.png";
+      }
+      //alert(experience.clicked);
+    },
+
+    editE: function (experience) {
+      axios
+        .put(this.$SERVER_URL + `/experience`, {
+          id: experience.exid,
+          title: experience.title,
+          uid: this.uid,
+          contents: experience.contents,
+          startdate: experience.startdate,
+          enddate: experience.enddate,
+        })
+        .then((response) => {
+          alert("성공");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>
 
 <style>
-
-.box-table{
-   border: 1px solid #888888;
-   box-shadow: 0 0 2px rgb(111, 111, 111);
+.box-table {
+  border: 1px solid #888888;
+  box-shadow: 0 0 2px rgb(111, 111, 111);
   margin: 100px;
   padding: 2%;
   background: #eeeeee;
   opacity: 0.8;
-
 }
 .img-circle {
-    position: relative;
-    background:#000000;
-    
-    border-radius: 50%;
-    height: 200px;
-    width: 200px;
-    opacity: 0.6;
-        background-size: cover;
-      margin-left: auto;
+  position: relative;
+  background: #000000;
+
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+  opacity: 0.6;
+  background-size: cover;
+  margin-left: auto;
 
   margin-right: auto;
-      
-    border: 3px solid #222222;
-    box-shadow: 0 0 8px rgb(111, 111, 111);
+
+  border: 3px solid #222222;
+  box-shadow: 0 0 8px rgb(111, 111, 111);
 }
 
-.img-circle .content{
-      width: 65%;
-      height: 65%;
-         position: relative;
-         transform: translate(25%, 30%);
-         font-size:15px;
-         color: white;
-         margin-top: auto;
-         margin-bottom: auto;
-    }
+.img-circle .content {
+  width: 65%;
+  height: 65%;
+  text-align: center;
+  position: relative;
+  transform: translate(25%, 30%);
+  font-size: 15px;
+  color: white;
+  margin-top: auto;
+  margin-bottom: auto;
+}
 
-    .txt_line p{
-        overflow: hidden;
-       text-overflow: ellipsis;
-      width: 250px;
+.txt_line p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px;
 
-      white-space: normal;
-      line-height: 1.2;
-      max-height: 2.4em;
+  white-space: normal;
+  line-height: 1.2;
+  max-height: 2.4em;
 
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-    }
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
 
+.icon-right {
+  text-align: end;
+  margin-right: 10%;
+}
+
+.row-custom {
+  margin-top: 4%;
+  margin-bottom: 4%;
+}
+
+.col-custom {
+  width: 100%;
+  margin-left: 8%;
+  margin-right: 8%;
+}
+
+.col-cotents {
+  text-align: left;
+}
+
+.col-cotents h2 {
+  text-align: center;
+}
+
+.date-align {
+  text-align: right;
+}
+
+.col-button-custom {
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>

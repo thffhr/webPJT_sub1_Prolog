@@ -27,7 +27,10 @@ public interface UserService {
    ResponseEntity<BasicResponse> emailcheck(String email) throws Exception;
 
    // 닉네임 중복 체크
-   ResponseEntity<BasicResponse> nicknamecheck(String uid) throws Exception;
+   ResponseEntity<BasicResponse> nicknamecheck(String nickname) throws Exception;
+
+   // 아이디 중복 체크
+   ResponseEntity<BasicResponse> idcheck(String uid) throws Exception;
 
    // 이메일로 유저정보찾기)
    ResponseEntity<BasicResponse> findUserByEmail(String email) throws Exception;

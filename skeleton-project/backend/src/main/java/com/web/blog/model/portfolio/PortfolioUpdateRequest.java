@@ -3,18 +3,15 @@ package com.web.blog.model.portfolio;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@NoArgsConstructor 
+@NoArgsConstructor
 public class PortfolioUpdateRequest {
 
     @Id
@@ -45,16 +42,9 @@ public class PortfolioUpdateRequest {
     @Column(name = "contents")
     String contents;
 
-    
-    public Portfolio toEntity(){
-        return Portfolio.builder()
-        .pid(pid)
-        .uid(uid)
-        .title(title)
-        .startDate(startDate)
-        .endDate(endDate)
-        .contents(contents)
-        .build();
+    public Portfolio toEntity() {
+        return Portfolio.builder().pid(pid).uid(uid).title(title).startDate(startDate).endDate(endDate)
+                .contents(contents).build();
     }
 
 }

@@ -6,6 +6,7 @@ import com.web.blog.dao.experience.ExperienceDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.experience.Experience;
 import com.web.blog.model.experience.ExperienceCreateRequest;
+import com.web.blog.model.experience.ExperienceCreateResponse;
 import com.web.blog.model.experience.ExperienceFindTagResponse;
 import com.web.blog.model.experience.ExperienceUpdateRequest;
 import com.web.blog.model.join.ExperienceTag;
@@ -95,7 +96,7 @@ public class ExperienceServiceImpl implements ExperienceService {
                 // System.out.println(et.getTag());
             }
             resList.add(ExperienceFindTagResponse.builder().uid(e.getUid()).exid(e.getExid()).title(e.getTitle())
-                    .startdate(e.getStartdate()).enddate(e.getEnddate()).contents(e.getContents()).tags(tags).build());
+                    .startdate(e.getStartdate()).enddate(e.getEnddate()).contents(e.getContents()).tags(tags).clicked(false).build());
         }
 
         if (!list.isEmpty()) {
