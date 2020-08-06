@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 style="text-align: center;">포트폴리오 관리 페이지</h1>
-    <h2 style="text-align: center;">태그들 보여줘야해</h2> 
+    <br>
+    <br>
 
 
     <!-- <ul>
@@ -9,28 +9,32 @@
     </ul> -->
 
     <!-- 여기부터 -->
-    <div class="tagButtons">
+    <div class="tagButtons box-table2">
       <b-button-group size="sm">
-        <button v-if="isIncludeNoTag" @click="showNotagProject">태그없는 프로젝트 숨기기</button>
-        <button v-else @click="showNotagProject">태그없는 프로젝트 보여주기</button>
+        <div class="col-lg-12 ">
         <b-button
+          pill
           v-for="(tag, idx) in tags"
           :key="idx"
           :pressed.sync="tag.state"
           @click="filtering(tag)"
-          variant="primary"
+          variant="secondary"
           style="display: inline-block; text-color: black;"
           class="m-1"
         >
           #{{ tag.tag_Name }}
         </b-button>
+        </div>
       </b-button-group>
     </div>
+    <div class="mt-3" style="text-align: right; margin-right: 10rem;">
+      <span v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer">태그없는 프로젝트 숨기기</span>
+      <span v-else @click="showNotagProject" style="cursor: pointer">태그없는 프로젝트 보여주기</span>
+    </div>
     <!-- 여기까지 -->
-    <!-- <button @click="allTagOnOff">태그 전체 켜기/끄기</button> -->
+    <button @click="allTagOnOff">태그 전체 켜기/끄기</button>
 
     <hr />
-    <h2 style="text-align: center;">내 포트폴리오</h2>
 
     <!-- <div
       v-for="portfolio in portfolios"
@@ -64,17 +68,19 @@
 
     <!-- 위랑 동일 / 카드 형태만 다름 -->
     <b-container>
-      <b-row align-v="start" align-h="center">
+      <b-row align-v="start" class="ml-5">
         <div
           v-for="portfolio in portfolios"
           :key="portfolio.pid"
           style="display: inline-block;"
           class="columns is-multiline"
         >
-
-          <b-card v-if="showProject(portfolio)" class="column is-one-third m-1" style="background: #ffcabd;">
+          <b-card v-if="showProject(portfolio)" style="background: lightgrey; width:20rem; height:15rem;" class="m-2">
             <div>
-              <b-img align-h="end"  @click="deleteP(portfolio)" style="cursor:pointer;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
+              <!-- 삭제 img -->
+              <div class="img-custom">
+              <b-img align-h="end"  @click="deleteP(portfolio)" style="cursor:pointer; test-align: right;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
+              </div>
               <h2>{{ portfolio.title }}</h2>
               <small>{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
               <p
@@ -90,15 +96,16 @@
                   <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
                 </h4>
               </div>
+              <div style="text-align: end;"><b-button size="sm" variant="outline-dark">download</b-button></div>
             </div>
-          </b-card>        
-          <hr>
+          </b-card>      
+          <!-- <hr> -->
 
         </div>
       </b-row>
 
       <!-- (+) 버튼 -->
-      <div class="row">
+      <div class="row mt-3 mb-3">
         <div class="col-button-custom">
             <div>
               <b-img v-on:click="addProject" :src="require(`@/assets/img/icons8-plus-50.png`)" width="60px" v-bind:style = "buttonStyle" v-on:mouseover = "change_button" v-on:mouseout = "origin_button"></b-img>
@@ -330,5 +337,17 @@ export default {
 .col-button-custom{
   margin-left: auto;
   margin-right: auto;  
+}
+
+.img-custom{
+    text-align: right;
+}
+.box-table2{
+    border: 1px solid #888888;
+    box-shadow: 0 0 2px rgb(111, 111, 111);
+    margin: 1%;
+    padding: 2%;
+    background: #eeeeee;
+    opacity: 0.8
 }
 </style>

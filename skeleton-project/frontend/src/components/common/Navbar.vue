@@ -43,6 +43,7 @@ export default {
   transform: translate(-50%, 0%);
   width: 60%;
   border: 0;
+  z-index: 10;
 }
 #pageMenue {
   border-bottom-right-radius: 4px;

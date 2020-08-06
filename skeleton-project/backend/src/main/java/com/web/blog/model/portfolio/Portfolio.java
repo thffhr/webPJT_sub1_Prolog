@@ -32,10 +32,12 @@ public class Portfolio {
 
     private String title;
 
-    @Column(name = "start_date")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="start_date", insertable = false)
     private Date startDate;
 
-    @Column(name = "end_date")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="end_date", insertable = false)
     private Date endDate;
 
     @Column(name = "contents")
