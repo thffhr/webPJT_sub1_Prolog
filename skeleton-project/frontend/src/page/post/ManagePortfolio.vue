@@ -73,7 +73,9 @@
           <b-card v-if="showProject(portfolio)" style="background: #ffcabd; width:20rem; height:15rem;" class="m-2">
             <div>
               <!-- 삭제 img -->
+              <div class="img-custom">
               <b-img align-h="end"  @click="deleteP(portfolio)" style="cursor:pointer; test-align: right;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
+              </div>
               <h2>{{ portfolio.title }}</h2>
               <small>{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
               <p
@@ -329,5 +331,9 @@ export default {
 .col-button-custom{
   margin-left: auto;
   margin-right: auto;  
+}
+
+.img-custom{
+    text-align: right;
 }
 </style>
