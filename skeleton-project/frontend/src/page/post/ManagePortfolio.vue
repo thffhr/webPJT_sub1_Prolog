@@ -11,20 +11,24 @@
     <!-- 여기부터 -->
     <div class="tagButtons">
       <b-button-group size="sm">
-        <button v-if="isIncludeNoTag" @click="showNotagProject">태그없는 프로젝트 숨기기</button>
-        <button v-else @click="showNotagProject">태그없는 프로젝트 보여주기</button>
+        <div class="col-lg-12">
         <b-button
+          pill
           v-for="(tag, idx) in tags"
           :key="idx"
           :pressed.sync="tag.state"
           @click="filtering(tag)"
-          variant="primary"
+          variant="secondary"
           style="display: inline-block; text-color: black;"
-          class="m-1"
         >
           #{{ tag.tag_Name }}
         </b-button>
+        </div>
       </b-button-group>
+    </div>
+    <div class="mt-3" style="text-align: right; margin-right: 10rem;">
+      <span v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer">태그없는 프로젝트 숨기기</span>
+      <span v-else @click="showNotagProject" style="cursor: pointer">태그없는 프로젝트 보여주기</span>
     </div>
     <!-- 여기까지 -->
     <!-- <button @click="allTagOnOff">태그 전체 켜기/끄기</button> -->
@@ -63,14 +67,14 @@
 
     <!-- 위랑 동일 / 카드 형태만 다름 -->
     <b-container>
-      <b-row align-v="start" align-h="center">
+      <b-row align-v="start" class="ml-5">
         <div
           v-for="portfolio in portfolios"
           :key="portfolio.pid"
           style="display: inline-block;"
           class="columns is-multiline"
         >
-          <b-card v-if="showProject(portfolio)" style="background: #ffcabd; width:20rem; height:15rem;" class="m-2">
+          <b-card v-if="showProject(portfolio)" style="background: lightgrey; width:20rem; height:15rem;" class="m-2">
             <div>
               <!-- 삭제 img -->
               <div class="img-custom">
@@ -93,13 +97,13 @@
               </div>
             </div>
           </b-card>      
-          <hr>
+          <!-- <hr> -->
 
         </div>
       </b-row>
 
       <!-- (+) 버튼 -->
-      <div class="row">
+      <div class="row mt-3 mb-3">
         <div class="col-button-custom">
             <div>
               <b-img v-on:click="addProject" :src="require(`@/assets/img/icons8-plus-50.png`)" width="60px" v-bind:style = "buttonStyle" v-on:mouseover = "change_button" v-on:mouseout = "origin_button"></b-img>
