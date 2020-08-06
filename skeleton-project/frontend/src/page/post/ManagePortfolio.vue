@@ -9,9 +9,9 @@
     </ul> -->
 
     <!-- 여기부터 -->
-    <div class="tagButtons">
+    <div class="tagButtons box-table2">
       <b-button-group size="sm">
-        <div class="col-lg-12">
+        <div class="col-lg-12 ">
         <b-button
           pill
           v-for="(tag, idx) in tags"
@@ -20,6 +20,7 @@
           @click="filtering(tag)"
           variant="secondary"
           style="display: inline-block; text-color: black;"
+          class="m-1"
         >
           #{{ tag.tag_Name }}
         </b-button>
@@ -31,7 +32,7 @@
       <span v-else @click="showNotagProject" style="cursor: pointer">태그없는 프로젝트 보여주기</span>
     </div>
     <!-- 여기까지 -->
-    <!-- <button @click="allTagOnOff">태그 전체 켜기/끄기</button> -->
+    <button @click="allTagOnOff">태그 전체 켜기/끄기</button>
 
     <hr />
 
@@ -95,6 +96,7 @@
                   <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
                 </h4>
               </div>
+              <div style="text-align: end;"><b-button size="sm" variant="outline-dark">download</b-button></div>
             </div>
           </b-card>      
           <!-- <hr> -->
@@ -339,5 +341,13 @@ export default {
 
 .img-custom{
     text-align: right;
+}
+.box-table2{
+    border: 1px solid #888888;
+    box-shadow: 0 0 2px rgb(111, 111, 111);
+    margin: 1%;
+    padding: 2%;
+    background: #eeeeee;
+    opacity: 0.8
 }
 </style>
