@@ -13,26 +13,37 @@
         </b-col>
         <!-- <div class="w-100"></div> -->
         <b-col cols="12" lg="6">
-          <b-form-input
-            v-model="emailOrUid"
-            id="emailOrUid"
-            placeholder="이메일 혹은 아이디를 입력해주세요"
-            type="text"
-          ></b-form-input>
-          <b-form-input
-            @keyup.enter="login"
-            v-model="password"
-            type="password"
-            placeholder="영문, 숫자 혼용 8자 이상"
-          ></b-form-input>
-          <b-button class="mr-2" @click="login">로그인</b-button>
-          <router-link :to="{ name: constants.URL_TYPE.USER.JOIN }">
-            <b-button>회원가입</b-button>
-          </router-link>
-          <button
-            class="findUser text-secondary m-1"
+          <div class="custom-login-style">
+            <b-form-input
+              v-model="emailOrUid"
+              id="emailOrUid"
+              placeholder="이메일 혹은 아이디를 입력해주세요"
+              type="text"
+              style="width: 60%;"
+            ></b-form-input>
+
+            <b-form-input
+              @keyup.enter="login"
+              v-model="password"
+              type="password"
+              placeholder="영문, 숫자 혼용 8자 이상"
+              style="width: 60%;"
+            ></b-form-input>
+          </div>
+          <div style="text-align: center;" class="mt-3">
+            <b-button class="mr-2" @click="login">로그인</b-button>
+            <router-link :to="{ name: constants.URL_TYPE.USER.JOIN }">
+              <b-button>회원가입</b-button>
+            </router-link>
+          </div>
+          <br>
+          <div style="text-align: center;">
+          <span
+            class="findUser text-secondary"
             @click="$bvModal.show('findUserModal')"
-          >아이디 또는 비밀번호를 잊으셨나요?</button>
+            style="text-align: center; cursor: pointer;"
+          >아이디 또는 비밀번호를 잊으셨나요?</span>
+          </div>
           <b-modal id="findUserModal" hide-footer>
             <template v-slot:modal-title>아이디 찾기</template>
             <div class="d-block text-center">
@@ -117,5 +128,8 @@ export default {
 #findUser:hover {
   cursor: pointer;
   text-align: center;
+}
+.custom-login-style{
+  text-align: -webkit-center;
 }
 </style>
