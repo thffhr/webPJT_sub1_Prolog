@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 style="text-align: center;">포트폴리오 관리 페이지</h1>
-    <h2 style="text-align: center;">태그들 보여줘야해</h2> 
+    <br>
+    <br>
 
 
     <!-- <ul>
@@ -30,7 +30,6 @@
     <!-- <button @click="allTagOnOff">태그 전체 켜기/끄기</button> -->
 
     <hr />
-    <h2 style="text-align: center;">내 포트폴리오</h2>
 
     <!-- <div
       v-for="portfolio in portfolios"
@@ -71,10 +70,10 @@
           style="display: inline-block;"
           class="columns is-multiline"
         >
-
-          <b-card v-if="showProject(portfolio)" class="column is-one-third m-1" style="background: #ffcabd;">
+          <b-card v-if="showProject(portfolio)" style="background: #ffcabd; width:20rem; height:15rem;" class="m-2">
             <div>
-              <b-img align-h="end"  @click="deleteP(portfolio)" style="cursor:pointer;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
+              <!-- 삭제 img -->
+              <b-img align-h="end"  @click="deleteP(portfolio)" style="cursor:pointer; test-align: right;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
               <h2>{{ portfolio.title }}</h2>
               <small>{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
               <p
@@ -91,7 +90,7 @@
                 </h4>
               </div>
             </div>
-          </b-card>        
+          </b-card>      
           <hr>
 
         </div>
