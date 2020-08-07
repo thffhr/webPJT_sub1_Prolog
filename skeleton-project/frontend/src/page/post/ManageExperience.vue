@@ -479,7 +479,14 @@ export default {
 
       //삭제했을때 0개가되면 위에 보여주는 태그도 삭제.
       if(count == 0){
-        this.tags.splice(this.tags.indexOf(experienceTag.tid),1);
+        var index = 0;
+        Array.prototype.forEach.call(this.tags, i =>{
+              if(experienceTag.tid == i.tid){
+                this.tags.splice((index),1);
+               alert(index);
+            }
+              index++;
+        })
       }
 
      
