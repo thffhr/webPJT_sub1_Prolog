@@ -10,7 +10,7 @@
             <router-link :to="{ name: constants.URL_TYPE.POST.MANAGEPORTFOLIO }">📇포트폴리오 관리</router-link>
           </b-nav-item>
           <b-nav-item class="mr-5" href="#">💼지원 목록</b-nav-item>
-          <b-nav-item class="mr-5" href="#">👥커뮤니티</b-nav-item>
+          <!-- <b-nav-item class="mr-5" href="#">👥커뮤니티</b-nav-item> -->
         </b-navbar-nav>
       </b-navbar>
     </b-collapse>

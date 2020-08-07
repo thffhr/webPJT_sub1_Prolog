@@ -28,7 +28,7 @@
             style="width: 2rem; height: 2rem;"
           />
 
-          <div id="userName" :uid="uid">{{ uid }}</div>님, 환영합니다.
+          <div id="userName" :uid="uid">{{ nickname }}</div>님, 환영합니다.
         </template>
 
         <b-dropdown-item href="#" @click="logout">로그아웃</b-dropdown-item>
@@ -61,6 +61,7 @@ export default {
     return {
       constants,
       uid: localStorage["uid"],
+      nickname: localStorage["nickname"],
       profileImgsrc:
         "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png",
     };
