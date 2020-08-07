@@ -31,6 +31,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     ProfileDao profileDao;
 
+    final BasicResponse result = new BasicResponse();
+    ResponseEntity<BasicResponse> response = null;
+
+               
+
     @Override
     public ResponseEntity<BasicResponse> login(final String emailOrUid, final String password) throws Exception {
         ResponseEntity<BasicResponse> response = null;
@@ -124,19 +129,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<BasicResponse> updateUser(final String uid, final UserUpdateRequest updateRequest)
+    public ResponseEntity<BasicResponse> updateUser(final UserUpdateRequest updateRequest)
             throws Exception {
-        userDao.save(updateRequest.toEntity(uid));
 
-        ResponseEntity<BasicResponse> response = null;
-
-        final BasicResponse result = new BasicResponse();
-
-        result.status = true;
-        result.data = "회원수정 성공";
-        response = new ResponseEntity<>(result, HttpStatus.OK);
-
-        return response;
+        try{
+                userDao.save(updateRequest.toEntity());
+                result.status = true;
+                result.data = "회원수정 성공";
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        catch(Exception e){
+                result.status = false;
+                result.data = "회원수정 실패";
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            }
+            return response;
     }
 
     @Override
