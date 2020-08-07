@@ -85,7 +85,7 @@
                 <span class="txt_tag">
                   <span>#</span>
                   <span>{{experienceTag.tagName}}</span>
-                  <b-img @click="deleteTag(experience.tags, experienceTag, experience.exid)" style="width:18px; height:18px; cursor:pointer"  v-bind:src="require(`@/assets/img/icons8-close-window-50.png`)">
+                  <b-img @click="deleteTag(experience.tags, experienceTag.tid, experience.exid)" style="width:18px; height:18px; cursor:pointer"  v-bind:src="require(`@/assets/img/icons8-close-window-50.png`)">
                     <span>삭제</span>
                   </b-img>
                 </span>
@@ -95,7 +95,7 @@
                 <span class="inp_tag">
                   <span>#</span>
                   <div style="inline-block" value="태그" placeholder="Tag입력"> 
-                      <input type="text" class="tf_g" name="tagText" placeholder="태그입력" style="box-sizing: content-box; width: 50px;">
+                      <input id="tagText" v-model="tagText"  v-on:keyup.enter="addTag(experience.tags, experience.exid,tagText)" type="text" class="tf_g"  placeholder="태그입력" style="box-sizing: content-box; width: 50px;">
                   </div>
                 </span>
               </div>
@@ -161,6 +161,7 @@ export default {
   data: () => {
     return {
 
+      tagText:"",
       tags: [],
       uid : localStorage["uid"],
       experiences: [],
@@ -447,13 +448,14 @@ export default {
       });
     },
 
-    deleteTag: function(tags,tag,exid){
+    deleteTag: function(tags,tid,exid){
           axios
-      .delete(this.$SERVER_URL + `/experience/${tag.tid}/${exid}`)
+      .delete(this.$SERVER_URL + `/experience/${tid}/${exid}`)
       .then((response) => {
 
         alert("삭제성공");
-        tags.splice(tags.indexOf(tag.tid), 1)
+        tags.splice(tags.indexOf(tid),1)
+        //this.$delete(tags, tid);
         //this.$delete( tags, tag.tid);
       })
       .catch((error) => {
@@ -462,6 +464,37 @@ export default {
         alert("삭제실패");
       });
     }
+    ,
+    addTag:function(tags, exid,tagText){
+        this.tagText = "";
+        //alert(this.uid);
+        axios
+      .post(this.$SERVER_URL + `/tag`, {
+        tagName:tagText
+      })
+      .then((response) => {
+          //조인테이블과 이어주기
+            this.addTagLink(tags, exid, response.data.object.tid,tagText);
+      })
+      .catch((error) => {
+        console.log(error); 
+      });
+
+    },
+    addTagLink:function(tags,exid,tid, tagText){
+        axios
+      .post(this.$SERVER_URL + `/experience/tag`, {
+        exid:exid, tid:tid
+      })
+      .then((response) => {
+        var temp = {tid:tid, tagName:tagText, state:false};
+        tags.push(temp);
+      })
+      .catch((error) => {
+        console.log(error); 
+      });
+
+    },
 
   },
 };
