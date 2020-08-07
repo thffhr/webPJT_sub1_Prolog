@@ -394,6 +394,8 @@ export default {
         response.data.object.enddate = startdate;
         response.data.object.imgsrc = "icons8-pencil-24.png";
 
+
+        //경험이 아예없으면
         if(response.data.status == false)
         { 
           experiences = response.data.object;
@@ -483,7 +485,7 @@ export default {
         Array.prototype.forEach.call(this.tags, i =>{
               if(experienceTag.tid == i.tid){
                 this.tags.splice((index),1);
-               alert(index);
+               //alert(index);
             }
               index++;
         })
@@ -508,6 +510,8 @@ export default {
       .then((response) => {
            //조인테이블과 이어주기
             this.addTagLink(tags, exid, response.data.object.tid,tagText);
+
+            //가장위쪽 태그테이블
             var res = Object.assign(response.data.object, {imgsrc:"icons8-circled-x-16.png"})
             
             //비어있으면 푸시에 에러남..
@@ -530,7 +534,8 @@ export default {
               }
             }
 
-
+            //showProject를 위함
+            this.selectedTags.push(response.data.object.tid);
           
       
       })
