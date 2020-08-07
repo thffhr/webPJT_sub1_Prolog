@@ -11,9 +11,9 @@
         </div><!-- /.col-lg-2 -->
         <div class="col-lg-2"   v-for="tag in tags" :key="tag.tid">
             
-            <div v-if="showTag(tag)">
-                #{{tag.tag_Name}}  <b-img @click="filtering(tag)" :pressed.sync="tag.state"  variant="primary" style="cursor:pointer" v-bind:src="require(`@/assets/img/${tag.imgsrc}`)" width="20px"></b-img>
-            </div>
+            <div v-if="showTag(tag)"> 
+                #{{tag.tagName}}  <b-img @click="filtering(tag)" :pressed.sync="tag.state"  variant="primary" style="cursor:pointer" v-bind:src="require(`@/assets/img/${tag.imgsrc}`)" width="20px"></b-img>
+             </div>
               
         </div><!-- /.col-lg-2 -->
       </div><!-- /.row -->
@@ -41,8 +41,7 @@
           <!-- 제목 -->
                 <p v-if="experience.clicked" >
                 <input  v-model = "experience.title"
-                  @blur= "experience.clicked = true; $emit('update')"
-                    @keyup.enter = "$emit('update')">
+                  @blur= "experience.clicked = true; ">
                 </p>
                   <div v-else>
                     <h2>{{experience.title}}</h2>
@@ -81,11 +80,11 @@
               <div class="editor_tag"  v-if="experience.clicked" >
 
               <!-- exid도잇어야함 -->
-              <div v-for="experienceTag in experience.tags" :key="experienceTag.tid">
+              <div v-for="(experienceTag,tid) in experience.tags" :key="experienceTag.tid">
                 <span class="txt_tag">
                   <span>#</span>
                   <span>{{experienceTag.tagName}}</span>
-                  <b-img @click="deleteTag(experience.tags, experienceTag.tid, experience.exid)" style="width:18px; height:18px; cursor:pointer"  v-bind:src="require(`@/assets/img/icons8-close-window-50.png`)">
+                  <b-img @click="deleteTag(experience.tags, experienceTag ,tid, experience)" style="width:18px; height:18px; cursor:pointer"  v-bind:src="require(`@/assets/img/icons8-close-window-50.png`)">
                     <span>삭제</span>
                   </b-img>
                 </span>
@@ -185,7 +184,24 @@ export default {
     };
   },
   beforeCreate () {
-  axios
+ 
+   
+   }
+   ,
+
+   computed: {
+    uidState(tag) {
+      return this.uid.length > 0 ? true : false;
+    },
+  
+  },
+  created() {
+    //alert(this.$SERVER_URL + `/portfolio/all`);
+    if (!constants.IS_LOGED_IN) {
+      this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
+    };
+
+     axios
       .get(this.$SERVER_URL + `/experience/Tags`, {
         params: {
           uid: localStorage["uid"],
@@ -209,26 +225,12 @@ export default {
       })
       .catch((error) => {
         console.log(error);
-        alert("실패");
+        this.tags = [];
+        console.log("태그리스트 가져오기 실패");
       });
-   
-   }
-   ,
 
-   computed: {
-    uidState(tag) {
-      return this.uid.length > 0 ? true : false;
-    },
-  
-  },
-  created() {
-    //alert(this.$SERVER_URL + `/portfolio/all`);
-    if (!constants.IS_LOGED_IN) {
-      this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
-    };
 
-    
-
+      
       axios
       .get(this.$SERVER_URL + `/experience/all`, {
         params: {
@@ -251,6 +253,8 @@ export default {
         console.log(error);   
           this.experiences = [];
       });
+
+
     
   },
    methods: {
@@ -293,7 +297,7 @@ export default {
 
     showTag(tag){
   
-        if (tag.tag_Name == null){
+        if (tag.tagName == null){
           return false
         } else {
           return true
@@ -390,7 +394,10 @@ export default {
         response.data.object.enddate = startdate;
         response.data.object.imgsrc = "icons8-pencil-24.png";
 
-        if(response.data.status == false){ experiences = response.data.object}
+        if(response.data.status == false)
+        { 
+          experiences = response.data.object;
+        }
         else {
             response.data.object.tags = [];
           this.experiences.push(response.data.object);
@@ -408,6 +415,7 @@ export default {
         axios
       .delete(this.$SERVER_URL + `/experience/${experience.exid}`)
       .then((response) => {
+        //alert(exid);
         this.$delete(this.experiences, exid);
         this.getTag();
         //alert("삭제완료 " + experience.exid);
@@ -440,7 +448,7 @@ export default {
         startdate:experience.startdate, enddate:experience.enddate
       })
       .then((response) => {
-        alert("성공");
+        //alert("성공");
           
       })
       .catch((error) => {
@@ -448,19 +456,37 @@ export default {
       });
     },
 
-    deleteTag: function(tags,tid,exid){
+    deleteTag: function(tags,experienceTag, idx,experience){
           axios
-      .delete(this.$SERVER_URL + `/experience/${tid}/${exid}`)
+      .delete(this.$SERVER_URL + `/experience/${experienceTag.tid}/${experience.exid}`)
       .then((response) => {
+        
+        //경험안에 태그 삭제
+        tags.splice(idx,1);
 
-        alert("삭제성공");
-        tags.splice(tags.indexOf(tid),1)
-        //this.$delete(tags, tid);
-        //this.$delete( tags, tag.tid);
+        //위에보이는 태그 삭제
+        //만약 더있으면 삭제안함!(중복된애가있으면)
+        var count = 0;
+        //2중포문
+        Array.prototype.forEach.call(this.experiences, i =>{
+            Array.prototype.forEach.call(i.tags, j =>{
+              if(experienceTag.tid == j.tid){
+                count++;
+              }
+            })//j
+           }//i
+      );
+
+      //삭제했을때 0개가되면 위에 보여주는 태그도 삭제.
+      if(count == 0){
+        this.tags.splice(this.tags.indexOf(experienceTag.tid),1);
+      }
+
+     
       })
       .catch((error) => {
         console.log(error);
-        alert(tag.tid + " - " + exid);
+        alert(tag.tid + " - " + experience.exid);
         alert("삭제실패");
       });
     }
@@ -473,8 +499,33 @@ export default {
         tagName:tagText
       })
       .then((response) => {
-          //조인테이블과 이어주기
+           //조인테이블과 이어주기
             this.addTagLink(tags, exid, response.data.object.tid,tagText);
+            var res = Object.assign(response.data.object, {imgsrc:"icons8-circled-x-16.png"})
+            
+            //비어있으면 푸시에 에러남..
+            //이미있으면 태그창에 추가안하기 위한 count
+            var count = 0;
+            Array.prototype.forEach.call(this.tags, t =>{
+             if(response.data.object.tid == t.tid){
+               count++;
+              }
+              }
+            );
+
+            //이미 있으면 안함 없으면 추가
+            if(count == 0){
+                try{
+                  this.tags.push(res);
+              }catch{
+                 this.tags = [];
+                  this.tags.push(res);  
+              }
+            }
+
+
+          
+      
       })
       .catch((error) => {
         console.log(error); 
