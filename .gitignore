@@ -48,3 +48,5 @@ npm-debug.log
 yarn-error.log
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,java,vuejs
+skeleton-project/backend/src/main/resources/application.properties
+skeleton-project/backend/target/classes/application.properties
