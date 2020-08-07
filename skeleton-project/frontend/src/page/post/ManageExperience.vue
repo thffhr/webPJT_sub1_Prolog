@@ -21,21 +21,19 @@
 
        <!-- 경험목록 -->
       <div v-for="(experience,exid) in experiences" :key="experience.exid">
-      <div class="row row-custom"  >
-        <div class="col-custom " style="display:inline-flex"  v-if="showProject(experience)">
+      <div class="row"  >
+        <div class="col-custom row-custom" style="display:inline-flex"  v-if="showProject(experience)">
            
            <!-- 동그라미 -->
           <div   v-bind:style = "mystyle" class="img-circle col-md-2">
             <div class="content">
-              <ul>
-                <div>
-                  <li v-for="experienceTag in experience.tags" :key="experienceTag.tid">
+              
+                <div v-for="experienceTag in experience.tags" :key="experienceTag.tid">
                        #{{experienceTag.tagName}}
           
-                   </li>
-                   
+               
                 </div>
-              </ul>
+              
             </div>
           </div>
 
@@ -74,6 +72,33 @@
                 <div v-else>
             <p class="txt_line"> {{experience.contents}} </p>
            </div>
+
+
+
+             
+
+              <!-- 태그 -->
+              <div class="editor_tag"  v-if="experience.clicked" >
+
+              <!-- exid도잇어야함 -->
+              <div v-for="experienceTag in experience.tags" :key="experienceTag.tid">
+                <span class="txt_tag">
+                  <span>#</span>
+                  <span>{{experienceTag.tagName}}</span>
+                  <b-img @click="deleteTag(experience.tags, experienceTag.tid, experience.exid)" style="width:18px; height:18px; cursor:pointer"  v-bind:src="require(`@/assets/img/icons8-close-window-50.png`)">
+                    <span>삭제</span>
+                  </b-img>
+                </span>
+              </div>
+
+
+                <span class="inp_tag">
+                  <span>#</span>
+                  <div style="inline-block" value="태그" placeholder="Tag입력"> 
+                      <input id="tagText" v-model="tagText"  v-on:keyup.enter="addTag(experience.tags, experience.exid,tagText)" type="text" class="tf_g"  placeholder="태그입력" style="box-sizing: content-box; width: 50px;">
+                  </div>
+                </span>
+              </div>
           </div>
 
       <!--버튼-->
@@ -94,7 +119,7 @@
 
       <!-- (+) 버튼 -->
       <div class="row">
-        <div class="col-lg-12">
+        <div class=" col-button-custom">
             <div>
                <b-img v-on:click="addExp" :src="require(`@/assets/img/icons8-plus-50.png`)" width="60px" v-bind:style = "buttonStyle" v-on:mouseover = "change_button" v-on:mouseout = "origin_button"></b-img>
             </div>
@@ -136,6 +161,7 @@ export default {
   data: () => {
     return {
 
+      tagText:"",
       tags: [],
       uid : localStorage["uid"],
       experiences: [],
@@ -188,6 +214,13 @@ export default {
    
    }
    ,
+
+   computed: {
+    uidState(tag) {
+      return this.uid.length > 0 ? true : false;
+    },
+  
+  },
   created() {
     //alert(this.$SERVER_URL + `/portfolio/all`);
     if (!constants.IS_LOGED_IN) {
@@ -415,6 +448,54 @@ export default {
       });
     },
 
+    deleteTag: function(tags,tid,exid){
+          axios
+      .delete(this.$SERVER_URL + `/experience/${tid}/${exid}`)
+      .then((response) => {
+
+        alert("삭제성공");
+        tags.splice(tags.indexOf(tid),1)
+        //this.$delete(tags, tid);
+        //this.$delete( tags, tag.tid);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(tag.tid + " - " + exid);
+        alert("삭제실패");
+      });
+    }
+    ,
+    addTag:function(tags, exid,tagText){
+        this.tagText = "";
+        //alert(this.uid);
+        axios
+      .post(this.$SERVER_URL + `/tag`, {
+        tagName:tagText
+      })
+      .then((response) => {
+          //조인테이블과 이어주기
+            this.addTagLink(tags, exid, response.data.object.tid,tagText);
+      })
+      .catch((error) => {
+        console.log(error); 
+      });
+
+    },
+    addTagLink:function(tags,exid,tid, tagText){
+        axios
+      .post(this.$SERVER_URL + `/experience/tag`, {
+        exid:exid, tid:tid
+      })
+      .then((response) => {
+        var temp = {tid:tid, tagName:tagText, state:false};
+        tags.push(temp);
+      })
+      .catch((error) => {
+        console.log(error); 
+      });
+
+    },
+
   },
 };
 </script>
@@ -450,6 +531,7 @@ export default {
 .img-circle .content{
       width: 65%;
       height: 65%;
+      text-align: center;
          position: relative;
          transform: translate(25%, 30%);
          font-size:15px;
@@ -500,6 +582,68 @@ export default {
 
 .date-align{
     text-align: right ;
+}
+
+.col-button-custom{
+  margin-left: auto;
+ margin-right: auto;
+   
+}
+.tag-custom{
+  width:30%;
+  display:flex;
+}
+
+.txt_tag {
+    display: flex;
+    position: relative;
+    margin: 16px 26px 0 0;
+    font-size: 13px;
+    vertical-align: top;
+    
+    white-space: nowrap;
+    
+}
+
+.editor_tag {
+    display: flex;
+    width: 100%;
+    min-height: 50px;
+    margin: 0 auto;
+    padding: 0 0 5px;
+    box-sizing: border-box;
+    font-size: 0;
+}
+
+.inp_tag {
+    display: flex;
+    margin: 16px 26px 0 0;
+    font-size: 13px;
+    color: #909090;
+    vertical-align: top;
+}
+
+.inp_tag .tf_g {
+    display: inline-block;
+    margin: 0;
+    border: 0;
+    font-size: 13px;
+    color: #333;
+    vertical-align: top;
+    outline: none;
+    background: #eeeeee;
+}
+
+.txt_tag  .tf_g {
+     display: inline-block;
+    margin: 0;
+    border: 0;
+    font-size: 13px;
+    color: #333;
+    vertical-align: top;
+    outline: none;
+    background: #eeeeee;
+    
 }
 
 </style>
