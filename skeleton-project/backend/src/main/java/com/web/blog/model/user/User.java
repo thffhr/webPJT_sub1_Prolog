@@ -42,11 +42,12 @@ public class User {
     private LocalDateTime createDate;
 
     @Builder
-    public User(String uid, String email, String password, String nickname) {
+    public User(String uid, String email, String password, String nickname, byte[] picByte) {
         this.uid = uid;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.picByte = picByte;
     }
 
     public byte[] getPicByte() {

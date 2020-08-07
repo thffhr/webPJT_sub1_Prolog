@@ -17,7 +17,7 @@ public class TagPortfolioTagResponse {
 
     @ApiModelProperty(required = true)
     @NotNull
-    String tag_Name;
+    String tagName;
 
     @ApiModelProperty(required = true)
     @NotNull
@@ -26,9 +26,9 @@ public class TagPortfolioTagResponse {
 
     
     @Builder
-    public TagPortfolioTagResponse(int tid,String tag_Name, boolean state){
+    public TagPortfolioTagResponse(int tid,String tagName, boolean state){
         this.tid = tid;
-        this.tag_Name = tag_Name;
+        this.tagName = tagName;
         this.state = state;
     }
 

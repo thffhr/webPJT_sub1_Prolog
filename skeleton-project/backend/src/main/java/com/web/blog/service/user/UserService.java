@@ -21,7 +21,7 @@ public interface UserService {
    ResponseEntity<BasicResponse> deleteUser(String uid) throws Exception;
 
    // 회원 정보 수정
-   ResponseEntity<BasicResponse> updateUser(String uid, UserUpdateRequest updateRequest) throws Exception;
+   ResponseEntity<BasicResponse> updateUser(UserUpdateRequest updateRequest) throws Exception;
 
    // 이메일 중복 체크
    ResponseEntity<BasicResponse> emailcheck(String email) throws Exception;
