@@ -18,10 +18,13 @@ public class TagCreateResponse {
     @Column(name = "tag_name", nullable = false)
     private String tagName;
 
+    private boolean state;
+
     @Builder
-    public TagCreateResponse(int tid, String tagName) {
+    public TagCreateResponse(int tid, String tagName, boolean state) {
         this.tid = tid;
         this.tagName = tagName;
+        this.state = state;
     }
 
 }
