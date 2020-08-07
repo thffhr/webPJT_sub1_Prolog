@@ -98,7 +98,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         for (Portfolio i : list) {
             List<PortfolioTag> portfolioTags = i.getPortfolioTags();
             for (PortfolioTag j : portfolioTags) {
-                hs.add(TagPortfolioTagResponse.builder().tid(j.getTag().getTid()).tag_Name(j.getTag().getTagName())
+                hs.add(TagPortfolioTagResponse.builder().tid(j.getTag().getTid()).tagName(j.getTag().getTagName())
                         .state(false).build());
             }
         }
