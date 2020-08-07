@@ -132,11 +132,15 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<BasicResponse> updateUser(final UserUpdateRequest updateRequest)
             throws Exception {
 
+
         try{
-                userDao.save(updateRequest.toEntity());
+                //프로필 있는지 확인하고 있으면넣고 없으면 안넣음.
+                Optional<User> opt = userDao.findUserByUid(updateRequest.getUid());
+                userDao.save(updateRequest.toEntity(opt.get().getPicByte()));
                 result.status = true;
                 result.data = "회원수정 성공";
                 response = new ResponseEntity<>(result, HttpStatus.OK);
+                
             }
         catch(Exception e){
                 result.status = false;
