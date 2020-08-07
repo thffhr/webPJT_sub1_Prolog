@@ -101,7 +101,7 @@ export default {
             localStorage.setItem("password", response.data.object.password);
             constants.IS_LOGED_IN = true;
             // alert("로그인 되었습니다!");
-            location.href = "http://localhost:3000/#/logedin";
+            location.href = "/#/logedin";
             // this.$router.go({ name: constants.URL_TYPE.MAIN.LOGINHOME });
           } else {
             alert("이메일 또는 비밀번호가 잘못되었습니다.");
