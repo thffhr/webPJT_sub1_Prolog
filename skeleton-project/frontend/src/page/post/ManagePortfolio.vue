@@ -22,7 +22,7 @@
           style="display: inline-block; text-color: black;"
           class="m-1"
         >
-          #{{ tag.tag_Name }}
+          #{{ tag.tagName }}
         </b-button>
         </div>
       </b-button-group>
@@ -32,7 +32,7 @@
       <span v-else @click="showNotagProject" style="cursor: pointer">태그없는 프로젝트 보여주기</span>
     </div>
     <!-- 여기까지 -->
-    <button @click="allTagOnOff">태그 전체 켜기/끄기</button>
+    <!-- <button @click="allTagOnOff">태그 전체 켜기/끄기</button> -->
 
     <hr />
 
@@ -75,20 +75,24 @@
           style="display: inline-block;"
           class="columns is-multiline"
         >
-          <b-card v-if="showProject(portfolio)" style="background: lightgrey; width:20rem; height:15rem;" class="m-2">
+          <b-card v-if="showProject(portfolio)" style="background: lightgrey; width:20rem; height:18rem;" class="m-2">
             <div>
               <!-- 삭제 img -->
               <div class="img-custom">
               <b-img align-h="end"  @click="deleteP(portfolio)" style="cursor:pointer; test-align: right;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
               </div>
-              <h2>{{ portfolio.title }}</h2>
-              <small>{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
+              
+              <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
+              <h2 v-else>{{ portfolio.title }}</h2>
+              
+              <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
+              <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div>
               <p
                 class="mt-2"
-              >{{ portfolio.contents }}</p>
+              >{{ portfolio.contents.slice(0, 60) }}</p>
               <!-- 태그 출력 -->
               <div
-                v-for="portfolioTag in portfolio.tag"
+                v-for="portfolioTag in portfolio.tag.slice(0, 3)"
                 :key="portfolioTag.tid"
                 style="display: inline-block;"
               >
@@ -96,7 +100,6 @@
                   <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
                 </h4>
               </div>
-              <div style="text-align: end;"><b-button size="sm" variant="outline-dark">download</b-button></div>
             </div>
           </b-card>      
           <!-- <hr> -->
@@ -154,17 +157,14 @@ export default {
         },
       })
       .then((response) => {
+        console.log('태그리스트');
         this.tags = response.data.object;
 
         Array.prototype.forEach.call(this.tags, tag => 
           this.selectedTags.push(tag.tid)
         )
-      })
-      .catch((error) => {
-        console.log(error);
-      });
 
-      axios
+        axios
       .get(this.$SERVER_URL + `/portfolio/all`, {
         params: {
           uid: localStorage["uid"],
@@ -177,6 +177,12 @@ export default {
       .catch((error) => {
         console.log(error);
       });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      
   },
   methods: {
     addProject() {
@@ -217,8 +223,8 @@ export default {
     },
 
     showProject(tagInPortfolio) {
-      var selectedTags = this.selectedTags
-      var cnt = 0
+      var selectedTags = this.selectedTags;
+      var cnt = 0;
       tagInPortfolio.tag.forEach(function(tag) {
         if (selectedTags.includes(tag.tid)) {
           cnt ++;
@@ -226,6 +232,22 @@ export default {
         return cnt;
       });
       if (cnt>0 || tagInPortfolio.tag.length == 0 && this.isIncludeNoTag) {
+        return true
+      } else {
+        return false
+      }
+    },
+
+    showProject2(tagInPortfolio) {
+      var selectedTags = this.selectedTags;
+      var cnt = 0;
+      selectedTags.forEach(function(tag) {
+        if (tagInPortfolio.tag.includes(tag.tid)) {
+          cnt ++;
+        };
+        return cnt;
+      });
+      if (cnt == selectedTags.length || tagInPortfolio.tag.length == 0 && this.isIncludeNoTag) {
         return true
       } else {
         return false
@@ -244,42 +266,13 @@ export default {
       this.isIncludeNoTag = !this.isIncludeNoTag
     },
 
-    allTagOnOff() {
-      if (this.allTagState == true) {
-        this.selectedTags = []
-        this.allTagState = false
-        Array.prototype.forEach.call(this.tags, tag => 
-              tag.state = false
-            )
-      } else {
-        axios
-          .get(this.$SERVER_URL + `/portfolio/Tags`, {
-            params: {
-              uid: localStorage["uid"],
-            },
-          })
-          .then((response) => {
-            this.tags = response.data.object;
-
-            Array.prototype.forEach.call(this.tags, tag => 
-              this.selectedTags.push(tag.tid)
-            )
-          })
-          .catch((error) => {
-            console.log(error);
-         });
-        this.allTagState = true
-        Array.prototype.forEach.call(this.tags, tag => 
-              tag.state = true
-            )
-      }
-    },
 
     deleteP: function(portfolio){      
         axios
       .delete(this.$SERVER_URL + `/portfolio/${portfolio.pid}`)
       .then((response) => {
-        this.$delete(this.portfolios, portfolio);
+        // this.$delete(this.portfolios, portfolio);
+        this.portfolios.splice(this.portfolios.indexOf(portfolio), 1)
         // this.getTag();
         //alert("삭제완료 " + experience.exid);
         axios
@@ -317,12 +310,39 @@ export default {
         console.log(error); 
       });
     },
+    allTagOnOff() {
+      if (this.allTagState == true) {
+        this.selectedTags = []
+        this.allTagState = false
+        Array.prototype.forEach.call(this.tags, tag => 
+              tag.state = false
+            )
+      } else {
+        axios
+          .get(this.$SERVER_URL + `/portfolio/Tags`, {
+            params: {
+              uid: localStorage["uid"],
+            },
+          })
+          .then((response) => {
+            this.tags = response.data.object;
+
+            Array.prototype.forEach.call(this.tags, tag => 
+              this.selectedTags.push(tag.tid)
+            )
+          })
+          .catch((error) => {
+            console.log(error);
+         });
+        this.allTagState = true
+        Array.prototype.forEach.call(this.tags, tag => 
+              tag.state = true
+            )
+      }
+    }
   },
   // 버튼
   computed: {
-    tagStates() {
-        return this.tags.map(tag => tag.state)
-      },
   },
 }
 
