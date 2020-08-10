@@ -1,4 +1,4 @@
-package com.web.blog.model.test;
+package com.web.blog.model.apply;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,30 +7,32 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.blog.model.portfolio.Portfolio;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
-public class MemberPhone {
+@AllArgsConstructor
+@Table(name = "apply_portfolio")
+public class ApplyPortfolio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "mpjoin_id")
+    @Column(name = "ap_pid")
     private int id;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "apid")
+    private Apply apply;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "phone_id")
-    private Phone phone;
-
+    @JoinColumn(name = "pid")
+    private Portfolio portfolio;
 }
