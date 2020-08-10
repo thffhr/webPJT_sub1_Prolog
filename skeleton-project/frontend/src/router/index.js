@@ -25,6 +25,8 @@ import ManagePortfolio from "../page/post/ManagePortfolio.vue";
 import ManageExperience from "../page/post/ManageExperience.vue";
 // PortfolioDetails
 import PortfolioDetails from "../page/post/PortfolioDetails.vue";
+// Apply
+import ManageApply from "../page/post/ManageApply.vue";
 
 Vue.use(Router);
 
@@ -95,5 +97,11 @@ export default new Router({
       component: PortfolioDetails,
       // props: true,
     },
+    //지원목록
+    {
+      path: "/ManageApply",
+      name: constants.URL_TYPE.POST.MANAGEAPPLY,
+      component: ManageApply,
+    }
   ],
 });
