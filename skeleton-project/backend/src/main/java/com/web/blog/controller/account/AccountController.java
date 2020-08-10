@@ -59,12 +59,12 @@ public class AccountController {
      * RequestParam :get, post RequestBody : get, post, put, delete filter추가로 cors
      * 해결
      */
-    @PutMapping("/account/{uid}")
+    @PutMapping("/account")
     @ApiOperation(value = "유저 정보 수정하기")
-    public Object updateUser(@PathVariable("uid") String uid, @Valid @RequestBody UserUpdateRequest updateRequest)
+    public Object updateUser( @Valid @RequestBody UserUpdateRequest updateRequest)
             throws Exception {
 
-        return userService.updateUser(uid, updateRequest);
+        return userService.updateUser(updateRequest);
     }
 
     @PostMapping("/account/signup/emailcheck")

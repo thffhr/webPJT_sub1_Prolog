@@ -36,13 +36,13 @@
               <b-button>회원가입</b-button>
             </router-link>
           </div>
-          <br>
+          <br />
           <div style="text-align: center;">
-          <span
-            class="findUser text-secondary"
-            @click="$bvModal.show('findUserModal')"
-            style="text-align: center; cursor: pointer;"
-          >아이디 또는 비밀번호를 잊으셨나요?</span>
+            <span
+              class="findUser text-secondary"
+              @click="$bvModal.show('findUserModal')"
+              style="text-align: center; cursor: pointer;"
+            >아이디 또는 비밀번호를 잊으셨나요?</span>
           </div>
           <b-modal id="findUserModal" hide-footer>
             <template v-slot:modal-title>아이디 찾기</template>
@@ -53,9 +53,6 @@
         </b-col>
       </b-row>
     </b-container>
-
-
-
   </div>
 </template>
 
@@ -98,19 +95,14 @@ export default {
         .then((response) => {
           console.log(response);
           if (response.data.data == "success") {
-            //   console.log("response.data.object")
-            // document.getElementById("closeBtn").click();
             localStorage.setItem("uid", response.data.object.uid);
             localStorage.setItem("nickname", response.data.object.nickname);
             localStorage.setItem("email", response.data.object.email);
             localStorage.setItem("password", response.data.object.password);
             constants.IS_LOGED_IN = true;
-            alert("로그인 되었습니다!");
-            // this.email = "";
-            // this.password = "";
-            // this.$router.push({ name: constants.URL_TYPE.MAIN.LOGINHOME });
+            // alert("로그인 되었습니다!");
+            location.href = "/#/logedin";
             // this.$router.go({ name: constants.URL_TYPE.MAIN.LOGINHOME });
-            location.href = "constants.URL_TYPE.MAIN.LOGINHOME"
           } else {
             alert("이메일 또는 비밀번호가 잘못되었습니다.");
           }
@@ -131,7 +123,7 @@ export default {
   cursor: pointer;
   text-align: center;
 }
-.custom-login-style{
+.custom-login-style {
   text-align: -webkit-center;
 }
 </style>

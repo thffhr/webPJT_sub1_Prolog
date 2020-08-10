@@ -341,10 +341,11 @@ export default {
         } else {
           this.newPassword = localStorage["password"];
         }
+       
         axios
-          .put(this.$SERVER_URL + `/account/update/${localStorage["uid"]}`, {
+          .put(this.$SERVER_URL + `/account`, {
             uid: this.uid,
-            nickName: this.nickName,
+            nickname: this.nickName,
             email: this.email,
             password: this.newPassword,
           })

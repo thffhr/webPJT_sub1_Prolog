@@ -4,9 +4,8 @@
       <carousel-3d :width="400" :height="320">
         <div v-for="(num, i) in slidesLength" :key="i">
           <!-- 클릭하면 포트폴리오 디테일 페이지로 이동 -->
-          <slide id="carousel_card" :index="i" @click="gotoDetail(pjtAll[i].pid)">
-            <!-- v-bind:class="{ 'current' : isCurrent(i) }" -->
-            <div class="m-3">
+          <slide id="carousel_card" :index="i">
+            <div class="m-3" @click="gotoDetail(pjtAll[i].pid)">
               <h2>
                 <!-- 제목 -->
                 <!-- <b-avatar variant="info" src="https://placekitten.com/300/300" class="mr-3"></b-avatar> -->
@@ -73,6 +72,8 @@ import constants from "../../lib/constants";
 import { Carousel3d, Slide } from "vue-carousel-3d";
 import axios from "axios";
 
+import router from "@/router";
+
 export default {
   components: {
     Carousel3d,
@@ -91,21 +92,24 @@ export default {
         params: { uid: localStorage["uid"] },
       })
       .then((response) => {
-        console.log(response);
-        // this.slidesLength = response.data.object.length;
+        // console.log(response);
         this.pjtAll = response.data.object;
         this.slidesLength = response.data.object;
-        console.log(this.slidesLength);
-        console.log(this.pjtAll);
+        // console.log(this.slidesLength);
+        // console.log(this.pjtAll);
       });
   },
   methods: {
     gotoDetail(pid) {
-      this.$router.push({ path: "/PortfolioDetails", params: { pid: pid } });
+      // console.log(pid);
+      router.push({
+        name: constants.URL_TYPE.POST.PORTFOLIODETAILS,
+        params: { pid: pid },
+      });
     },
     gotoPortfolio() {
       this.$router.push({ path: "/ManagePortfolio" });
-    },
+    }
   },
 };
 </script>

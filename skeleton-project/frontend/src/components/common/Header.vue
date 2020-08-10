@@ -28,7 +28,7 @@
             style="width: 2rem; height: 2rem;"
           />
 
-          <div id="userName" :uid="uid">{{ uid }}</div>님, 환영합니다.
+          <div id="userName" :uid="uid">{{ nickname }}</div>님, 환영합니다.
         </template>
 
         <b-dropdown-item href="#" @click="logout">로그아웃</b-dropdown-item>
@@ -61,25 +61,23 @@ export default {
     return {
       constants,
       uid: localStorage["uid"],
+      nickname: localStorage["nickname"],
       profileImgsrc:
         "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png",
     };
   },
   created() {
-    console.log(constants.IS_PROFILEIMG_UPLOAD);
+    // console.log(constants.IS_PROFILEIMG_UPLOAD);
     if (constants.IS_LOGED_IN) {
-      // profileImgsrc = localStorage["profileImg"];
       axios
         .get(this.$SERVER_URL + `/account/ckprofile/${localStorage["uid"]}`)
         .then((response) => {
           if (response.data.status) {
-            console.log(response);
+            // console.log(response);
             if (response.data.object == null) {
-              console.log("등록된 프로필 이미지가 없습니다.");
-              // profileImgsrc =
-              //   "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png";
+              // console.log("등록된 프로필 이미지가 없습니다.");
             } else {
-              console.log("등록된 프로필 이미지가 있습니다.");
+              // console.log("등록된 프로필 이미지가 있습니다.");
               this.profileImgsrc =
                 this.$SERVER_URL + `/account/profile/${localStorage["uid"]}`;
             }
