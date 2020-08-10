@@ -16,10 +16,10 @@
           pill
           v-for="(tag, idx) in tags"
           :key="idx"
-          :pressed.sync="tag.state"
+          :pressed="tagState(tag)"
           @click="filtering(tag)"
           variant="secondary"
-          style="display: inline-block; text-color: black;"
+          style="display: inline-block; color: black;"
           class="m-1"
         >
           #{{ tag.tagName }}
@@ -27,12 +27,15 @@
         </div>
       </b-button-group>
     </div>
-    <div class="mt-3" style="text-align: right; margin-right: 10rem;">
-      <span v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer">태그없는 프로젝트 숨기기</span>
-      <span v-else @click="showNotagProject" style="cursor: pointer">태그없는 프로젝트 보여주기</span>
-    </div>
+    <b-container>
+      <b-row align-h="between">
+        <b-col cols="4" v-if="allTagState" @click="allTagOnOff" style="cursor: pointer;">태그 전체 해제</b-col>
+        <b-col cols="4" v-else @click="allTagOnOff" style="cursor: pointer;">태그 전체 선택 해제</b-col>
+        <b-col cols="4" v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; text-align: right;">태그없는 프로젝트 숨기기</b-col>
+        <b-col cols="4" v-else @click="showNotagProject" style="cursor: pointer; text-align: right;">태그없는 프로젝트 보여주기</b-col>
+    </b-row>
+    </b-container>
     <!-- 여기까지 -->
-    <!-- <button @click="allTagOnOff">태그 전체 켜기/끄기</button> -->
 
     <hr />
 
@@ -160,9 +163,9 @@ export default {
         console.log('태그리스트');
         this.tags = response.data.object;
 
-        Array.prototype.forEach.call(this.tags, tag => 
-          this.selectedTags.push(tag.tid)
-        )
+        // Array.prototype.forEach.call(this.tags, tag => 
+        //   this.selectedTags.push(tag.tid)
+        // )
 
         axios
       .get(this.$SERVER_URL + `/portfolio/all`, {
@@ -231,22 +234,6 @@ export default {
         };
         return cnt;
       });
-      if (cnt>0 || tagInPortfolio.tag.length == 0 && this.isIncludeNoTag) {
-        return true
-      } else {
-        return false
-      }
-    },
-
-    showProject2(tagInPortfolio) {
-      var selectedTags = this.selectedTags;
-      var cnt = 0;
-      selectedTags.forEach(function(tag) {
-        if (tagInPortfolio.tag.includes(tag.tid)) {
-          cnt ++;
-        };
-        return cnt;
-      });
       if (cnt == selectedTags.length || tagInPortfolio.tag.length == 0 && this.isIncludeNoTag) {
         return true
       } else {
@@ -255,6 +242,7 @@ export default {
     },
 
     filtering(tag) {
+      tag.state = !tag.state;
       if (this.selectedTags.includes(tag.tid)) {
         this.selectedTags.splice(this.selectedTags.indexOf(tag.tid), 1)
       } else {
@@ -311,34 +299,20 @@ export default {
         console.log(error); 
       });
     },
+    tagState(tag) {
+      return tag.state;
+    },
     allTagOnOff() {
+      this.allTagState = !this.allTagState;
       if (this.allTagState == true) {
-        this.selectedTags = []
-        this.allTagState = false
         Array.prototype.forEach.call(this.tags, tag => 
-              tag.state = false
-            )
+          tag.state = this.allTagState,
+          this.selectedTags.push(tag.tid))
       } else {
-        axios
-          .get(this.$SERVER_URL + `/portfolio/Tags`, {
-            params: {
-              uid: localStorage["uid"],
-            },
-          })
-          .then((response) => {
-            this.tags = response.data.object;
-
-            Array.prototype.forEach.call(this.tags, tag => 
-              this.selectedTags.push(tag.tid)
-            )
-          })
-          .catch((error) => {
-            console.log(error);
-         });
-        this.allTagState = true
+        this.selectedTags = []
         Array.prototype.forEach.call(this.tags, tag => 
-              tag.state = true
-            )
+          tag.state = this.allTagState)
+
       }
     }
   },
