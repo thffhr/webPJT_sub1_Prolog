@@ -25,11 +25,11 @@ public class TempServiceImpl implements TempService {
     @Override
     public ResponseEntity<BasicResponse> findAll() {
         
-        List<Temp> opt = tempDao.findAll();
-        List<Temp> temp = opt;
+        List<Temp> obj = tempDao.findAll();
+        List<Temp> temp = obj;
 
-        if (opt != null ) {
-            for(Temp t : opt){
+        if (obj != null ) {
+            for(Temp t : obj){
                 System.out.println(t);
             }
             result.status = true;

@@ -11,8 +11,6 @@ import javax.persistence.Entity;
 import lombok.*;
 
 @NoArgsConstructor
-@AllArgsConstructor
-@Setter
 @Entity
 @ToString
 @Table(name = "apply_date")
