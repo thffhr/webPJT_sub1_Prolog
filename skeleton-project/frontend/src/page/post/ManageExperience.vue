@@ -20,8 +20,9 @@
 
 
        <!-- 경험목록 -->
-      <div class="card-copy" v-for="(experience,exid) in experiences" :key="experience.exid">
-      <div class="row card-body"  v-if="showProject(experience)" >
+      <div v-for="(experience,exid) in experiences" :key="experience.exid">
+      <div class="card-copy"   v-if="showProject(experience)" >
+      <div class="row card-body">
         <div class="col-custom row-custom" style="display:inline-flex" >
            
            <!-- 동그라미 -->
@@ -110,6 +111,7 @@
         
         </div><!-- /.col-lg-4 -->
         </div>
+      </div>
       </div><!-- /.row -->
 
 
@@ -210,12 +212,12 @@ export default {
        //
         this.tags = response.data.object;
           Array.prototype.forEach.call(this.tags, t =>
-          Object.assign(t, {imgsrc:"icons8-close-window-26.png"}),
+          Object.assign(t, {imgsrc:"icons8-plus-64.png"}),
           )
-
+/* 
         Array.prototype.forEach.call(this.tags, tag => 
           this.selectedTags.push(tag.tid)
-        )
+        ) */
         
        console.log(this.tags);
        
@@ -279,19 +281,6 @@ export default {
 
     },
 
-
-    addOrDeleteTagClickE: function(taginput){
-          if(!taginput.state){//불포함 상태
-            taginput.imgsrc = "icons8-plus-64.png";
-          }
-          else {//포함 상태
-            taginput.imgsrc = "icons8-circled-x-16.png";
-          }
-          taginput.state = !taginput.state;
-          console.log("값들" + this.isIncluedTag);
-          console.log(taginput.tid +" - " +taginput.state + " - " + taginput.imgsrc);
-    },
-
     showTag(tag){
   
         if (tag.tagName == null){
@@ -301,6 +290,7 @@ export default {
         }
       },
 
+    //하나의 프로젝트를 보여줄거?
     showProject(experience) {
       var selectedTags = this.selectedTags
       var cnt = 0
@@ -310,18 +300,14 @@ export default {
                 cnt ++;
             };
               return cnt;
-          
+    
         });
-      
-  
-  
-        if (cnt>0 || (experience.tags.length==0 && this.isIncludeNoTag)) {
+
+        if (cnt==selectedTags.length  || (experience.tags.length==0 && this.isIncludeNoTag)) {
           return true
         } else {
           return false
         }
-                                                                                                                                                                                                                                                                                                                                                     ;
-  
     },
 
 
@@ -338,12 +324,12 @@ export default {
        //
         this.tags = response.data.object;
           Array.prototype.forEach.call(this.tags, t =>
-          Object.assign(t, {imgsrc:"icons8-circled-x-16.png"}),
+          Object.assign(t, {imgsrc:"icons8-plus-64.png"}),
           )
 
-        Array.prototype.forEach.call(this.tags, tag => 
+       /*  Array.prototype.forEach.call(this.tags, tag => 
           this.selectedTags.push(tag.tid)
-        )
+        ) */
       
         
        console.log(this.tags);
@@ -358,10 +344,11 @@ export default {
     
     filtering(tag) {
        
+      //tag가 선택되어있다면
       if (this.selectedTags.includes(tag.tid)) {
         this.selectedTags.splice(this.selectedTags.indexOf(tag.tid), 1)
          tag.imgsrc = "icons8-plus-64.png";
-      } else {
+      } else {//tag가 선택되어 있지 않다면
         this.selectedTags.push(tag.tid)
         tag.imgsrc = "icons8-close-window-26.png";
       }
@@ -509,7 +496,7 @@ export default {
             this.addTagLink(tags, exid, response.data.object.tid,tagText);
 
             //가장위쪽 태그테이블
-            var res = Object.assign(response.data.object, {imgsrc:"icons8-close-window-26.png"})
+            var res = Object.assign(response.data.object, {imgsrc:"icons8-plus-64.png"})
             
             //비어있으면 푸시에 에러남..
             //이미있으면 태그창에 추가안하기 위한 count
@@ -532,7 +519,7 @@ export default {
             }
 
             //showProject를 위함
-            this.selectedTags.push(response.data.object.tid);
+            //this.selectedTags.push(response.data.object.tid);
           
       
       })
