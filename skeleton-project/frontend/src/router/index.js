@@ -71,7 +71,7 @@ export default new Router({
     },
     // 유저찾기
     {
-      path: "/FindUserByEmail/",
+      path: "/FindUserByEmail",
       name: constants.URL_TYPE.USER.FINDUSERBYEMAIL,
       component: FindUserByEmail,
       props: true,
@@ -93,7 +93,7 @@ export default new Router({
       path: "/PortfolioDetails",
       name: constants.URL_TYPE.POST.PORTFOLIODETAILS,
       component: PortfolioDetails,
-      props: true,
+      // props: true,
     },
   ],
 });
