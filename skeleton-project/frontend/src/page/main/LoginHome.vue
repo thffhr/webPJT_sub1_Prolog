@@ -105,7 +105,7 @@ export default {
     },
     gotoPortfolio() {
       this.$router.push({ path: "/ManagePortfolio" });
-    },
+    }
   },
 };
 </script>

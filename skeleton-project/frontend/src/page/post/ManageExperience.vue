@@ -9,7 +9,7 @@
                 #No태그 여부 <b-img  @click="exeptNoTagClickE(isIncludeNoTag)" :pressed.sync="NoTagImgSrcT" style="cursor:pointer" v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)" width="20px"></b-img>
             </div>
         </div><!-- /.col-lg-2 -->
-        <div class="col-lg-2"   v-for="tag in tags" :key="tag.tid">
+        <div class="adge tag-margin-custom mr-3 badge-secondary badge-pill"   v-for="tag in tags" :key="tag.tid">
             
             <div v-if="showTag(tag)"> 
                 #{{tag.tagName}}  <b-img @click="filtering(tag)" :pressed.sync="tag.state"  variant="primary" style="cursor:pointer" v-bind:src="require(`@/assets/img/${tag.imgsrc}`)" width="20px"></b-img>
@@ -20,9 +20,9 @@
 
 
        <!-- 경험목록 -->
-      <div v-for="(experience,exid) in experiences" :key="experience.exid">
-      <div class="row"  >
-        <div class="col-custom row-custom" style="display:inline-flex"  v-if="showProject(experience)">
+      <div class="card-copy" v-for="(experience,exid) in experiences" :key="experience.exid">
+      <div class="row card-body"  v-if="showProject(experience)" >
+        <div class="col-custom row-custom" style="display:inline-flex" >
            
            <!-- 동그라미 -->
           <div   v-bind:style = "mystyle" class="img-circle col-md-2">
@@ -140,9 +140,6 @@
       </div>
 
       <hr class="featurette-divider">
-    
-      
-      <hr class="featurette-divider">
     </div>
 
     
@@ -213,7 +210,7 @@ export default {
        //
         this.tags = response.data.object;
           Array.prototype.forEach.call(this.tags, t =>
-          Object.assign(t, {imgsrc:"icons8-circled-x-16.png"}),
+          Object.assign(t, {imgsrc:"icons8-close-window-26.png"}),
           )
 
         Array.prototype.forEach.call(this.tags, tag => 
@@ -285,7 +282,7 @@ export default {
 
     addOrDeleteTagClickE: function(taginput){
           if(!taginput.state){//불포함 상태
-            taginput.imgsrc = "icons8-joyent-64.png";
+            taginput.imgsrc = "icons8-plus-64.png";
           }
           else {//포함 상태
             taginput.imgsrc = "icons8-circled-x-16.png";
@@ -363,10 +360,10 @@ export default {
        
       if (this.selectedTags.includes(tag.tid)) {
         this.selectedTags.splice(this.selectedTags.indexOf(tag.tid), 1)
-         tag.imgsrc = "icons8-joyent-64.png";
+         tag.imgsrc = "icons8-plus-64.png";
       } else {
         this.selectedTags.push(tag.tid)
-        tag.imgsrc = "icons8-circled-x-16.png";
+        tag.imgsrc = "icons8-close-window-26.png";
       }
       tag.state = !tag.state;
      
@@ -512,7 +509,7 @@ export default {
             this.addTagLink(tags, exid, response.data.object.tid,tagText);
 
             //가장위쪽 태그테이블
-            var res = Object.assign(response.data.object, {imgsrc:"icons8-circled-x-16.png"})
+            var res = Object.assign(response.data.object, {imgsrc:"icons8-close-window-26.png"})
             
             //비어있으면 푸시에 에러남..
             //이미있으면 태그창에 추가안하기 위한 count
@@ -619,7 +616,12 @@ export default {
 
   .icon-right{
       text-align: end;
+      padding: 5%;
     margin-right: 10%;
+  }
+
+  .icon-right img{
+    margin-right: 8%;
   }
 
  .row-custom{
@@ -707,6 +709,24 @@ export default {
     outline: none;
     background: #eeeeee;
     
+}
+.tag-margin-custom{
+  padding: 0.5%;
+  margin: 5px;
+}
+
+.card-copy{   
+   position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #ffffffaa;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 2.25rem;
+    margin-bottom: 5% ;
+
 }
 
 </style>

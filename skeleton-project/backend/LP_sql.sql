@@ -86,3 +86,10 @@ CREATE TABLE `p_tag` (
   CONSTRAINT `p_tag_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `portfolio` (`pid`) ON DELETE CASCADE,
   CONSTRAINT `p_tag_ibfk_2` FOREIGN KEY (`tid`) REFERENCES `tag` (`tid`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE `apply_date` (
+  `adid` int(11) NOT NULL,
+  `date` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`adid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
