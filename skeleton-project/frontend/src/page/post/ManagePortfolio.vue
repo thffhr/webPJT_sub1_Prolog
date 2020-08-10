@@ -29,8 +29,8 @@
     </div>
     <b-container>
       <b-row align-h="between">
-        <b-col cols="4" v-if="allTagState" @click="allTagOnOff" style="cursor: pointer;">태그 전체 해제</b-col>
-        <b-col cols="4" v-else @click="allTagOnOff" style="cursor: pointer;">태그 전체 선택 해제</b-col>
+        <b-col cols="4" v-if="allTagState" @click="allTagOnOff" style="cursor: pointer;">태그 전체 선택 해제</b-col>
+        <b-col cols="4" v-else @click="allTagOnOff" style="cursor: pointer;">태그 전체 선택</b-col>
         <b-col cols="4" v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; text-align: right;">태그없는 프로젝트 숨기기</b-col>
         <b-col cols="4" v-else @click="showNotagProject" style="cursor: pointer; text-align: right;">태그없는 프로젝트 보여주기</b-col>
     </b-row>
