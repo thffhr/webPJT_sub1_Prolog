@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Getter;
+import lombok.Builder;
 
 @Entity
 @Getter
@@ -20,5 +21,11 @@ public class ApplyTerm {
 
     @Column(name = "ap_term")
     private String apTerm;
+
+    @Builder
+    public ApplyTerm(int aptid, String apTerm) {
+        this.aptid = aptid;
+        this.apTerm = apTerm;
+    }
 
 }

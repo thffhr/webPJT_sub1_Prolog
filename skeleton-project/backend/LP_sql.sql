@@ -89,11 +89,13 @@ CREATE TABLE `p_tag` (
 
 CREATE TABLE `apply` (
   `apid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` varchar(45) NOT NULL,
   `ap_company` varchar(45) DEFAULT NULL,
   `ap_desc` varchar(255) DEFAULT NULL,
   `ap_term` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`apid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  PRIMARY KEY (`apid`),
+  KEY `apply_uid_fk_idx` (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `apply_experience` (
   `ap_exid` int(11) NOT NULL AUTO_INCREMENT,

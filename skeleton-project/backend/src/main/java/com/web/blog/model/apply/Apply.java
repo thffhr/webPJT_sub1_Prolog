@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -23,6 +24,9 @@ public class Apply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int apid;
+
+    @Column(name = "uid")
+    private String uid;
 
     @Column(name = "ap_company")
     @NonNull
@@ -40,4 +44,12 @@ public class Apply {
     @OneToMany(mappedBy = "apply")
     private List<ApplyExperience> applyExperience;
 
+    @Builder
+    public Apply(int apid, String uid, String apCompany, String apTerm, String apDesc) {
+        this.apid = apid;
+        this.uid = uid;
+        this.apCompany = apCompany;
+        this.apTerm = apTerm;
+        this.apDesc = apDesc;
+    }
 }
