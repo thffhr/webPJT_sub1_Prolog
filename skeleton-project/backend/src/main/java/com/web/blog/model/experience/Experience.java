@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.web.blog.model.apply.ApplyExperience;
 import com.web.blog.model.join.ExperienceTag;
 
 import lombok.Builder;
@@ -37,16 +38,19 @@ public class Experience {
     private Date startdate;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="end_date", insertable = false)
+    @Column(name = "end_date", insertable = false)
     private Date enddate;
 
     private String contents;
 
     @OneToMany(mappedBy = "experience")
-    private List<ExperienceTag> experienceTags = new ArrayList<>();
+    private List<ExperienceTag> experienceTags;
+
+    @OneToMany(mappedBy = "experience")
+    private List<ApplyExperience> applyExperiences;
 
     @Builder
-    public Experience(int exid, String uid, String title, Date startdate, Date enddate, String contents){
+    public Experience(int exid, String uid, String title, Date startdate, Date enddate, String contents) {
         this.exid = exid;
         this.uid = uid;
         this.title = title;
@@ -55,8 +59,4 @@ public class Experience {
         this.contents = contents;
     }
 
-  
-
-
-    
 }
