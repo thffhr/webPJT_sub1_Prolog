@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.web.blog.model.apply.ApplyPortfolio;
+// import com.web.blog.model.apply.ApplyPortfolio;
 import com.web.blog.model.join.PortfolioTag;
 
 import lombok.Builder;
@@ -44,10 +46,13 @@ public class Portfolio {
     private String contents;
 
     @OneToMany(mappedBy = "portfolio")
-    private List<PortfolioTag> portfolioTags = new ArrayList<>();
+    private List<PortfolioTag> portfolioTags;
 
     @OneToMany(mappedBy = "pid")
     private List<UploadFile> files;
+
+    @OneToMany(mappedBy = "portfolio")
+    private List<ApplyPortfolio> applyPortfolios;
 
     @Builder
     public Portfolio(int pid, String uid, Date startDate, Date endDate, String title, String contents) {

@@ -1,12 +1,10 @@
 package com.web.blog.model.portfolio;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import lombok.*;
 
-@Entity
 @Data
 @NoArgsConstructor
 public class PTagCreateResponse {
