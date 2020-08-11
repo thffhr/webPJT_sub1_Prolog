@@ -1,10 +1,10 @@
 package com.web.blog.service.temp;
 
-
 import java.util.*;
 
 import com.web.blog.dao.temp.TempDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.apply.ApplyTerm;
 import com.web.blog.model.temp.Temp;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +25,12 @@ public class TempServiceImpl implements TempService {
     @Override
     public ResponseEntity<BasicResponse> findAll() {
         
-        List<Temp> obj = tempDao.findAll();
-        List<Temp> temp = obj;
+        List<ApplyTerm> obj = tempDao.findAll();
 
         if (obj != null ) {
-            for(Temp t : obj){
-                System.out.println(t);
-            }
             result.status = true;
             result.data = "기간 가져오기 성공";
-            result.object = temp;
+            result.object = obj;
             response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
         }  else {
             result.status = false;
