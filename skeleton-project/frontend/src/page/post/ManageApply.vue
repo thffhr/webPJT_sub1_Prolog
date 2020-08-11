@@ -1,4 +1,41 @@
 <template>
+<div>
+
+   <!-- <div class="row">
+       <modal name="example"
+         @before-open="beforeOpen"
+         @before-close="beforeClose">
+    <span>Hello, {{ periods }}!</span>
+    </modal>
+   </div> -->
+    <div v-if="is_show">
+      
+       <modal name="example"
+         @before-open="beforeOpen"
+         @before-close="beforeClose"
+         draggable=""
+         >
+        <div class="custom-modal-header">
+            지원회사 기간 선택
+            <div class="modal-button">
+              <b-img @click="$modal.hide('example')"  style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-xbox-x-50.png`)" width="30px"></b-img>
+            </div>
+        </div>
+        <div class="modal-contents" >
+            <select v-on:input="updateValue($event.target.value)" >
+              <option v-for="option in periods">{{ option.apTerm }}</option>
+            </select>    
+            
+            <div>
+              <p> 선택하신 기간은 {{search_input}}입니다. </p>
+              <p> 맞으시면 확인 버튼을 눌러주세요.</p>
+            </div>
+              <button @click="searchByPeriod(search_input)" type="button" class="btn btn-primary">확인</button>
+         </div>
+       </modal>
+    
+    </div> 
+
     <div class="container marketing">
 
       <div class="custom_search_container">
@@ -6,7 +43,9 @@
         <input type="hidden" name="keyword_log_flag" value="Y" />
         <div class ="search-input">
         <b-img type="image" @click="deleteE(exid, experience)" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-search-50.png`)" width="25px"></b-img>
-        <input type="text" name="search_text" value=""  autocomplete="off" autofocus title="검색해보아요~" class="search_top" >
+        <input type="text" v-model="search_input" value=""  autocomplete="off" autofocus title="검색해보아요~" class="search_top" >
+        <b-img type="image" @click="calendar()" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-calendar-50.png`)" width="25px"></b-img>
+  
         </div>
         </form>
       </div>
@@ -84,12 +123,14 @@
     
 
     
-
+</div>
 </template>
 
 <script>
 import constants from "../../lib/constants.js";
 import axios from "axios";
+import Vue from "vue";
+
 
 //const SERVER_URL = "http://localhost:8080";
 
@@ -98,15 +139,16 @@ export default {
   data: () => {
     return {
         slide: 0,
-        sliding: null
+        sliding: null,
+        periods: [],
+        is_show:false,
+        search_input:""
     };
   },
-  beforeCreate () {
- 
-   
-   }
-   ,
-
+  mounted(){
+        this.$modal.show('example')
+     
+    },
    computed: {
     uidState(tag) {
       return this.uid.length > 0 ? true : false;
@@ -114,16 +156,31 @@ export default {
   
   },
   created() {
-    axios
-      .get(this.$SERVER_URL + `/temp`, {
-       
-      })
-      .then((response) => {
-        // alert(this.$SERVER_URL + `/experience/Tags`);
-       console.log(response.data.object);
-      })
-      .catch((error) => {
-      });
+
+
+     //지원기간 가져오기, 없을경우만
+    if(constants.APPLY_PERIOD == null){
+      axios
+        .get(this.$SERVER_URL + `/temp`, {
+        
+        })
+        .then((response) => {
+          
+        //console.log(response.data.object);
+        constants.APPLY_PERIOD = response.data.object;
+        this.periods = constants.APPLY_PERIOD;
+        console.log(constants.APPLY_PERIOD);
+        //
+        })
+        .catch((error) => {
+        });
+    }else{
+       this.periods = constants.APPLY_PERIOD;
+    }
+
+  
+
+
   },
 
   methods:{
@@ -133,23 +190,39 @@ export default {
       onSlideEnd(slide) {
         this.sliding = false
       } ,
-
-      test(){
-         axios
-      .get(this.$SERVER_URL + `/temp`, {
-       
-      })
-      .then((response) => {
-        // alert(this.$SERVER_URL + `/experience/Tags`);
-       console.log(response.data.object);
-       
+      calendar(){
+        this.is_show = true;
+        this.$modal.show('example');
+        
+      }
+      ,
+      updateValue: function (period) {
+            this.search_input = period;
+      },
+      searchByPeriod: function(period){
+          
+          //검색어 없음, 처음 미정일때
+          if(period == ""){
+            alert("기간을 선택하세요.");
+            return;
+          }
           
 
-       
-      })
-      .catch((error) => {
-      });
+          //검색어 있으면
+          this.$modal.hide('example');
+          alert(period);
       }
+      ,
+
+    beforeOpen (event) {
+    this.is_show= true;
+    console.log('Opening...')
+    },
+    beforeClose (event) {
+      console.log('Closing...')
+       this.is_show= false;
+       event.cancel()
+    }
   }
 };
 </script>
@@ -184,5 +257,30 @@ export default {
   margin: auto;
   text-align: center;
 }
+
+
+.custom-modal-header{
+  
+  display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem 1rem;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: calc(0.3rem - 1px);
+    border-top-right-radius: calc(0.3rem - 1px);
+    
+  background: #eeeeee;
+  font-weight: 400;
+
+}
+
+.modal-contents{
+  text-align: center;
+}
+
+.modal-button{
+  text-align: right;
+}
+
 
 </style>
