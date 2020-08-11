@@ -39,7 +39,7 @@ export default {
     },
   },
 
-  data: function () {
+  data: function() {
     return {
       isHeader: true,
       constants,
@@ -55,10 +55,10 @@ export default {
   word-break: keep-all;
 }
 #app {
-  background-color: #eee;
+  background-color: #270949;
 }
 html {
-  background-color: #eee;
+  background-color: #270949;
 }
 a:link {
   color: #000;
