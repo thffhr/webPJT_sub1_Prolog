@@ -244,10 +244,11 @@ export default {
   },
   methods: {
     login() {
+      alert(this.emailOrUid + "-" + this.password)
       axios
-        .get(this.$SERVER_URL + "/account/login/", {
-          params: { emailOrUid: this.emailOrUid, password: this.password },
-        })
+        .post(this.$SERVER_URL + "/account/login/", 
+          { uidOrEmail: this.emailOrUid, password: this.password }
+        )
         .then((response) => {
           console.log(response);
           if (response.data.data == "success") {

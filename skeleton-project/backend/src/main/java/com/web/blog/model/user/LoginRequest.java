@@ -14,6 +14,7 @@ import javax.validation.constraints.Pattern;
 public class LoginRequest {
 
     @ApiModelProperty(required = true)
+    @NotNull
     String uidOrEmail;
 
     @ApiModelProperty(required = true)
