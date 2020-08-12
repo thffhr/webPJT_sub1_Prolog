@@ -1,21 +1,35 @@
 <template>
   <div>
-    <h2 class="title">
+    <h2 v-if="!updateTitleState" class="title" style="color: grey;" @click="updateTitle">
       {{pjtDetail.title}}
       <!-- {{router.params.pid}} -->
-      <b-button size="sm" variant="outline-dark">
-        <b-icon-box-arrow-down class="mr-1"></b-icon-box-arrow-down>전체 파일 다운로드
-      </b-button>
     </h2>
+    <h2 v-else class="title" style="color: grey;">
+      <input size=70% :value="pjtDetail.title" @input="pjtDetail.title = $event.target.value" @keyup.enter="sendUpdateInfo(); updateTitle()">
+      <b-img :src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px" style="display: inline-block; margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateTitle()"></b-img>
+      <!-- {{router.params.pid}} -->
+    </h2>
+    <b-button size="sm" variant="outline-dark">
+      <b-icon-box-arrow-down class="mr-1"></b-icon-box-arrow-down>전체 파일 다운로드
+    </b-button>
+  
+    
     <div class="tabs">
       <!-- <b-tabs content-class align="center"> -->
       <b-tabs content-class fill>
         <b-tab title="프로젝트 정보" active>
           <b-container class="tabContents">
             <b-row>
-              <b-col class="mt-4 mb-2">
-                <p>프로젝트 진행 기간 : {{pjtDetail.start_date}} ~ {{pjtDetail.end_date}}</p>
+
+              <b-col v-if="!updateDateState" class="mt-4 mb-2">
+                <p @click="updateDate()">프로젝트 진행 기간 : {{pjtDetail.start_date}} ~ {{pjtDetail.end_date}}</p>
               </b-col>
+              
+              <b-col v-else class="mt-4 mb-2">
+                <p style="display: inline-block;">프로젝트 진행 기간 : <input :value="pjtDetail.start_date" @input="pjtDetail.start_date = $event.target.value" @keyup.enter="sendUpdateInfo(); updateDate()"> ~ <input :value="pjtDetail.end_date" @input="pjtDetail.end_date = $event.target.value" @keyup.enter="sendUpdateInfo(); updateDate()"></p>
+                <b-img :src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px" style="display: inline-block; margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateDate()"></b-img>
+              </b-col>
+
             </b-row>
             <b-row>
               <b-col class="mt-2 mb-2">
@@ -59,7 +73,12 @@
                       class="mr-3"
                       id="tag"
                       text-variant="black"
-                    >{{ ptag.tagName }}</b-badge>
+                    >{{ ptag.tagName }}
+                    <b-img :src="require(`@/assets/img/icons8-trash-24.png`)" width="15px" style="margin-left: 5%; cursor: pointer;" @click="deleteTag(ptag.tid)"></b-img>
+                    </b-badge>
+
+                      <input size=5 placeholder="태그 추가하기" v-model="newTag" @keyup.enter="addNewTag(newTag)">
+
                   </div>
                   <div v-else>
                     <b-icon-plus-square class="mr-1"></b-icon-plus-square>
@@ -71,7 +90,13 @@
             <b-row>
               <b-col class="mt-2 mb-2">
                 <h5>프로젝트 정의</h5>
-                <p>{{pjtDetail.contents}}</p>
+
+                <p v-if="!updateContentsState" @click="updateContents">{{ pjtDetail.contents }}</p>
+                <p v-else>
+                  <input class="input-contents" :value="pjtDetail.contents" @input="pjtDetail.contents = $event.target.value">
+                  <b-img :src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px" style="display: inline-block; margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateContents()"></b-img>
+                </p>
+
               </b-col>
             </b-row>
           </b-container>
@@ -123,8 +148,13 @@ export default {
   // },
   data: () => {
     return {
+      uid: localStorage["uid"],
       pjtDetail: [],
       updateP: false,
+      updateDateState: false,
+      updateContentsState: false,
+      updateTitleState: false,
+      newTag: "",
     };
   },
   created() {
@@ -140,6 +170,85 @@ export default {
         }
       });
   },
+  methods: {
+    updateDate() {
+      this.updateDateState = !this.updateDateState
+    },
+    updateContents() {
+      this.updateContentsState = !this.updateContentsState
+    },
+    updateTitle() {
+      this.updateTitleState = !this.updateTitleState
+    },
+    sendUpdateInfo() {
+      axios
+      .put(this.$SERVER_URL + `/portfolio`, {
+        uid: this.uid,
+        pid: this.pjtDetail.pid,
+        title: this.pjtDetail.title,
+        contents: this.pjtDetail.contents,
+        startDate: this.pjtDetail.start_date,
+        endDate: this.pjtDetail.end_date,
+      })
+      .then((response) => {
+        // alert('수정완료')
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    },
+    deleteTag(tid) {
+      axios
+      .delete((this.$SERVER_URL + `/tag`), {
+        data: {
+        pid: this.pjtDetail.pid,
+        tid: tid,
+      }})
+      .then((response) => {
+        // alert('태그삭제')
+        // 태그 다시 받아야 새로고침효과
+        axios
+        .get(this.$SERVER_URL + `/portfolio/${this.pjtDetail.pid}`, {
+          params: { pid: this.pjtDetail.pid },
+        })
+        .then((response) => {
+          if (response.data.status) {
+            this.pjtDetail = response.data.object;
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    },
+    addNewTag(newTag) {
+      console.log(this.pjtDetail.pid)
+      console.log(newTag)
+      let form = new FormData();
+      form.append("pid", this.pjtDetail.pid)
+      form.append("tag", newTag)
+      axios
+      .post(this.$SERVER_URL + `/portfolio/tag`, form)
+      .then((response) => {
+        // alert("태그!")
+        // 태그 다시 받아야 새로고침효과..
+        axios
+        .get(this.$SERVER_URL + `/portfolio/${this.pjtDetail.pid}`, {
+          params: { pid: this.pjtDetail.pid },
+        })
+        .then((response) => {
+          if (response.data.status) {
+            this.pjtDetail = response.data.object;
+          }
+        });
+        this.newTag = ""
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    },
+  },
+  
 };
 </script>
 
@@ -162,5 +271,9 @@ export default {
 .title {
   text-align: left;
   margin-left: 120px;
+}
+.input-contents {
+  width: 90%;
+  height: 20rem;
 }
 </style>

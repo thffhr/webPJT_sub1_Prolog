@@ -29,10 +29,10 @@
     </div>
     <b-container>
       <b-row align-h="between">
-        <b-col cols="4" v-if="allTagState" @click="allTagOnOff" style="cursor: pointer;">태그 전체 선택 해제</b-col>
-        <b-col cols="4" v-else @click="allTagOnOff" style="cursor: pointer;">태그 전체 선택</b-col>
-        <b-col cols="4" v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; text-align: right;">태그없는 프로젝트 숨기기</b-col>
-        <b-col cols="4" v-else @click="showNotagProject" style="cursor: pointer; text-align: right;">태그없는 프로젝트 보여주기</b-col>
+        <b-col cols="4" v-if="allTagState" @click="allTagOnOff" style="cursor: pointer; color: white;">태그 전체 선택 해제</b-col>
+        <b-col cols="4" v-else @click="allTagOnOff" style="cursor: pointer; color: white;">태그 전체 선택</b-col>
+        <b-col cols="4" v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; text-align: right; color: white;">태그없는 프로젝트 숨기기</b-col>
+        <b-col cols="4" v-else @click="showNotagProject" style="cursor: pointer; text-align: right; color: white;">태그없는 프로젝트 보여주기</b-col>
     </b-row>
     </b-container>
     <!-- 여기까지 -->
@@ -78,11 +78,12 @@
           style="display: inline-block;"
           class="columns is-multiline"
         >
-          <b-card v-if="showProject(portfolio)" style="background: lightgrey; width:20rem; height:18rem;" class="m-2">
+          <b-card v-if="showProject(portfolio)" style="background: lightgrey; width:20rem; height:26rem;" class="m-2">
             <div>
-              <!-- 삭제 img -->
+              <!-- 수정 삭제 img -->
               <div class="img-custom">
-              <b-img align-h="end"  @click="deleteP(portfolio)" style="cursor:pointer; test-align: right;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
+              <b-img @click="gotoDetail(portfolio.pid)" style="cursor:pointer; margin-right: 8%" v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)" width="15px"></b-img>
+              <b-img @click="deleteP(portfolio)" style="cursor:pointer;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
               </div>
               
               <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
@@ -91,11 +92,25 @@
               <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
               <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div>
               <p
+                v-if="portfolio.contents.length > 60"
                 class="mt-2"
-              >{{ portfolio.contents.slice(0, 60) }}</p>
+              >{{ portfolio.contents.slice(0, 60) }}...</p>
+              <p v-else class="mt-2">{{ portfolio.contents }}</p>
               <!-- 태그 출력 -->
+              <div v-if="portfolio.tag.length > 4">
               <div
-                v-for="portfolioTag in portfolio.tag.slice(0, 3)"
+                v-for="portfolioTag in portfolio.tag.slice(0, 4)"
+                :key="portfolioTag.tid"
+                style="display: inline-block;"
+              >
+                <h4>
+                  <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
+                </h4>
+              </div>...
+              </div>
+              <div v-else-if="portfolio.tag.length > 0">
+                <div
+                v-for="portfolioTag in portfolio.tag.slice(0, 4)"
                 :key="portfolioTag.tid"
                 style="display: inline-block;"
               >
@@ -103,6 +118,8 @@
                   <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
                 </h4>
               </div>
+              </div>
+              <div v-else>태그를 추가해보세요</div>
             </div>
           </b-card>      
           <!-- <hr> -->
@@ -312,9 +329,15 @@ export default {
         this.selectedTags = []
         Array.prototype.forEach.call(this.tags, tag => 
           tag.state = this.allTagState)
-
       }
-    }
+    },
+    gotoDetail(pid) {
+      // console.log(pid);
+      this.$router.push({
+        name: constants.URL_TYPE.POST.PORTFOLIODETAILS,
+        params: { pid: pid },
+      });
+    },
   },
   // 버튼
   computed: {
@@ -337,6 +360,7 @@ export default {
 .img-custom{
     text-align: right;
 }
+
 .box-table2{
     border: 1px solid #888888;
     box-shadow: 0 0 2px rgb(111, 111, 111);
