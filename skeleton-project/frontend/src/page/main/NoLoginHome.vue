@@ -245,8 +245,9 @@ export default {
   methods: {
     login() {
       axios
-        .get(this.$SERVER_URL + "/account/login/", {
-          params: { emailOrUid: this.emailOrUid, password: this.password },
+        .post(this.$SERVER_URL + "/account/login/", {
+          uidOrEmail: this.emailOrUid,
+          password: this.password,
         })
         .then((response) => {
           console.log(response);
@@ -273,7 +274,8 @@ export default {
 
 <style>
 #nologinHome {
-  margin-top: 50px;
+  background-color: #270949;
+  padding-top: 50px;
   color: #e7e7e7;
   text-align: center;
 }
