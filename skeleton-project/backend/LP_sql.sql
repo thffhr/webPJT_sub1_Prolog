@@ -104,9 +104,9 @@ CREATE TABLE `apply_experience` (
   PRIMARY KEY (`ap_exid`),
   KEY `apply_exp_apid_fk` (`apid`),
   KEY `apply_exp_exid_fk` (`exid`),
-  CONSTRAINT `apply_exp_exid_fk` FOREIGN KEY (`exid`) REFERENCES `experience` (`exid`),
-  CONSTRAINT `apply_exp_apid_fk` FOREIGN KEY (`apid`) REFERENCES `apply` (`apid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `apply_exp_apid_fk` FOREIGN KEY (`apid`) REFERENCES `apply` (`apid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `apply_exp_exid_fk` FOREIGN KEY (`exid`) REFERENCES `experience` (`exid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 
 CREATE TABLE `apply_portfolio` (
   `ap_pid` int(11) NOT NULL AUTO_INCREMENT,
@@ -115,9 +115,9 @@ CREATE TABLE `apply_portfolio` (
   PRIMARY KEY (`ap_pid`),
   KEY `apply_port_apid_fk` (`apid`),
   KEY `apply_port_pid_fk` (`pid`),
-  CONSTRAINT `apply_port_pid_fk` FOREIGN KEY (`pid`) REFERENCES `portfolio` (`pid`),
-  CONSTRAINT `apply_port_apid_fk` FOREIGN KEY (`apid`) REFERENCES `apply` (`apid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `apply_port_apid_fk` FOREIGN KEY (`apid`) REFERENCES `apply` (`apid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `apply_port_pid_fk` FOREIGN KEY (`pid`) REFERENCES `portfolio` (`pid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 
 CREATE TABLE `applyterm` (
   `aptid` int(11) NOT NULL AUTO_INCREMENT,

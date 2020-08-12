@@ -114,24 +114,25 @@ public class ApplyServiceImpl implements ApplyService {
 
     @Override
     public ResponseEntity<BasicResponse> deleteApply(String uid, int apid) {
-        // try {
-        // Optional<Apply> applyOpt = applyDao.findApplyByUidAndApid(uid, apid);
-        // if (applyOpt.isPresent()) {
-        // applyDao.delete(applyOpt.get());
-        // result.status = false;
-        // result.data = "지원 내역 삭제 성공";
-        // result.object = applyOpt;
-        // } else {
-        // result.status = false;
-        // result.data = "지원 내역 없음";
-        // result.object = null;
-        // }
-        // } catch (Exception e) {
-        // result.status = false;
-        // result.data = "지원 내역 삭제 실패";
-        // result.object = null;
-        // }
-        // response = new ResponseEntity<>(result, HttpStatus.OK);
+        try {
+            Optional<Apply> applyOpt = applyDao.findApplyByUidAndApid(uid, apid);
+            if (applyOpt.isPresent()) {
+                applyDao.delete(applyOpt.get());
+                result.status = false;
+                result.data = "지원 내역 삭제 성공";
+                result.object = applyOpt;
+            } else {
+                result.status = false;
+                result.data = "지원 내역 없음";
+                result.object = null;
+            }
+        } catch (Exception e) {
+            // e.printStackTrace();
+            result.status = false;
+            result.data = "지원 내역 삭제 실패";
+            result.object = null;
+        }
+        response = new ResponseEntity<>(result, HttpStatus.OK);
         return response;
     }
 }

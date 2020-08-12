@@ -1,4 +1,4 @@
-package com.web.blog.controller.Apply;
+package com.web.blog.controller.apply;
 
 import javax.validation.Valid;
 
@@ -51,7 +51,7 @@ public class ApplyController {
     }
 
     @DeleteMapping("/apply")
-    @ApiOperation(value = "지원목록 삭제-미완")
+    @ApiOperation(value = "지원목록 삭제")
     public ResponseEntity<BasicResponse> delete(@RequestParam String uid, @RequestParam int apid) {
         return applyService.deleteApply(uid, apid);
     }
