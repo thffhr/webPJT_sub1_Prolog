@@ -34,8 +34,6 @@ public class UserServiceImpl implements UserService {
     final BasicResponse result = new BasicResponse();
     ResponseEntity<BasicResponse> response = null;
 
-               
-
     @Override
     public ResponseEntity<BasicResponse> login(final String emailOrUid, final String password) throws Exception {
         ResponseEntity<BasicResponse> response = null;
@@ -129,25 +127,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<BasicResponse> updateUser(final UserUpdateRequest updateRequest)
-            throws Exception {
+    public ResponseEntity<BasicResponse> updateUser(final UserUpdateRequest updateRequest) throws Exception {
 
+        try {
+            // 프로필 있는지 확인하고 있으면넣고 없으면 안넣음.
+            Optional<User> opt = userDao.findUserByUid(updateRequest.getUid());
+            userDao.save(updateRequest.toEntity(opt.get().getPicByte()));
+            result.status = true;
+            result.data = "회원수정 성공";
+            response = new ResponseEntity<>(result, HttpStatus.OK);
 
-        try{
-                //프로필 있는지 확인하고 있으면넣고 없으면 안넣음.
-                Optional<User> opt = userDao.findUserByUid(updateRequest.getUid());
-                userDao.save(updateRequest.toEntity(opt.get().getPicByte()));
-                result.status = true;
-                result.data = "회원수정 성공";
-                response = new ResponseEntity<>(result, HttpStatus.OK);
-                
-            }
-        catch(Exception e){
-                result.status = false;
-                result.data = "회원수정 실패";
-                response = new ResponseEntity<>(result, HttpStatus.OK);
-            }
-            return response;
+        } catch (Exception e) {
+            result.status = false;
+            result.data = "회원수정 실패";
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        return response;
     }
 
     @Override
@@ -297,4 +292,19 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<BasicResponse> deleteProfile(String uid) {
+
+        Profile profile = profileDao.findUserByUid(uid);
+        profile.setPicByte(null);
+        profileDao.save(profile);
+
+        final BasicResponse result = new BasicResponse();
+
+        result.status = true;
+        result.data = "회원프로필이미지 삭제";
+        result.object = profile;
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

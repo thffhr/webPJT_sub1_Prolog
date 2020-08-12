@@ -61,8 +61,7 @@ public class AccountController {
      */
     @PutMapping("/account")
     @ApiOperation(value = "유저 정보 수정하기")
-    public Object updateUser( @Valid @RequestBody UserUpdateRequest updateRequest)
-            throws Exception {
+    public Object updateUser(@Valid @RequestBody UserUpdateRequest updateRequest) throws Exception {
 
         return userService.updateUser(updateRequest);
     }
@@ -120,6 +119,12 @@ public class AccountController {
     @GetMapping(path = { "/account/ckprofile/{uid}" })
     public ResponseEntity<BasicResponse> checkProfile(@PathVariable("uid") String uid) throws Exception {
         return userService.getProfile(uid);
+    }
+
+    @ApiOperation(value = "프로필 이미지 삭제")
+    @PostMapping("/account/profile/delete/{uid}")
+    public ResponseEntity<BasicResponse> deleteImage(@PathVariable("uid") String uid) throws Exception {
+        return userService.deleteProfile(uid);
     }
 
     // public static String byteArrayToBinaryString(byte[] b) {
