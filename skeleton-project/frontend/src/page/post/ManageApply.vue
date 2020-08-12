@@ -1,13 +1,10 @@
 <template>
 <div>
 
-   <!-- <div class="row">
-       <modal name="example"
-         @before-open="beforeOpen"
-         @before-close="beforeClose">
-    <span>Hello, {{ periods }}!</span>
-    </modal>
-   </div> -->
+  
+
+
+    <!-- 기간 선택 모달 -->
     <div v-if="is_show">
       
        <modal name="example"
@@ -27,34 +24,39 @@
             </select>    
             
             <div>
-              <p> 선택하신 기간은 {{search_input}}입니다. </p>
+              <p> 선택하신 기간은 {{search_input_period}}입니다. </p>
               <p> 맞으시면 확인 버튼을 눌러주세요.</p>
             </div>
-              <button @click="searchByPeriod(search_input)" type="button" class="btn btn-primary">확인</button>
+              <button @click="searchByPeriod(search_input_period)" type="button" class="btn btn-primary">확인</button>
          </div>
        </modal>
     
     </div> 
+    <!-- 기간 선택 모달 -->
+  
 
+
+    <!-- 검색 창 -->
     <div class="container marketing">
 
       <div class="custom_search_container">
        <form class="fleft" name="topSearchForm" id="topSearchForm" action="/goods/search">
         <input type="hidden" name="keyword_log_flag" value="Y" />
         <div class ="search-input">
-        <b-img type="image" @click="deleteE(exid, experience)" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-search-50.png`)" width="25px"></b-img>
-        <input type="text" v-model="search_input" value=""  autocomplete="off" autofocus title="검색해보아요~" class="search_top" >
-        <b-img type="image" @click="calendar()" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-calendar-50.png`)" width="25px"></b-img>
-  
+          <b-img type="image" @click="deleteE(exid, experience)" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-search-50.png`)" width="25px"></b-img>
+          <input type="text" v-model="search_input_text" value=""  autocomplete="off" autofocus title="회사명으로 검색해보아요~" class="search_top_text" >
+          <input readonly type="text" v-model="search_input_period" value=""  autocomplete="off" autofocus title="기간선택해보아요~" class="search_top_period" >
+          <b-img type="image" @click="calendar()" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-calendar-50.png`)" width="25px"></b-img>
         </div>
         </form>
       </div>
       
       <hr class="featurette-divider">
+    <!-- 검색 창 -->
    
    
-   
-       <div>
+   <!-- 케러셀 -->
+   <div>
     <b-carousel
       id="carousel-1"
       v-model="slide"
@@ -68,57 +70,74 @@
       @sliding-start="onSlideStart"
       @sliding-end="onSlideEnd"
     >
-      <!-- Text slides with image -->
-      <b-carousel-slide
-        caption="First slide"
-        text="Nulla vitae elit libero, a pharetra augue mollis interdum."
-        img-src="https://picsum.photos/1024/480/?image=52"
-      ></b-carousel-slide>
 
-      <!-- Slides with custom text -->
-      <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=54">
-        <h1>Hello world!</h1>
-      </b-carousel-slide>
 
-      <!-- Slides with image only -->
-      <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=58"></b-carousel-slide>
+      <div v-for="(apply,apid) in apply_lists" :key="apply.apid">
+             <div class="custom-contents" @click="view_apply_detail(apply)">
+                 
+            <b-carousel-slide
+                caption="First slide"
+                text="Nulla vitae elit libero, a pharetra augue mollis interdum."
+                img-src="https://picsum.photos/1024/480/?image=52"
+                >
+                      <!-- 제목 -->
+                        <div>
+                            <h2>{{apply.apCompany}}</h2>
+                        </div>
+                        <div>
+                            <h4>{{apply.apTerm}}</h4>
+                        </div>
 
-      <!-- Slides with img slot -->
-      <!-- Note the classes .d-block and .img-fluid to prevent browser default image alignment -->
-      <b-carousel-slide>
-        <template v-slot:img>
-          <img
-            class="d-block img-fluid w-100"
-            width="1024"
-            height="480"
-            src="https://picsum.photos/1024/480/?image=55"
-            alt="image slot"
-          >
-        </template>
-      </b-carousel-slide>
+                      <!-- 날짜 -->
+                        <div class="date-align">
+                          <small>{{apply.ap_term}} ~ {{apply.ap_term}}</small>
+                        </div>
 
-      <!-- Slide with blank fluid image to maintain slide aspect ratio -->
-      <b-carousel-slide caption="Blank Image" img-blank img-alt="Blank image">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eros felis, tincidunt
-          a tincidunt eget, convallis vel est. Ut pellentesque ut lacus vel interdum.
-        </p>
-      </b-carousel-slide>
+                      <!-- 내용 -->
+                      <div>
+                          <p class="txt_line"> {{apply.apDesc}} </p>
+                      </div>
+                </b-carousel-slide>
+                
+                </div>
+                
+      </div>
+
+
     </b-carousel>
-
-    <p class="mt-4">
-      Slide #: {{ slide }}<br>
-      Sliding: {{ sliding }}
-    </p>
   </div>
+  <!-- 케러셀 -->
 
 
-   
-   
-   
-   
-    </div>
-    
+  <!-- 임시 지원목록 상세 -->
+  
+          <!-- 지원목록 -->
+        <div v-bind="selected_apply" v-if="isEmptyApply()">
+            <div class="custom-temp col-md-12">
+              <!-- 제목 -->
+                <div>
+                    <h2>{{selected_apply.apCompany}}</h2>
+                </div>
+                <div>
+                    <h4>{{selected_apply.apTerm}}</h4>
+                </div>
+
+              <!-- 날짜 -->
+                <div class="date-align">
+                  <small>{{selected_apply.ap_term}} ~ {{selected_apply.ap_term}}</small>
+                </div>
+
+              <!-- 내용 -->
+              <div>
+                  <p class="txt_line"> {{selected_apply.apDesc}} </p>
+              </div>
+            </div>
+        </div><!-- /지원목록 -->
+
+  <!-- 임시 지원목록 리스트 -->
+  
+  </div>
+  <!-- Container 끝-->  
 
     
 
@@ -140,21 +159,17 @@ export default {
     return {
         slide: 0,
         sliding: null,
+
         periods: [],
         is_show:false,
-        search_input:""
+        search_input_period:"",
+        search_input_text:"",
+
+        apply_lists:[],
+        selected_apply:[]
     };
-  },
-  mounted(){
-        this.$modal.show('example')
-     
-    },
-   computed: {
-    uidState(tag) {
-      return this.uid.length > 0 ? true : false;
-    },
-  
-  },
+  }
+  ,
   created() {
 
 
@@ -178,13 +193,31 @@ export default {
        this.periods = constants.APPLY_PERIOD;
     }
 
+    //지원목록 가져오기
+    axios
+      .get(this.$SERVER_URL + `/apply`, {
+        params: {
+          uid: localStorage["uid"],
+        },
+      })
+      .then((response) => {
+        
+        console.log(response)
+        console.log(response.data.object);
+        this.apply_lists = response.data.object;
+        console.log(response.data.object[0].portfolioTags);
+        
+      })
+      .catch((error) => {
+        console.log(error);   
+      });
   
 
 
   },
 
   methods:{
-    onSlideStart(slide) {
+      onSlideStart(slide) {
         this.sliding = true
       },
       onSlideEnd(slide) {
@@ -197,7 +230,7 @@ export default {
       }
       ,
       updateValue: function (period) {
-            this.search_input = period;
+            this.search_input_period = period;
       },
       searchByPeriod: function(period){
           
@@ -222,6 +255,16 @@ export default {
       console.log('Closing...')
        this.is_show= false;
        event.cancel()
+    },
+    view_apply_detail(in_select_apply){
+      alert("임시");
+      this.selected_apply = in_select_apply;
+    },
+    isEmptyApply(){
+      if(this.selected_apply == ""){
+        return false;
+      }
+      return true;
     }
   }
 };
@@ -230,8 +273,13 @@ export default {
 <style>
 
 
-.search-input input{
-      width: 475px;
+.search-input{
+    width: 70%;
+    text-align: center;
+}
+
+.search_top_period {
+     width: 20%;
     font-size: 16px;
     border: 0;
     outline: 0;
@@ -240,22 +288,29 @@ export default {
     color: #000;
     font-size: 20px;
     
-    border-bottom: 3px solid #00000022
+    border-bottom: 3px solid #00000022;
+    height: 45px;
+    background: #eeeeeeff;
 }
 
-.search_top {
-    height: 45px;
-    font-size: 19px;
-    padding-top: 5px;
+.search_top_text {
+    width: 50%;
+    font-size: 16px;
+    border: 0;
+    outline: 0;
+    font-family: "Noto Sans KR", "NanumGothic", "Nanum Gothic", "Malgun Gothic", "Apple SD Gothic Neo", dotum, sans-serif;
     font-weight: 500;
-    color: white;
+    color: #000;
+    font-size: 20px;
+    
+    border-bottom: 3px solid #00000022;
+    height: 45px;
     background: #eeeeeeff;
-    letter-spacing: -0.0px;
 }
 
 .custom_search_container{
   margin: auto;
-  text-align: center;
+  text-align: -webkit-center;
 }
 
 
@@ -280,6 +335,13 @@ export default {
 
 .modal-button{
   text-align: right;
+}
+
+.custom-temp{
+  background: #eeeeee;
+  border-radius: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  margin-top: 5%;
 }
 
 

@@ -297,11 +297,13 @@ export default {
         this.emailDupcheck &&
         this.passwordCheck
       ) {
+        alert("여긴옴")
         axios
           .delete(this.$SERVER_URL + `/email/${this.email}`, this.email)
           .then((response) => {
             if (response.data.status) {
               let form = new FormData();
+              alert("여긴오니")
               axios
                 .post(this.$SERVER_URL + `/account`, {
                   uid: this.uid,

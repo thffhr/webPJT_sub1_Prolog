@@ -8,10 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Builder;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @Table(name = "applyterm")
 public class ApplyTerm {
 
