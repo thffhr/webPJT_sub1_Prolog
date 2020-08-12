@@ -10,6 +10,7 @@ import java.util.zip.Inflater;
 import com.web.blog.dao.user.ProfileDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.user.LoginRequest;
 import com.web.blog.model.user.Profile;
 import com.web.blog.model.user.ProfileUpdateRequest;
 import com.web.blog.model.user.SignupRequest;
@@ -35,10 +36,14 @@ public class UserServiceImpl implements UserService {
     ResponseEntity<BasicResponse> response = null;
 
     @Override
-    public ResponseEntity<BasicResponse> login(final String emailOrUid, final String password) throws Exception {
+    public ResponseEntity<BasicResponse> login(LoginRequest loginRequest) throws Exception {
         ResponseEntity<BasicResponse> response = null;
-        final Optional<User> userOpt = userDao.findUserByEmailAndPassword(emailOrUid, password);
-        final Optional<User> userOpt2 = userDao.findUserByUidAndPassword(emailOrUid, password);
+        String email = loginRequest.toEntity().getEmail();
+        String uid = loginRequest.toEntity().getUid();
+        String password = loginRequest.getPassword();
+
+        final Optional<User> userOpt = userDao.findUserByEmailAndPassword(email, password);
+        final Optional<User> userOpt2 = userDao.findUserByUidAndPassword(uid, password);
 
         final BasicResponse result = new BasicResponse();
 
