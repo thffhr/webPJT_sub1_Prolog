@@ -1,99 +1,129 @@
 <template>
   <div id="join">
-    <!-- <b-card class="join_card" header-tag="header" footer-tag="footer"> -->
-    <!-- <template v-slot:header> -->
-    <!-- <h4 class="mb-0 mt-2 mb-2">회원가입</h4> -->
-    <!-- 사용자 닉네임 잘 들어가는지 확인하기 -->
-    <!-- <p class="mb-2">회원 정보를 입력해주세요.</p> -->
-    <!-- </template> -->
-    <!-- <b-card-text> -->
-    <b-form-text id="email-help"
-      >아이디, 닉네임, 이메일 변경 시 중복확인이 필요합니다.</b-form-text
-    >
+    <b-container>
+      <b-row class="my-1">
+        <b-col role="group" cols="12">
+          <b-form-text class="joinTitle mb-2" id="email-help">
+            회원가입을 위해 이메일 인증이 필요합니다.
+          </b-form-text>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col role="group" cols="9">
+          <b-form-input
+            id="uid"
+            v-model="uid"
+            :state="uidState"
+            aria-describedby="uid-help uid-feedback"
+            placeholder="아이디를 입력해주세요"
+            trim
+            type="text"
+          ></b-form-input>
+          <b-form-invalid-feedback id="uid-feedback">
+            {{ uidFeedback }}
+          </b-form-invalid-feedback>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col role="group" cols="9">
+          <b-form-input
+            id="nickName"
+            v-model="nickName"
+            :state="nickNameState"
+            aria-describedby="nickName-help nickName-feedback"
+            placeholder="닉네임을 입력해주세요"
+            trim
+            type="text"
+          ></b-form-input>
+          <b-form-invalid-feedback id="nickName-feedback">
+            {{ nicknameFeedback }}
+          </b-form-invalid-feedback>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col class="emailInput" role="group" cols="9">
+          <div class="emailInput">
+            <b-form-input
+              id="email"
+              v-model="email"
+              :state="emailState"
+              aria-describedby="email-help email-feedback"
+              placeholder="이메일을 입력해주세요"
+              trim
+              type="text"
+            ></b-form-input>
+            <b-form-invalid-feedback id="email-feedback">
+              {{ emailFeedback }}
+            </b-form-invalid-feedback>
+          </div>
+        </b-col>
+        <b-col class="align-self-center">
+          <b-overlay
+            spinner-variant="secondary"
+            spinner-small
+            :show="show"
+            rounded="sm"
+          >
+            <div :aria-hidden="show ? 'true' : null">
+              <b-button
+                size="sm"
+                variant="light"
+                id="emailAuthentication"
+                @click="emailAuthentication"
+                :disabled="show"
+              >
+                메일 인증
+              </b-button>
+            </div>
+          </b-overlay>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col role="group" cols="9">
+          <b-form-input
+            id="password"
+            v-model="password"
+            placeholder="비밀번호를 입력해주세요"
+            :state="passwordState"
+            aria-describedby="password-help password-feedback"
+            trim
+            :type="passwordType"
+          ></b-form-input>
+          <span :class="{ active: passwordType === 'text' }">
+            <i class="fas fa-eye"></i>
+          </span>
+          <b-form-invalid-feedback id="password-feedback">
+            {{ passwordFeedback }}
+          </b-form-invalid-feedback>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col role="group" cols="9">
+          <b-form-input
+            id="password-confirm"
+            v-model="passwordConfirm"
+            :state="passwordConfirmState"
+            placeholder="비밀번호를 한번 더 입력해주세요"
+            trim
+            :type="passwordConfirmType"
+          ></b-form-input>
+          <span :class="{ active: passwordConfirmType === 'text' }">
+            <i class="fas fa-eye"></i>
+          </span>
+          <b-form-invalid-feedback id="password-feedback"
+            >비밀번호를 정확히 입력해주세요.
+          </b-form-invalid-feedback>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col role="group" cols="12">
+          <b-button @click="join" class="mt-3 ml-auto mr-auto"
+            >회원가입</b-button
+          >
+        </b-col>
+      </b-row>
+    </b-container>
 
-    <b-form-input
-      id="uid"
-      v-model="uid"
-      :state="uidState"
-      aria-describedby="uid-help uid-feedback"
-      placeholder="아이디를 입력해주세요"
-      trim
-      class="mr-auto ml-auto"
-      style="width: 60%;"
-      type="text"
-    ></b-form-input>
-    <b-form-invalid-feedback id="uid-feedback">
-      {{ uidFeedback }}
-    </b-form-invalid-feedback>
-
-    <b-form-input
-      id="nickName"
-      v-model="nickName"
-      :state="nickNameState"
-      aria-describedby="nickName-help nickName-feedback"
-      placeholder="닉네임을 입력해주세요"
-      trim
-      class="mr-auto ml-auto"
-      style="width: 60%;"
-      type="text"
-    ></b-form-input>
-    <b-form-invalid-feedback id="nickName-feedback">
-      {{ nicknameFeedback }}
-    </b-form-invalid-feedback>
-
-    <div class="emailInput">
-      <b-form-input
-        id="email"
-        v-model="email"
-        :state="emailState"
-        aria-describedby="email-help email-feedback"
-        placeholder="이메일을 입력해주세요"
-        trim
-        class="mr-auto ml-auto"
-        style="width: 60%;"
-        type="text"
-      ></b-form-input>
-      <b-form-invalid-feedback id="email-feedback">
-        {{ emailFeedback }}
-      </b-form-invalid-feedback>
-      <label @click="emailcerti" class="emailcerti">이메일 인증</label>
-    </div>
-
-    <b-form-input
-      id="password"
-      v-model="password"
-      placeholder="비밀번호를 입력해주세요"
-      :state="passwordState"
-      aria-describedby="password-help password-feedback"
-      trim
-      class="mr-auto ml-auto"
-      style="width: 60%;"
-      :type="passwordType"
-    ></b-form-input>
-    <span :class="{ active: passwordType === 'text' }">
-      <i class="fas fa-eye"></i>
-    </span>
-    <b-form-invalid-feedback id="password-feedback">
-      {{ passwordFeedback }}
-    </b-form-invalid-feedback>
-
-    <b-form-input
-      id="password-confirm"
-      v-model="passwordConfirm"
-      :state="passwordConfirmState"
-      placeholder="비밀번호를 한번 더 입력해주세요"
-      trim
-      class="mr-auto ml-auto"
-      style="width: 60%;"
-      :type="passwordConfirmType"
-    ></b-form-input>
-    <span :class="{ active: passwordConfirmType === 'text' }">
-      <i class="fas fa-eye"></i>
-    </span>
-    <b-form-invalid-feedback id="password-feedback"
-      >비밀번호를 정확히 입력해주세요.
-    </b-form-invalid-feedback>
-    <b-button @click="join" class="ml-auto mr-auto">회원가입</b-button>
     <!-- <b-row>
               <b-col cols="9">
                 <label>
@@ -103,15 +133,6 @@
                 <span class="go-term">약관 보기</span>
               </b-col>
       </b-row>-->
-    <!-- </b-card-text> -->
-    <!-- <div class="ml-auto">
-      <b-button @click="join" class="ml-2 mr-2">회원가입</b-button>
-      <router-link :to="{ name: constants.URL_TYPE.MAIN.NOLOGINHOME }">
-        <b-button>취소</b-button>
-      </router-link>
-    </div> -->
-    <!-- <em>Footer Slot</em> -->
-    <!-- </b-card> -->
   </div>
 </template>
 
@@ -126,6 +147,9 @@ export default {
   data: () => {
     return {
       constants,
+      // 확인확인
+      show: false,
+      // 확인확인
       email: "",
       uid: "",
       nickName: "",
@@ -250,7 +274,8 @@ export default {
   },
   methods: {
     // 이메일 인증 메서드 만들기
-    emailcerti() {
+    emailAuthentication() {
+      this.show = true;
       axios
         .put(this.$SERVER_URL + "/email/auth", {
           subject: "블로그 가입 인증 메일입니다.",
@@ -258,6 +283,7 @@ export default {
         })
         .then((response) => {
           console.log(response);
+          this.show = !this.show;
           alert("회원가입 인증 메일이 발송되었습니다. 메일을 확인해 주세요.");
         })
         .catch((error) => {
@@ -275,7 +301,7 @@ export default {
         axios
           .delete(this.$SERVER_URL + `/email/${this.email}`, this.email)
           .then((response) => {
-            if (response.data.status == true) {
+            if (response.data.status) {
               let form = new FormData();
               alert("여긴오니")
               axios
@@ -287,8 +313,11 @@ export default {
                 })
                 .then((response) => {
                   if (response.data.status == true) {
-                    alert("회원가입이 완료되었습니다. 로그인을 해 주세요.");
-                    this.$router.push({ path: "/" });
+                    alert(
+                      "회원가입이 완료되었습니다. 모달은 아직 직접 닫아야 돼요^^ ㅈㅅㅈㅅ"
+                    );
+                    // 모달 닫히게 하는 법 좀 누가 알려줘라~!!
+                    // document.getElementById('modalClosed').click()
                   }
                 })
                 .catch((error) => {
@@ -317,12 +346,5 @@ export default {
 }
 #eamil {
   /* margin-left: 93.2px; */
-}
-.emailcerti {
-  /* display: inline; */
-}
-.emailcerti:hover {
-  cursor: pointer;
-  opacity: 0.5;
 }
 </style>
