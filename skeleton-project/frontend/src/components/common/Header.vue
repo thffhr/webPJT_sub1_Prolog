@@ -7,7 +7,7 @@
         v-bind:to="{ name: constants.URL_TYPE.MAIN.LOGINHOME }"
       >
         <!-- 로고 이미지 -->
-        <b-img :src="require(`@/assets/img/top_logo.jpg`)" width="150"></b-img>
+        <b-img :src="require(`@/assets/img/logo2-5.png`)" width="50"></b-img>
       </router-link>
     </h1>
     <!-- 로그인 시에만 사용자 메뉴 보이기 -->
@@ -28,7 +28,8 @@
             style="width: 2rem; height: 2rem;"
           />
 
-          <div id="userName" :uid="uid">{{ nickname }}</div>님, 환영합니다.
+          <div id="userName" :uid="uid">{{ nickname }}</div>
+          님, 환영합니다.
         </template>
 
         <b-dropdown-item href="#" @click="logout">로그아웃</b-dropdown-item>
@@ -57,7 +58,7 @@ export default {
   props: ["isHeader"],
   computed: {},
   watch: {},
-  data: function () {
+  data: function() {
     return {
       constants,
       uid: localStorage["uid"],

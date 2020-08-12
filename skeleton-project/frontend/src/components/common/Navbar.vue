@@ -1,16 +1,23 @@
 <template>
   <div id="navigationBar">
     <b-collapse id="collapse_navbar" v-if="constants.IS_LOGED_IN">
-      <b-navbar id="pageMenue" type="ligth" variant="#ffcabd">
+      <b-navbar id="pageMenue">
         <b-navbar-nav class="ml-auto mr-auto">
           <b-nav-item class="mr-5" href="#">
-            <router-link :to="{ name: constants.URL_TYPE.POST.MANAGEEXPERIENCE}">📝경험 관리</router-link>
+            <router-link
+              :to="{ name: constants.URL_TYPE.POST.MANAGEEXPERIENCE }"
+              >📝경험 관리</router-link
+            >
           </b-nav-item>
           <b-nav-item class="mr-5">
-            <router-link :to="{ name: constants.URL_TYPE.POST.MANAGEPORTFOLIO }">📇포트폴리오 관리</router-link>
+            <router-link :to="{ name: constants.URL_TYPE.POST.MANAGEPORTFOLIO }"
+              >📇포트폴리오 관리</router-link
+            >
           </b-nav-item>
           <b-nav-item class="mr-5" href="#">
-              <router-link :to="{ name: constants.URL_TYPE.POST.MANAGEAPPLY }">💼지원 목록</router-link>
+            <router-link :to="{ name: constants.URL_TYPE.POST.MANAGEAPPLY }"
+              >💼지원 목록</router-link
+            >
           </b-nav-item>
           <!-- <b-nav-item class="mr-5" href="#">👥커뮤니티</b-nav-item> -->
         </b-navbar-nav>
@@ -27,7 +34,7 @@
 <script>
 import constants from "../../lib/constants";
 export default {
-  data: function () {
+  data: function() {
     return {
       constants,
     };
@@ -36,6 +43,12 @@ export default {
 </script>
 
 <style>
+a:link {
+  color: white;
+}
+a:visited {
+  color: white;
+}
 #navigationBar {
   position: fixed;
   margin: 0 auto;
@@ -49,7 +62,9 @@ export default {
 }
 #pageMenue {
   border-bottom-right-radius: 4px;
-  background-color: #ffcabd;
+  border-bottom-left-radius: 4px;
+  background-color: #7a63ff;
+  color: white;
 }
 #navBtn {
   position: relative;
