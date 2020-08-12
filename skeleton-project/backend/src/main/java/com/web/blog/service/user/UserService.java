@@ -1,6 +1,7 @@
 package com.web.blog.service.user;
 
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.user.LoginRequest;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.UserUpdateRequest;
 
@@ -12,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UserService {
 
    // 로그인
-   ResponseEntity<BasicResponse> login(String emailOrUid, String password) throws Exception;
+   ResponseEntity<BasicResponse> login(LoginRequest loginRequest) throws Exception;
 
    // 회원 가입
    ResponseEntity<BasicResponse> signup(SignupRequest request) throws Exception;

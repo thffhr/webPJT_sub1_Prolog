@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.user.LoginRequest;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.UserUpdateRequest;
 import com.web.blog.service.user.UserService;
@@ -33,12 +34,11 @@ public class AccountController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/account/login")
+    @PostMapping("/account/login")
     @ApiOperation(value = "유저 로그인(uid 혹은 email로 로그인 가능)")
-    public Object login(@RequestParam(required = true) final String emailOrUid,
-            @RequestParam(required = true) final String password) throws Exception {
-
-        return userService.login(emailOrUid, password);
+    public Object login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
+        System.out.println(loginRequest.toEntity().getPassword());
+        return userService.login(loginRequest);
     }
 
     @PostMapping("/account")
