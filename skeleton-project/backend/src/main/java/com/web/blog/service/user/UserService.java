@@ -41,4 +41,7 @@ public interface UserService {
    // uid에 해당하는 유저의 프로필 사진 가져오기
    ResponseEntity<BasicResponse> getProfile(String uid) throws Exception;
 
+   // uid에 해당하는 유저의 프로필 사진 삭제
+   ResponseEntity<BasicResponse> deleteProfile(String uid);
+
 }
