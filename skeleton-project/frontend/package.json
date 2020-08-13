@@ -12,11 +12,13 @@
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.5",
+    "jquery": "^1.9.1",
     "vue": "^2.6.11",
     "vue-carousel-3d": "^0.2.0",
     "vue-js-modal": "^2.0.0-rc.6",
+    "vue-loader": "^15.9.3",
     "vue-router": "^3.3.4",
-    "vuedragger": "^1.0.21",
+    "vuedraggable": "^2.24.0",
     "vuex": "^3.5.1"
   },
   "devDependencies": {

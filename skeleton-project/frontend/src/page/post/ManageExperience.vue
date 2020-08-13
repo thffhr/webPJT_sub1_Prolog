@@ -210,9 +210,9 @@
     </div>
     <!-- /.row -->
 
-    <!-- START THE FEATURETTES -->
+      <!-- START THE FEATURETTES -->
 
-    <hr class="featurette-divider" />
+      <hr class="featurette-divider">
 
     <div class="row featurette">
       <div class="col-md-7">
@@ -251,25 +251,25 @@ export default {
     return {
       tagText: "",
       tags: [],
-      uid: localStorage["uid"],
+      uid : localStorage["uid"],
       experiences: [],
       noTagExperiences: [],
       selectedTags: [],
-      isIncludeNoTag: true,
+      isIncludeNoTag  : true,
       NoTagImgSrcT: "icons8-doorbell-50.png",
-      ex: [],
+      ex:[],
       experienceTags: {
         "": [],
       },
       mystyle: {
-        width: "",
-        height: "",
-        opacity: "",
+        width :"",
+        height : "",
+        opacity: ""
       },
-      buttonStyle: {
-        width: "",
-        opacity: "",
-      },
+      buttonStyle:{
+        width :"",
+        opacity: ""
+      }
     };
   },
   beforeCreate() {},
@@ -292,8 +292,8 @@ export default {
       })
       .then((response) => {
         // alert(this.$SERVER_URL + `/experience/Tags`);
-        console.log(response.data.object);
-        //
+       console.log(response.data.object);
+       //
         this.tags = response.data.object;
         Array.prototype.forEach.call(this.tags, (t) =>
           Object.assign(t, { imgsrc: "icons8-plus-64.png" })
@@ -318,28 +318,30 @@ export default {
         },
       })
       .then((response) => {
+        
         console.log(response);
         console.log(response.data.object);
         this.experiences = response.data.object;
         console.log(response.data.object[0].portfolioTags);
 
-        Array.prototype.forEach.call(this.experiences, (t) =>
-          Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
-        );
+          Array.prototype.forEach.call(this.experiences, t =>
+          Object.assign(t, {imgsrc:"icons8-pencil-24.png"}),
+          )
+        
       })
       .catch((error) => {
-        console.log(error);
-        this.experiences = [];
+        console.log(error);   
+          this.experiences = [];
       });
   },
   methods: {
     editTodo: function(todo) {
       this.editedTodo = todo;
     },
-    changebgcolor: function () {
+    changebgcolor: function() {
       this.mystyle.opacity = "0.7";
     },
-    originalcolor: function () {
+    originalcolor: function() {
       this.mystyle.opacity = "0.6";
     },
     change_button: function() {
@@ -348,12 +350,13 @@ export default {
     },
     origin_button: function() {
       this.buttonStyle.opacity = "0.6";
-      this.buttonStyle.width = "60px";
+        this.buttonStyle.width = "60px";
     },
 
     exeptNoTagClickE: function(isIncludeNoTag) {
       //alert("바뀔 값" + isIncludeNoTag);
-      this.isIncludeNoTag = !this.isIncludeNoTag;
+       this.isIncludeNoTag = !this.isIncludeNoTag;
+
     },
 
     showTag(tag) {
@@ -385,7 +388,7 @@ export default {
       }
     },
 
-    getTag() {
+    getTag(){
       axios
         .get(this.$SERVER_URL + `/experience/Tags`, {
           params: {
@@ -412,7 +415,8 @@ export default {
           //alert("실패");
         });
     },
-
+  
+    
     filtering(tag) {
       //tag가 선택되어있다면
       if (this.selectedTags.includes(tag.tid)) {
@@ -424,16 +428,29 @@ export default {
         tag.imgsrc = "icons8-close-window-26.png";
       }
       tag.state = !tag.state;
+     
     },
 
     addExp: function() {
       var date = new Date();
       var year = date.getFullYear();
-      var month = date.getMonth() + 1;
+      var month = date.getMonth()+1;
       var day = date.getDate();
 
-      if (day < 10) day = "0" + day;
-      if (month < 10) month = "0" + month;
+      if(day<10) day = "0"+day;
+      if(month<10) month = "0"+month;
+       
+      var startdate = year+"-"+month+"-"+day;
+      
+      //alert(this.uid);
+        axios
+      .post(this.$SERVER_URL + `/experience`, {
+        title:"제목",uid:this.uid, 
+      })
+      .then((response) => {
+        response.data.object.startdate = startdate;
+        response.data.object.enddate = startdate;
+        response.data.object.imgsrc = "icons8-pencil-24.png";
 
       var startdate = year + "-" + month + "-" + day;
 
@@ -453,13 +470,14 @@ export default {
             experiences = response.data.object;
           } else {
             response.data.object.tags = [];
-            this.experiences.push(response.data.object);
-          }
-        })
-        .catch((error) => {
-          //alert("실패");
-          console.log(error);
-        });
+          this.experiences.push(response.data.object);
+          } 
+          
+      })
+      .catch((error) => {
+        //alert("실패");
+        console.log(error); 
+      });
     },
 
     deleteE: function(exid, experience) {
@@ -479,14 +497,15 @@ export default {
     clickeEdit: function(experience) {
       experience.clicked = !experience.clicked;
       //저장하기
-      if (!experience.clicked) {
+      if(!experience.clicked){ 
         this.editE(experience);
         experience.imgsrc = "icons8-pencil-24.png";
-      }
+        }
       //수정하기
-      else {
+      else{ 
         experience.imgsrc = "icons8-save-close-64.png";
-      }
+        
+        }
       //alert(experience.clicked);
     },
 
@@ -607,6 +626,7 @@ export default {
           console.log(error);
         });
     },
+
   },
 };
 </script>
@@ -624,52 +644,53 @@ export default {
   padding: 2%;
   background: #eeeeee;
   opacity: 0.8;
+
 }
 .noTag {
   text-align: right;
 }
 .img-circle {
-  position: relative;
-  background: #000000;
-
-  border-radius: 50%;
-  height: 200px;
-  width: 200px;
-  opacity: 0.6;
-  background-size: cover;
-  margin-left: auto;
+    position: relative;
+    background:#000000;
+    
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    opacity: 0.6;
+        background-size: cover;
+      margin-left: auto;
 
   margin-right: auto;
-
-  border: 3px solid #222222;
-  box-shadow: 0 0 8px rgb(111, 111, 111);
+      
+    border: 3px solid #222222;
+    box-shadow: 0 0 8px rgb(111, 111, 111);
 }
 
-.img-circle .content {
-  width: 65%;
-  height: 65%;
-  text-align: center;
-  position: relative;
-  transform: translate(25%, 30%);
-  font-size: 15px;
-  color: white;
-  margin-top: auto;
-  margin-bottom: auto;
-}
+.img-circle .content{
+      width: 65%;
+      height: 65%;
+      text-align: center;
+         position: relative;
+         transform: translate(25%, 30%);
+         font-size:15px;
+         color: white;
+         margin-top: auto;
+         margin-bottom: auto;
+    }
 
-.txt_line p {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 250px;
+    .txt_line p{
+        overflow: hidden;
+       text-overflow: ellipsis; 
+      width: 250px;
 
-  white-space: normal;
-  line-height: 1.2;
-  max-height: 2.4em;
+       white-space: normal;
+      line-height: 1.2;
+      max-height: 2.4em; 
 
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
 
 .icon-right {
   text-align: end;
@@ -681,27 +702,19 @@ export default {
   margin-right: 8%;
 }
 
-.row-custom {
-  margin-top: 4%;
-  margin-bottom: 4%;
+.col-cotents h2{
+    text-align: center;
 }
 
-.col-custom {
-  width: 100%;
-  margin-left: 8%;
-  margin-right: 8%;
+
+.date-align{
+    text-align: right ;
 }
 
-.col-cotents {
-  text-align: left;
-}
-
-.col-cotents h2 {
-  text-align: center;
-}
-
-.date-align {
-  text-align: right;
+.col-button-custom{
+  margin-left: auto;
+ margin-right: auto;
+   
 }
 
 .col-button-custom {
