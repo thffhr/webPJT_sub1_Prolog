@@ -336,10 +336,10 @@ export default {
     editTodo: function(todo) {
       this.editedTodo = todo;
     },
-    changebgcolor: function() {
+    changebgcolor: function () {
       this.mystyle.opacity = "0.7";
     },
-    originalcolor: function() {
+    originalcolor: function () {
       this.mystyle.opacity = "0.6";
     },
     change_button: function() {

@@ -12,10 +12,12 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.blog.model.experience.Experience;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
+@Getter
 @Table(name = "apply_experience")
 public class ApplyExperience {
 

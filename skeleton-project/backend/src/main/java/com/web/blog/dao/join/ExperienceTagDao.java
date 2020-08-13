@@ -1,10 +1,6 @@
 package com.web.blog.dao.join;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
 
 import com.web.blog.model.join.ExperienceTag;
 import com.web.blog.model.tag.Tag;

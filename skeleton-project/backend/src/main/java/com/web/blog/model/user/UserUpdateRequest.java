@@ -3,7 +3,6 @@ package com.web.blog.model.user;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.Valid;
@@ -39,9 +38,7 @@ public class UserUpdateRequest {
     byte[] picByte;
 
     public User toEntity(byte[] picByte) {
-        return User.builder().uid(uid)
-                .nickname(nickname)
-                .email(email).password(password).picByte(picByte).build();
+        return User.builder().uid(uid).nickname(nickname).email(email).password(password).picByte(picByte).build();
     }
 
 }

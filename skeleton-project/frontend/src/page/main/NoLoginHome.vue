@@ -175,14 +175,13 @@
 import constants from "../../lib/constants.js";
 import axios from "axios";
 
-import Join from "../../page/user/Join.vue";
 import FindUserByEmail from "../../page/user/FindUserByEmail.vue";
 
 //const SERVER_URL = "http://localhost:8080";
 
 export default {
   name: "NoLoginHome",
-  components: { FindUserByEmail, Join },
+  components: { FindUserByEmail },
   props: [],
   computed: {},
   watch: {},
@@ -205,17 +204,18 @@ export default {
   methods: {
     login() {
       axios
-        .post(this.$SERVER_URL + "/account/login/", {
-          uidOrEmail: this.emailOrUid,
-          password: this.password,
+        .get(this.$SERVER_URL + "/account/login/", {
+          params: { emailOrUid: this.emailOrUid, password: this.password },
         })
         .then((response) => {
           console.log(response);
           if (response.data.data == "success") {
+            //   console.log("response.data.object")
+            // document.getElementById("closeBtn").click();
             localStorage.setItem("uid", response.data.object.uid);
-            localStorage.setItem("nickname", response.data.object.nickname);
-            localStorage.setItem("email", response.data.object.email);
             localStorage.setItem("password", response.data.object.password);
+            localStorage.setItem("email", response.data.object.email);
+            localStorage.setItem("createDate", response.data.object.createDate);
             constants.IS_LOGED_IN = true;
             this.$router.go({ name: constants.URL_TYPE.MAIN.LOGINHOME });
           } else {
@@ -234,49 +234,11 @@ export default {
 </script>
 
 <style>
-#nologinHome {
-  background-color: #270949;
-  padding-top: 50px;
-  color: #e7e7e7;
-  text-align: center;
-}
-#nologinHomeContainer {
-  width: 100%;
-  margin: 0;
-}
-.BackColor {
-  background-color: #e7e7e7;
-}
-#Home {
-  margin: 150px auto;
-}
-#AboutUs {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
-#AboutUsCarousel {
-  margin: 0 auto;
-}
-#Ourservice {
-  color: black;
-  width: 100%;
-}
-#service {
-  background-color: #b6b6b6;
-  border-radius: 10px;
-  padding: 40px 20px;
-  margin: 100px 0;
-}
-#Contact {
-  color: black;
-  padding-bottom: 100px;
+.nologinHome {
+  margin-top: 50px;
 }
 #findUser:hover {
   cursor: pointer;
   text-align: center;
-}
-.custom-login-style {
-  text-align: -webkit-center;
 }
 </style>
