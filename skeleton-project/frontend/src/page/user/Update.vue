@@ -387,6 +387,7 @@ export default {
             console.log(response);
             if (response.data.status) {
               alert("회원정보가 수정되었습니다!");
+              this.$router.push({ name: constants.URL_TYPE.MAIN.LOGINHOME });
             } else {
               alert("수정된 정보가 반영되지 않았습니다.");
             }
@@ -414,7 +415,7 @@ export default {
             localStorage.removeItem("createDate");
             constants.IS_LOGED_IN = false;
             alert("회원정보가 삭제되었습니다");
-            this.$router.push({ name: constants.URL_TYPE.MAIN.LOGINHOME });
+            this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
           }
         })
         .catch((error) => {
