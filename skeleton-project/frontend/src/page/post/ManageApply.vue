@@ -3,51 +3,64 @@
 
 <div>
 
+
+
+<div class="about"> 
+  <div>
+     <div class="left">
+        <div ref="left" id="drag-elements"> 
+          <div>Element 1</div> 
+          <div>Element 2</div> 
+          <div>Element 3</div> 
+        </div> 
+      <div ref="right" id="drop-target">
+      </div>
+       </div> 
+       <div class="right"> 
+         <div id="display" ref="display1">Display</div> 
+         </div> 
+         </div>
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  <div id="row">
+    <drag-drop
+      :dropzones="dropGroups"
+      :dropzonesTitle="'XYZ Company Teams'"
+      :originalData="stories"
+      :originalTitle="'Tasks to be distributed'"
+      :inPlace="true"
+      :enableSave="true"
+      :enableCancel="true"
+      @dropInOriginalBucket="originalBucketDropEvent"
+      @dropInDestinationBucket="destinationBucketDropEvent"
+      @save="save"
+      @cancel="cancel"
+    >
+      <template #dd-card="{ cardData }">
+        <custom-card
+          :data="cardData"
+          @done="doneMarked"
+        />
+      </template>
+    </drag-drop>
+  </div> -->
   
-
-  <div class="row">
-    <div class="col-3">
-      <h3>Draggable 1</h3>
-      <draggable
-        class="dragArea list-group"
-        :list="list1"
-        :group="{ name: 'people', pull: 'clone', put: false }"
-        @change="log"
-      >
-        <div
-          class="list-group-item"
-          v-for="element in list1"
-          :key="element.name"
-        >
-          {{ element.name }}
-        </div>
-      </draggable>
-    </div>
-
-    <div class="col-3">
-      <h3>Draggable 2</h3>
-      <draggable
-        class="dragArea list-group"
-        :list="list2"
-        group="people"
-        @change="log"
-      >
-        <div
-          class="list-group-item"
-          v-for="element in list2"
-          :key="element.name"
-        >
-          {{ element.name }}
-        </div>
-      </draggable>
-    </div>
-
-    <rawDisplayer class="col-3" :value="list1" title="List 1" />
-
-    <rawDisplayer class="col-3" :value="list2" title="List 2" />
-  </div>
-
-
 
 
 
@@ -302,17 +315,20 @@
 import constants from "../../lib/constants.js";
 import axios from "axios";
 import Vue from "vue";
-import draggable from "vuedraggable";
+import DragDrop from 'vue-drag-n-drop'
+import MyComponent  from './MyComponent.vue'
+import dragula from 'dragula';
 
 
 //const SERVER_URL = "http://localhost:8080";
 
 export default {
-  name: "ManageExperience",
+  name: "ManageApply",
   display: "Clone",
   order: 2,
   components: {
-    draggable
+     DragDrop,
+    MyComponent 
   },
   data: () => {
     return {
@@ -342,9 +358,67 @@ export default {
         { name: "Edgard", id: 6 },
         { name: "Johnson", id: 7 }
       ]
+
+,
+       stories: [
+        {
+          title: 'Strategy 101',
+          description: 'Create a draft of business plan',
+          time: '3 days',
+          done: false
+        },
+        {
+          title: 'Strategy 102',
+          description: 'Finalize the plan',
+          time: '4 days',
+          done: false
+        },
+        {
+          title: 'Tech diagram',
+          description: 'Draw the tech data',
+          time: '4 days',
+          done: false
+        },
+        {
+          title: 'Place Holder',
+          description: 'Data Science Team',
+          time: '5 days',
+          done: false
+        }
+      ],
+
+      dropGroups: [
+        {
+          name: 'Business Team',
+          children: []
+        },
+        {
+          name: 'Tech Dept',
+          children: []
+        },
+        {
+          name: 'Marketing Dept',
+          children: []
+        }
+      ]
     };
   }
   ,
+
+  mounted(){ 
+    const { right, display1, left } = this.$refs;
+     dragula([ left, right  ],{ revertOnSpill: true  } ).on('drop', el =>
+      { 
+        if(right.children.length > 0) 
+        { 
+          display1.innerHTML = right.innerHTML
+           }
+           else{ 
+             display1.innerHTML = "Display"
+              }
+               }) 
+               }
+,
   created() {
 
 
@@ -454,17 +528,20 @@ export default {
             }, 80);
     },
 
-  add: function() {
-      this.list.push({ name: "Juan" });
-    },
-    replace: function() {
-      this.list = [{ name: "Edgard" }];
-    },
-    clone: function(el) {
+   getComponentData() {
       return {
-        name: el.name + " cloned"
-      };
-    },
+        on: {
+          change: this.handleChange,
+          input: this.inputChanged
+        },
+        attrs:{
+          wrap: true
+        },
+        props: {
+          value: this.activeNames
+        }
+      }
+   },
     log: function(evt) {
       window.console.log(evt);
     }
@@ -645,7 +722,6 @@ export default {
 
 
 .left {float: left;position: relative;width: 50%;height: 100%; } .right {float: left;position: relative;width: 40%;margin-left: 5%;height: 100%; } #display {background: #2d2d2d;border: 10px solid #000000;border-radius: 5px;font-size: 2em;color: white;height: 100px;min-width:200px;text-align: center;padding: 1em;display:table-cell;vertical-align:middle; } #drag-elements {display: block;background-color: #dfdfdf;border-radius: 5px;min-height: 50px;margin: 0 auto;padding: 2em; } #drag-elements > div {text-align: center;float: left;padding: 1em;margin: 0 1em 1em 0;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);border-radius: 100px;border: 2px solid #ececec;background: #F7F7F7;transition: all .5s ease; } #drag-elements > div:active {-webkit-animation: wiggle 0.3s 0s infinite ease-in;animation: wiggle 0.3s 0s infinite ease-in;opacity: .6;border: 2px solid #000; } #drag-elements > div:hover {border: 2px solid gray;background-color: #e5e5e5; } #drop-target {border: 2px dashed #D9D9D9;border-radius: 5px;min-height: 50px;margin: 0 auto;margin-top: 10px;padding: 2em;display: block;text-align: center; } #drop-target > div {text-align: center;float: left;padding: 1em;margin: 0 1em 1em 0;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);border-radius: 100px;border: 2px solid #ececec;background: #F7F7F7;transition: all .5s ease; } #drop-target > div:active {-webkit-animation: wiggle 0.3s 0s infinite ease-in;animation: wiggle 0.3s 0s infinite ease-in;opacity: .6;border: 2px solid #000; } @-webkit-keyframes wiggle {0% {-webkit-transform: rotate(0deg);}25% {-webkit-transform: rotate(2deg);}75% {-webkit-transform: rotate(-2deg);}100% {-webkit-transform: rotate(0deg);} } @keyframes wiggle {0% {transform: rotate(-2deg);}25% {transform: rotate(2deg);}75% {transform: rotate(-2deg);}100% {transform: rotate(0deg);} } .gu-mirror {position: fixed !important;margin: 0 !important;z-index: 9999 !important;padding: 1em; } .gu-hide {display: none !important; } .gu-unselectable {-webkit-user-select: none !important;-moz-user-select: none !important;-ms-user-select: none !important;user-select: none !important; } .gu-transit {opacity: 0.5;-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";filter: alpha(opacity=50); } .gu-mirror {opacity: 0.5;-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";filter: alpha(opacity=50); }
-
 
 
 </style>
