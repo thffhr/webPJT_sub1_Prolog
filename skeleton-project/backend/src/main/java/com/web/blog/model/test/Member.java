@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Member {
-	// cicd되나
+
 	@Id
 	@Column(name = "mid")
 	@GeneratedValue(strategy = GenerationType.AUTO)
