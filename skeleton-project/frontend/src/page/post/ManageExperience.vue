@@ -378,17 +378,7 @@ export default {
         return cnt;
       });
 
-      if (
-        cnt == selectedTags.length ||
-        (experience.tags.length == 0 && this.isIncludeNoTag)
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-
-    getTag(){
+    getTag() {
       axios
         .get(this.$SERVER_URL + `/experience/Tags`, {
           params: {
@@ -431,7 +421,7 @@ export default {
      
     },
 
-    addExp: function() {
+    addExp: function(){      
       var date = new Date();
       var year = date.getFullYear();
       var month = date.getMonth()+1;
@@ -454,25 +444,33 @@ export default {
 
       var startdate = year + "-" + month + "-" + day;
 
-      //alert(this.uid);
-      axios
-        .post(this.$SERVER_URL + `/experience`, {
-          title: "제목",
-          uid: this.uid,
-        })
-        .then((response) => {
-          response.data.object.startdate = startdate;
-          response.data.object.enddate = startdate;
-          response.data.object.imgsrc = "icons8-pencil-24.png";
-
-          //경험이 아예없으면
-          if (response.data.status == false) {
-            experiences = response.data.object;
-          } else {
+        //경험이 아예없으면
+        if(response.data.status == false)
+        { 
+          experiences = response.data.object;
+        }
+        else {
             response.data.object.tags = [];
           this.experiences.push(response.data.object);
           } 
           
+      })
+      .catch((error) => {
+        //alert("실패");
+        console.log(error); 
+      });
+    },
+
+
+    deleteE: function(exid,experience){      
+    
+        axios
+      .delete(this.$SERVER_URL + `/experience/${experience.exid}`)
+      .then((response) => {
+        //alert(exid);
+        this.$delete(this.experiences, exid);
+        this.getTag();
+        //alert("삭제완료 " + experience.exid);
       })
       .catch((error) => {
         //alert("실패");
