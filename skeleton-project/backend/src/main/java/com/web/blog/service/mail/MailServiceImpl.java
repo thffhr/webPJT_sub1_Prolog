@@ -142,7 +142,7 @@ public class MailServiceImpl implements MailService {
     public ResponseEntity<BasicResponse> sendInfoMail(final MailInfoSendRequest request) {
         try {
 
-            final String AuthCode = MailMakeCode();// 랜덤 인증코드 생성 필요
+            // final String AuthCode = MailMakeCode();// 랜덤 인증코드 생성 필요
             final String AuthSubject = "유저 정보 찾기 서비스";
             final SimpleMailMessage message = new SimpleMailMessage();
 
