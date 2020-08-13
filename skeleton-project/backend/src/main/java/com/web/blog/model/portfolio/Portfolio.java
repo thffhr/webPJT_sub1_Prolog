@@ -1,7 +1,6 @@
 package com.web.blog.model.portfolio;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -35,11 +34,11 @@ public class Portfolio {
     private String title;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="start_date", insertable = false)
+    @Column(name = "start_date", insertable = false)
     private Date startDate;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="end_date", insertable = false)
+    @Column(name = "end_date", insertable = false)
     private Date endDate;
 
     @Column(name = "contents")

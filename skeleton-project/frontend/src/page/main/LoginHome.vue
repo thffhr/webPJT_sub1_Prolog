@@ -36,25 +36,23 @@
                 {{ pjtAll[i].contents.slice(0, 130) }}
               </p>
               <div>
-                <h4>
+                <h6>
                   <!-- 태그 -->
                   <div v-if="pjtAll[i].tag.length > 0">
-                    <b-badge
+                    <div
                       v-for="(ptag, j) in pjtAll[i].tag.slice(0, 3)"
                       :key="j"
-                      pill
-                      class="mr-3"
-                      id="tag"
-                      text-variant="black"
+                      class="tag mr-3"
                     >
                       <!-- id말고 tag_name으로 바꾸기 -->
-                      {{ ptag.tagName }} </b-badge
-                    >...
+                      # {{ ptag.tagName }}
+                    </div>
+                    ...
                   </div>
                   <div v-else>
                     <small>태그를 추가해보세요.</small>
                   </div>
-                </h4>
+                </h6>
               </div>
             </div>
           </slide>
@@ -98,20 +96,13 @@ export default {
         params: { uid: localStorage["uid"] },
       })
       .then((response) => {
-        // console.log(response);
         this.pjtAll = response.data.object;
         this.slidesLength = response.data.object;
-        // console.log(this.slidesLength);
-        // console.log(this.pjtAll);
       });
   },
   methods: {
     gotoDetail(pid) {
-      // console.log(pid);
-      router.push({
-        name: constants.URL_TYPE.POST.PORTFOLIODETAILS,
-        params: { pid: pid },
-      });
+      this.$router.push({ path: `/PortfolioDetails/${pid}` });
     },
     gotoPortfolio() {
       this.$router.push({ path: "/ManagePortfolio" });
@@ -132,9 +123,13 @@ export default {
 #carousel_card:hover {
   cursor: pointer;
 }
-/* #tag {
-  background-color: #747474;
-} */
+.tag {
+  display: inline;
+  color: white;
+  padding: 5px 10px;
+  background-color: #5d5d5d;
+  border-radius: 100px;
+}
 .projectImage {
   -webkit-filter: grayscale(100%);
 }
@@ -142,7 +137,8 @@ export default {
   -webkit-filter: grayscale(0%);
 }
 .current {
-  background-color: #e7e7e7;
+  background-color: #bedcff;
+  /* color: white; */
 }
 .noPortfolio {
   width: 500px;
