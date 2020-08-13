@@ -29,10 +29,16 @@
     </div>
     <b-container>
       <b-row align-h="between">
-        <b-col cols="4" v-if="allTagState" @click="allTagOnOff" style="cursor: pointer; color: white;">태그 전체 선택 해제</b-col>
-        <b-col cols="4" v-else @click="allTagOnOff" style="cursor: pointer; color: white;">태그 전체 선택</b-col>
-        <b-col cols="4" v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; text-align: right; color: white;">태그없는 프로젝트 숨기기</b-col>
-        <b-col cols="4" v-else @click="showNotagProject" style="cursor: pointer; text-align: right; color: white;">태그없는 프로젝트 보여주기</b-col>
+        <b-col cols="4">
+          <span v-if="allTagState" @click="allTagOnOff" style="cursor: pointer; color: black;">태그 전체 선택 해제</span>
+          <span v-else @click="allTagOnOff" style="cursor: pointer; color: black;">태그 전체 선택</span>
+        </b-col>
+        <b-col cols="4" style="text-align: right;">
+          <span v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; color: black;">태그없는 프로젝트 숨기기</span>
+          <span v-else @click="showNotagProject" style="cursor: pointer; text-align: right; color: black;">태그없는 프로젝트 보여주기</span>
+          <!-- <span v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; color: black;">{{ showNoTag }}</span>
+          <span v-else @click="showNotagProject" style="cursor: pointer; text-align: right; color: black;">{{ showNoTag }}</span> -->
+        </b-col>
     </b-row>
     </b-container>
     <!-- 여기까지 -->
@@ -72,59 +78,80 @@
     <!-- 위랑 동일 / 카드 형태만 다름 -->
     <b-container>
       <b-row align-v="start" class="ml-5">
-        <div
-          v-for="portfolio in portfolios"
-          :key="portfolio.pid"
-          style="display: inline-block;"
-          class="columns is-multiline"
-        >
-          <b-card v-if="showProject(portfolio)" style="background: lightgrey; width:20rem; height:26rem;" class="m-2">
-            <div>
-              <!-- 수정 삭제 img -->
-              <div class="img-custom">
-              <b-img @click="gotoDetail(portfolio.pid)" style="cursor:pointer; margin-right: 8%" v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)" width="15px"></b-img>
-              <b-img @click="deleteP(portfolio)" style="cursor:pointer;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
-              </div>
-              
-              <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
-              <h2 v-else>{{ portfolio.title }}</h2>
-              
-              <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
-              <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div>
-              <p
-                v-if="portfolio.contents.length > 60"
-                class="mt-2"
-              >{{ portfolio.contents.slice(0, 60) }}...</p>
-              <p v-else class="mt-2">{{ portfolio.contents }}</p>
-              <!-- 태그 출력 -->
-              <div v-if="portfolio.tag.length > 4">
-              <div
-                v-for="portfolioTag in portfolio.tag.slice(0, 4)"
-                :key="portfolioTag.tid"
-                style="display: inline-block;"
-              >
-                <h4>
-                  <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
-                </h4>
-              </div>...
-              </div>
-              <div v-else-if="portfolio.tag.length > 0">
-                <div
-                v-for="portfolioTag in portfolio.tag.slice(0, 4)"
-                :key="portfolioTag.tid"
-                style="display: inline-block;"
-              >
-                <h4>
-                  <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
-                </h4>
-              </div>
-              </div>
-              <div v-else>태그를 추가해보세요</div>
-            </div>
-          </b-card>      
-          <!-- <hr> -->
 
-        </div>
+          <div
+            v-for="portfolio in portfolios"
+            :key="portfolio.pid"
+            style="display: inline-block;"
+            class="columns is-multiline"
+          >
+            
+
+            
+            <b-card v-if="showProject(portfolio)" style="background: lightgrey; width:20rem; height:26rem;" class="m-2">
+              <div>
+                  
+                <b-container>
+                  <b-row align-h="between">
+                    <b-col style="padding-left: 0;" cols="8">
+                      <b-button size="sm" variant="outline-dark">download</b-button>
+                      <b-button
+                        @click="gotoDetail(portfolio.pid)"
+                        size="sm"
+                        variant="outline-dark"
+                        >상세보기
+                      </b-button>
+                    </b-col>
+                    <b-col style="text-align: right; padding-right: 0;" cols="4">
+                      <b-img @click="deleteP(portfolio)" style="cursor:pointer;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
+                    </b-col>
+                  </b-row>
+                </b-container>
+
+
+                
+                <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
+                <h2 v-else>{{ portfolio.title }}</h2>
+                
+                <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
+                <!-- <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div> -->
+                <p
+                  v-if="portfolio.contents.length > 60"
+                  class="mt-2"
+                >{{ portfolio.contents.slice(0, 60) }}...</p>
+                <p v-else class="mt-2">{{ portfolio.contents }}</p>
+                <!-- 태그 출력 -->
+                <div v-if="portfolio.tag.length > 4">
+                <div
+                  v-for="portfolioTag in portfolio.tag.slice(0, 4)"
+                  :key="portfolioTag.tid"
+                  style="display: inline-block;"
+                >
+                  <h4>
+                    <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
+                  </h4>
+                </div>...
+                </div>
+                <div v-else-if="portfolio.tag.length > 0">
+                  <div
+                  v-for="portfolioTag in portfolio.tag.slice(0, 4)"
+                  :key="portfolioTag.tid"
+                  style="display: inline-block;"
+                >
+                  <h4>
+                    <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
+                  </h4>
+                </div>
+                </div>
+                <div v-else>태그를 추가해보세요</div>
+              </div>
+            </b-card>      
+          </div>
+
+
+      
+
+      
       </b-row>
 
       <!-- (+) 버튼 -->
@@ -177,7 +204,7 @@ export default {
         },
       })
       .then((response) => {
-        console.log('태그리스트');
+        // console.log('태그리스트');
         this.tags = response.data.object;
 
         // Array.prototype.forEach.call(this.tags, tag => 
@@ -191,7 +218,7 @@ export default {
         },
       })
       .then((response) => {
-        console.log(response.data.object);
+        // console.log(response.data.object);
         this.portfolios = response.data.object;
       })
       .catch((error) => {
@@ -269,6 +296,29 @@ export default {
 
     showNotagProject() {
       this.isIncludeNoTag = !this.isIncludeNoTag
+      if (this.isIncludeNoTag == true) {
+        axios
+        .get(this.$SERVER_URL + `/portfolio/all`, {
+          params: {
+            uid: localStorage["uid"],
+          },
+        })
+        .then((response) => {
+          // console.log(response.data.object);
+          this.portfolios = response.data.object;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      } else {
+        let tmp = []
+        Array.prototype.forEach.call(this.portfolios, portfolio => {
+          if (portfolio.tag.length > 0) {
+            tmp.push(portfolio)
+          }
+        })
+        this.portfolios = tmp
+      }
     },
 
 
@@ -289,9 +339,10 @@ export default {
       .then((response) => {
         this.tags = response.data.object;
 
-        Array.prototype.forEach.call(this.tags, tag => 
-          this.selectedTags.push(tag.tid)
-        )
+        // Array.prototype.forEach.call(this.tags, tag => 
+        //   this.selectedTags.push(tag.tid)
+        // )
+
       })
       .catch((error) => {
         console.log(error);
@@ -321,7 +372,7 @@ export default {
     },
     allTagOnOff() {
       this.allTagState = !this.allTagState;
-      if (this.allTagState == true) {
+      if (this.allTagState == false) {
         Array.prototype.forEach.call(this.tags, tag => 
           tag.state = this.allTagState,
           this.selectedTags.push(tag.tid))
@@ -333,14 +384,17 @@ export default {
     },
     gotoDetail(pid) {
       // console.log(pid);
-      this.$router.push({
-        name: constants.URL_TYPE.POST.PORTFOLIODETAILS,
-        params: { pid: pid },
-      });
+      this.$router.push({path:`/PortfolioDetails/${pid}`});
     },
   },
-  // 버튼
   computed: {
+    // showNoTag: function() {
+    //   if (this.isIncludeNoTag == true) {
+    //     return "태그없는 프로젝트 숨기기"
+    //   } else {
+    //     return "태그없는 프로젝트 보여주기"
+    //   }
+    // }
   },
 }
 
