@@ -28,6 +28,8 @@ import PortfolioDetails from "../page/post/PortfolioDetails.vue";
 // Apply
 import ManageApply from "../page/post/ManageApply.vue";
 
+import MyComponent from "../page/post/MyComponent.vue";
+
 Vue.use(Router);
 
 export default new Router({
@@ -102,6 +104,12 @@ export default new Router({
       path: "/ManageApply",
       name: constants.URL_TYPE.POST.MANAGEAPPLY,
       component: ManageApply,
+    },
+    //카드
+    {
+      path: "/MyComponent",
+      name: constants.URL_TYPE.USER.MYCOMPONENT,
+      component: MyComponent,
     },
   ],
 });

@@ -26,7 +26,8 @@ export default {
       MANAGEPORTFOLIO: "manageportfolio",
       MANAGEEXPERIENCE: "manageexperience",
       PORTFOLIODETAILS: "portfoliodetails",
-      MANAGEAPPLY: "manageapply"
+      MANAGEAPPLY: "manageapply",
+      MYCOMPONENT: "mycomponent"
     },
   },
 };
