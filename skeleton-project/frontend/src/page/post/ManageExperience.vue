@@ -13,6 +13,7 @@
           <b-img
             @click="filtering(tag)"
             :pressed.sync="tag.state"
+            
             variant="primary"
             style="cursor:pointer"
             v-bind:src="require(`@/assets/img/${tag.imgsrc}`)"
@@ -26,13 +27,14 @@
     <div class="noTag mt-3 mb-3">
       #No태그 여부
       <b-img
-        @click="exeptNoTagClickE(isIncludeNoTag)"
-        :pressed.sync="NoTagImgSrcT"
+        @click="exeptNoTagClickE()"
         style="cursor:pointer"
+        :pressed.sync="this.isIncludeNoTag"
         v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)"
         width="20px"
       ></b-img>
     </div>
+
 
     <!-- 경험목록 -->
     <div id="experienceList">
@@ -274,10 +276,11 @@ export default {
   },
   beforeCreate() {},
   computed: {
-    uidState(tag) {
-      return this.uid.length > 0 ? true : false;
+    nickNameState() {
+      
     },
   },
+
   created() {
     //alert(this.$SERVER_URL + `/portfolio/all`);
     if (!constants.IS_LOGED_IN) {
@@ -353,8 +356,8 @@ export default {
         this.buttonStyle.width = "60px";
     },
 
-    exeptNoTagClickE: function(isIncludeNoTag) {
-      //alert("바뀔 값" + isIncludeNoTag);
+    exeptNoTagClickE: function() {
+      //lert("바뀔 값" + this.isIncludeNoTag);
        this.isIncludeNoTag = !this.isIncludeNoTag;
 
     },
@@ -369,14 +372,25 @@ export default {
 
     //하나의 프로젝트를 보여줄거?
     showProject(experience) {
+
+      
+
       var selectedTags = this.selectedTags;
       var cnt = 0;
       experience.tags.forEach(function(tag) {
         if (selectedTags.includes(tag.tid)) {
           cnt++;
         }
-        return cnt;
       });
+
+      if (cnt==selectedTags.length  || (experience.tags.length==0 && this.isIncludeNoTag)) {
+          return true
+        } else {
+          return false
+        }
+
+    },
+
 
     getTag() {
       axios
@@ -793,5 +807,10 @@ export default {
 }
 #experienceList {
   margin-top: 30px;
+}
+
+.temp1{
+  display: none;
+  margin: 0;
 }
 </style>
