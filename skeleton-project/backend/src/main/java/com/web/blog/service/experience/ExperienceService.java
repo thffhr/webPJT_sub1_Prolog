@@ -1,6 +1,8 @@
 package com.web.blog.service.experience;
 
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.experience.ETagCreateRequest;
+import com.web.blog.model.experience.ETagDeleteRequest;
 import com.web.blog.model.experience.ExperienceCreateRequest;
 import com.web.blog.model.experience.ExperienceUpdateRequest;
 
@@ -18,6 +20,10 @@ public interface ExperienceService {
 
     ResponseEntity<BasicResponse> readAll(String uid);
 
-    ResponseEntity<BasicResponse> getTagAll(String uid); 
+    ResponseEntity<BasicResponse> getTagAll(String uid);
+
+    ResponseEntity<BasicResponse> createETag(ETagCreateRequest request) throws Exception;
+
+    ResponseEntity<BasicResponse> deleteTagFromEx(int tid, int exid);
 
 }

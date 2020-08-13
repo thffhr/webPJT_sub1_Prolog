@@ -25,6 +25,8 @@ import ManagePortfolio from "../page/post/ManagePortfolio.vue";
 import ManageExperience from "../page/post/ManageExperience.vue";
 // PortfolioDetails
 import PortfolioDetails from "../page/post/PortfolioDetails.vue";
+// Apply
+import ManageApply from "../page/post/ManageApply.vue";
 
 Vue.use(Router);
 
@@ -71,7 +73,7 @@ export default new Router({
     },
     // 유저찾기
     {
-      path: "/FindUserByEmail/",
+      path: "/FindUserByEmail",
       name: constants.URL_TYPE.USER.FINDUSERBYEMAIL,
       component: FindUserByEmail,
       props: true,
@@ -93,7 +95,13 @@ export default new Router({
       path: "/PortfolioDetails",
       name: constants.URL_TYPE.POST.PORTFOLIODETAILS,
       component: PortfolioDetails,
-      props: true,
+      // props: true,
     },
+    //지원목록
+    {
+      path: "/ManageApply",
+      name: constants.URL_TYPE.POST.MANAGEAPPLY,
+      component: ManageApply,
+    }
   ],
 });

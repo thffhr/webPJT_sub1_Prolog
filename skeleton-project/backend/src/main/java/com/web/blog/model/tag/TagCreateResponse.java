@@ -1,12 +1,10 @@
 package com.web.blog.model.tag;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import lombok.*;
 
-@Entity
 @Data
 @NoArgsConstructor
 public class TagCreateResponse {
@@ -18,10 +16,13 @@ public class TagCreateResponse {
     @Column(name = "tag_name", nullable = false)
     private String tagName;
 
+    private boolean state;
+
     @Builder
-    public TagCreateResponse(int tid, String tagName) {
+    public TagCreateResponse(int tid, String tagName, boolean state) {
         this.tid = tid;
         this.tagName = tagName;
+        this.state = state;
     }
 
 }

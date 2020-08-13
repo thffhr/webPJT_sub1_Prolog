@@ -10,6 +10,7 @@ import java.util.zip.Inflater;
 import com.web.blog.dao.user.ProfileDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.user.LoginRequest;
 import com.web.blog.model.user.Profile;
 import com.web.blog.model.user.ProfileUpdateRequest;
 import com.web.blog.model.user.SignupRequest;
@@ -31,11 +32,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     ProfileDao profileDao;
 
+    final BasicResponse result = new BasicResponse();
+    ResponseEntity<BasicResponse> response = null;
+
     @Override
-    public ResponseEntity<BasicResponse> login(final String emailOrUid, final String password) throws Exception {
+    public ResponseEntity<BasicResponse> login(LoginRequest loginRequest) throws Exception {
         ResponseEntity<BasicResponse> response = null;
-        final Optional<User> userOpt = userDao.findUserByEmailAndPassword(emailOrUid, password);
-        final Optional<User> userOpt2 = userDao.findUserByUidAndPassword(emailOrUid, password);
+        String email = loginRequest.toEntity().getEmail();
+        String uid = loginRequest.toEntity().getUid();
+        String password = loginRequest.getPassword();
+
+        final Optional<User> userOpt = userDao.findUserByEmailAndPassword(email, password);
+        final Optional<User> userOpt2 = userDao.findUserByUidAndPassword(uid, password);
 
         final BasicResponse result = new BasicResponse();
 
@@ -124,18 +132,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<BasicResponse> updateUser(final String uid, final UserUpdateRequest updateRequest)
-            throws Exception {
-        userDao.save(updateRequest.toEntity(uid));
+    public ResponseEntity<BasicResponse> updateUser(final UserUpdateRequest updateRequest) throws Exception {
 
-        ResponseEntity<BasicResponse> response = null;
+        try {
+            // 프로필 있는지 확인하고 있으면넣고 없으면 안넣음.
+            Optional<User> opt = userDao.findUserByUid(updateRequest.getUid());
+            userDao.save(updateRequest.toEntity(opt.get().getPicByte()));
+            result.status = true;
+            result.data = "회원수정 성공";
+            response = new ResponseEntity<>(result, HttpStatus.OK);
 
-        final BasicResponse result = new BasicResponse();
-
-        result.status = true;
-        result.data = "회원수정 성공";
-        response = new ResponseEntity<>(result, HttpStatus.OK);
-
+        } catch (Exception e) {
+            result.status = false;
+            result.data = "회원수정 실패";
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        }
         return response;
     }
 
@@ -286,4 +297,19 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<BasicResponse> deleteProfile(String uid) {
+
+        Profile profile = profileDao.findUserByUid(uid);
+        profile.setPicByte(null);
+        profileDao.save(profile);
+
+        final BasicResponse result = new BasicResponse();
+
+        result.status = true;
+        result.data = "회원프로필이미지 삭제";
+        result.object = profile;
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

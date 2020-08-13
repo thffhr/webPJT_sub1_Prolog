@@ -34,6 +34,7 @@ public class SignupRequest {
     @NotNull
     String nickname;
 
+    
     public User toEntity() {
         return User.builder().uid(uid).email(email).password(password).nickname(nickname).build();
     }

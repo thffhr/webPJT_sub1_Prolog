@@ -98,7 +98,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         for (Portfolio i : list) {
             List<PortfolioTag> portfolioTags = i.getPortfolioTags();
             for (PortfolioTag j : portfolioTags) {
-                hs.add(TagPortfolioTagResponse.builder().tid(j.getTag().getTid()).tag_Name(j.getTag().getTagName())
+                hs.add(TagPortfolioTagResponse.builder().tid(j.getTag().getTid()).tagName(j.getTag().getTagName())
                         .state(false).build());
             }
         }
@@ -158,12 +158,15 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     @Override
     public ResponseEntity<BasicResponse> deletePortfolio(int pid) {
+        
         try {
             Portfolio portfolio = portfolioDao.findPortfolioByPid(pid);
-
+            System.out.println("포트폴리오 삭제 중..");
+        
             // 프로젝트에 포함되어있는 파일 삭제
             // - pid가 pid인 파일리스트를 불러와서 for문으로 filename으로 파일스토리지에서 삭제하고 db에서 삭제
             List<UploadFile> fileList = portfolio.getFiles();
+            
             for (UploadFile uploadFile : fileList) {
                 String fileName = uploadFile.getFileName();
                 int fileId = uploadFile.getId();

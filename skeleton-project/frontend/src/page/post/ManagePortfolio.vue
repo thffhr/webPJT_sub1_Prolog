@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 style="text-align: center;">포트폴리오 관리 페이지</h1>
-    <h2 style="text-align: center;">태그들 보여줘야해</h2> 
+    <br>
+    <br>
 
 
     <!-- <ul>
@@ -9,28 +9,35 @@
     </ul> -->
 
     <!-- 여기부터 -->
-    <div class="tagButtons">
+    <div class="tagButtons box-table2">
       <b-button-group size="sm">
-        <button v-if="isIncludeNoTag" @click="showNotagProject">태그없는 프로젝트 숨기기</button>
-        <button v-else @click="showNotagProject">태그없는 프로젝트 보여주기</button>
+        <div class="col-lg-12 ">
         <b-button
+          pill
           v-for="(tag, idx) in tags"
           :key="idx"
-          :pressed.sync="tag.state"
+          :pressed="tagState(tag)"
           @click="filtering(tag)"
-          variant="primary"
-          style="display: inline-block; text-color: black;"
+          variant="secondary"
+          style="display: inline-block; color: black;"
           class="m-1"
         >
-          #{{ tag.tag_Name }}
+          #{{ tag.tagName }}
         </b-button>
+        </div>
       </b-button-group>
     </div>
+    <b-container>
+      <b-row align-h="between">
+        <b-col cols="4" v-if="allTagState" @click="allTagOnOff" style="cursor: pointer; color: white;">태그 전체 선택 해제</b-col>
+        <b-col cols="4" v-else @click="allTagOnOff" style="cursor: pointer; color: white;">태그 전체 선택</b-col>
+        <b-col cols="4" v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; text-align: right; color: white;">태그없는 프로젝트 숨기기</b-col>
+        <b-col cols="4" v-else @click="showNotagProject" style="cursor: pointer; text-align: right; color: white;">태그없는 프로젝트 보여주기</b-col>
+    </b-row>
+    </b-container>
     <!-- 여기까지 -->
-    <!-- <button @click="allTagOnOff">태그 전체 켜기/끄기</button> -->
 
     <hr />
-    <h2 style="text-align: center;">내 포트폴리오</h2>
 
     <!-- <div
       v-for="portfolio in portfolios"
@@ -64,25 +71,46 @@
 
     <!-- 위랑 동일 / 카드 형태만 다름 -->
     <b-container>
-      <b-row align-v="start" align-h="center">
+      <b-row align-v="start" class="ml-5">
         <div
           v-for="portfolio in portfolios"
           :key="portfolio.pid"
           style="display: inline-block;"
           class="columns is-multiline"
         >
-
-          <b-card v-if="showProject(portfolio)" class="column is-one-third m-1" style="background: #ffcabd;">
+          <b-card v-if="showProject(portfolio)" style="background: lightgrey; width:20rem; height:26rem;" class="m-2">
             <div>
-              <b-img align-h="end"  @click="deleteP(portfolio)" style="cursor:pointer;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
-              <h2>{{ portfolio.title }}</h2>
-              <small>{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
+              <!-- 수정 삭제 img -->
+              <div class="img-custom">
+              <b-img @click="gotoDetail(portfolio.pid)" style="cursor:pointer; margin-right: 8%" v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)" width="15px"></b-img>
+              <b-img @click="deleteP(portfolio)" style="cursor:pointer;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
+              </div>
+              
+              <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
+              <h2 v-else>{{ portfolio.title }}</h2>
+              
+              <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
+              <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div>
               <p
+                v-if="portfolio.contents.length > 60"
                 class="mt-2"
-              >{{ portfolio.contents }}</p>
+              >{{ portfolio.contents.slice(0, 60) }}...</p>
+              <p v-else class="mt-2">{{ portfolio.contents }}</p>
               <!-- 태그 출력 -->
+              <div v-if="portfolio.tag.length > 4">
               <div
-                v-for="portfolioTag in portfolio.tag"
+                v-for="portfolioTag in portfolio.tag.slice(0, 4)"
+                :key="portfolioTag.tid"
+                style="display: inline-block;"
+              >
+                <h4>
+                  <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
+                </h4>
+              </div>...
+              </div>
+              <div v-else-if="portfolio.tag.length > 0">
+                <div
+                v-for="portfolioTag in portfolio.tag.slice(0, 4)"
                 :key="portfolioTag.tid"
                 style="display: inline-block;"
               >
@@ -90,15 +118,17 @@
                   <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
                 </h4>
               </div>
+              </div>
+              <div v-else>태그를 추가해보세요</div>
             </div>
-          </b-card>        
-          <hr>
+          </b-card>      
+          <!-- <hr> -->
 
         </div>
       </b-row>
 
       <!-- (+) 버튼 -->
-      <div class="row">
+      <div class="row mt-3 mb-3">
         <div class="col-button-custom">
             <div>
               <b-img v-on:click="addProject" :src="require(`@/assets/img/icons8-plus-50.png`)" width="60px" v-bind:style = "buttonStyle" v-on:mouseover = "change_button" v-on:mouseout = "origin_button"></b-img>
@@ -147,17 +177,14 @@ export default {
         },
       })
       .then((response) => {
+        console.log('태그리스트');
         this.tags = response.data.object;
 
-        Array.prototype.forEach.call(this.tags, tag => 
-          this.selectedTags.push(tag.tid)
-        )
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        // Array.prototype.forEach.call(this.tags, tag => 
+        //   this.selectedTags.push(tag.tid)
+        // )
 
-      axios
+        axios
       .get(this.$SERVER_URL + `/portfolio/all`, {
         params: {
           uid: localStorage["uid"],
@@ -170,6 +197,12 @@ export default {
       .catch((error) => {
         console.log(error);
       });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      
   },
   methods: {
     addProject() {
@@ -210,15 +243,15 @@ export default {
     },
 
     showProject(tagInPortfolio) {
-      var selectedTags = this.selectedTags
-      var cnt = 0
+      var selectedTags = this.selectedTags;
+      var cnt = 0;
       tagInPortfolio.tag.forEach(function(tag) {
         if (selectedTags.includes(tag.tid)) {
           cnt ++;
         };
         return cnt;
       });
-      if (cnt>0 || tagInPortfolio.tag.length == 0 && this.isIncludeNoTag) {
+      if (cnt == selectedTags.length || tagInPortfolio.tag.length == 0 && this.isIncludeNoTag) {
         return true
       } else {
         return false
@@ -226,6 +259,7 @@ export default {
     },
 
     filtering(tag) {
+      tag.state = !tag.state;
       if (this.selectedTags.includes(tag.tid)) {
         this.selectedTags.splice(this.selectedTags.indexOf(tag.tid), 1)
       } else {
@@ -237,42 +271,13 @@ export default {
       this.isIncludeNoTag = !this.isIncludeNoTag
     },
 
-    allTagOnOff() {
-      if (this.allTagState == true) {
-        this.selectedTags = []
-        this.allTagState = false
-        Array.prototype.forEach.call(this.tags, tag => 
-              tag.state = false
-            )
-      } else {
-        axios
-          .get(this.$SERVER_URL + `/portfolio/Tags`, {
-            params: {
-              uid: localStorage["uid"],
-            },
-          })
-          .then((response) => {
-            this.tags = response.data.object;
-
-            Array.prototype.forEach.call(this.tags, tag => 
-              this.selectedTags.push(tag.tid)
-            )
-          })
-          .catch((error) => {
-            console.log(error);
-         });
-        this.allTagState = true
-        Array.prototype.forEach.call(this.tags, tag => 
-              tag.state = true
-            )
-      }
-    },
 
     deleteP: function(portfolio){      
         axios
       .delete(this.$SERVER_URL + `/portfolio/${portfolio.pid}`)
       .then((response) => {
-        this.$delete(this.portfolios, portfolio);
+        // this.$delete(this.portfolios, portfolio);
+        this.portfolios.splice(this.portfolios.indexOf(portfolio), 1)
         // this.getTag();
         //alert("삭제완료 " + experience.exid);
         axios
@@ -306,16 +311,36 @@ export default {
         console.log(error);
       });
       })
+      
       .catch((error) => {
         console.log(error); 
+      });
+    },
+    tagState(tag) {
+      return tag.state;
+    },
+    allTagOnOff() {
+      this.allTagState = !this.allTagState;
+      if (this.allTagState == true) {
+        Array.prototype.forEach.call(this.tags, tag => 
+          tag.state = this.allTagState,
+          this.selectedTags.push(tag.tid))
+      } else {
+        this.selectedTags = []
+        Array.prototype.forEach.call(this.tags, tag => 
+          tag.state = this.allTagState)
+      }
+    },
+    gotoDetail(pid) {
+      // console.log(pid);
+      this.$router.push({
+        name: constants.URL_TYPE.POST.PORTFOLIODETAILS,
+        params: { pid: pid },
       });
     },
   },
   // 버튼
   computed: {
-    tagStates() {
-        return this.tags.map(tag => tag.state)
-      },
   },
 }
 
@@ -330,5 +355,18 @@ export default {
 .col-button-custom{
   margin-left: auto;
   margin-right: auto;  
+}
+
+.img-custom{
+    text-align: right;
+}
+
+.box-table2{
+    border: 1px solid #888888;
+    box-shadow: 0 0 2px rgb(111, 111, 111);
+    margin: 1%;
+    padding: 2%;
+    background: #eeeeee;
+    opacity: 0.8
 }
 </style>

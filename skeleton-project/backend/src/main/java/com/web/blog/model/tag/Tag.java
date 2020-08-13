@@ -40,7 +40,7 @@ public class Tag {
     }
 
     public TagCreateResponse toResEntity() {
-        return TagCreateResponse.builder().tid(tid).tagName(tagName).build();
+        return TagCreateResponse.builder().tid(tid).tagName(tagName).state(false).build();
     }
 
 }
