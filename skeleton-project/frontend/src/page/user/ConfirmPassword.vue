@@ -17,7 +17,7 @@
         </b-col>
       </b-row>
       <div @click="$bvModal.hide('confirmPassword')">
-        <b-button class="mt-1" @click="confirmPassword" pill>확인</b-button>
+        <b-button class="mt-1" @click="confirmPassword">확인</b-button>
         <!-- <button class="btn btn--back btn--login" @click="confirmPassword">확인</button> -->
       </div>
     </div>

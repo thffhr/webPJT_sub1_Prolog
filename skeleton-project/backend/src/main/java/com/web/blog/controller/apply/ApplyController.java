@@ -57,4 +57,33 @@ public class ApplyController {
     public ResponseEntity<BasicResponse> delete(@RequestParam String uid, @RequestParam int apid) {
         return applyService.deleteApply(uid, apid);
     }
+
+    @GetMapping("/apply/inportfolio")
+    @ApiOperation(value = "지원목록에 속해있는 프로젝트 목록")
+    public ResponseEntity<BasicResponse> portfolioInApply(@RequestParam(required = true) String uid,
+            @RequestParam(required = true) int apid) {
+        return applyService.portfolioInApply(uid, apid);
+    }
+
+    @GetMapping("/apply/outportfolio")
+    @ApiOperation(value = "지원목록에 속해있지 않은 프로젝트 목록")
+    public ResponseEntity<BasicResponse> portfolioOutOfApply(@RequestParam(required = true) String uid,
+            @RequestParam(required = true) int apid) {
+        return applyService.portfolioOutOfApply(uid, apid);
+    }
+
+    @GetMapping("/apply/inexp")
+    @ApiOperation(value = "지원목록에 속해있는 경험 목록")
+    public ResponseEntity<BasicResponse> experienceInApply(@RequestParam(required = true) String uid,
+            @RequestParam(required = true) int apid) {
+        return applyService.experienceInApply(uid, apid);
+    }
+
+    @GetMapping("/apply/outexp")
+    @ApiOperation(value = "지원목록에 속해있지 않은 경험 목록")
+    public ResponseEntity<BasicResponse> experienceOutOfApply(@RequestParam(required = true) String uid,
+            @RequestParam(required = true) int apid) {
+        return applyService.experienceOutOfApply(uid, apid);
+    }
+
 }

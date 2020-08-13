@@ -55,10 +55,10 @@ export default {
   word-break: keep-all;
 }
 #app {
-  background-color: #eee;
+  background-color: #e7e7e7;
 }
 html {
-  background-color: #eee;
+  background-color: #e7e7e7;
 }
 a:link {
   color: #000;
