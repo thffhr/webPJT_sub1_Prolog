@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.web.blog.model.apply.ApplyPortfolio;
+// import com.web.blog.model.apply.ApplyPortfolio;
 import com.web.blog.model.join.PortfolioTag;
 
 import lombok.Builder;
@@ -32,20 +34,25 @@ public class Portfolio {
 
     private String title;
 
-    @Column(name = "start_date")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="start_date", insertable = false)
     private Date startDate;
 
-    @Column(name = "end_date")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="end_date", insertable = false)
     private Date endDate;
 
     @Column(name = "contents")
     private String contents;
 
     @OneToMany(mappedBy = "portfolio")
-    private List<PortfolioTag> portfolioTags = new ArrayList<>();
+    private List<PortfolioTag> portfolioTags;
 
     @OneToMany(mappedBy = "pid")
     private List<UploadFile> files;
+
+    @OneToMany(mappedBy = "portfolio")
+    private List<ApplyPortfolio> applyPortfolios;
 
     @Builder
     public Portfolio(int pid, String uid, Date startDate, Date endDate, String title, String contents) {

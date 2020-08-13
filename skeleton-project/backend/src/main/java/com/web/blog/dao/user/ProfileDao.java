@@ -20,4 +20,6 @@ public interface ProfileDao extends JpaRepository<Profile, String> {
     @Modifying
     @Query(value = "UPDATE user" + " SET pic_byte = :pic_byte " + " where user.uid = :uid", nativeQuery = true)
     void updateUser(@Param("pic_byte") byte[] picByte, @Param("uid") String uid);
+
+    Profile findUserByUid(String uid);
 }

@@ -86,3 +86,41 @@ CREATE TABLE `p_tag` (
   CONSTRAINT `p_tag_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `portfolio` (`pid`) ON DELETE CASCADE,
   CONSTRAINT `p_tag_ibfk_2` FOREIGN KEY (`tid`) REFERENCES `tag` (`tid`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `apply` (
+  `apid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` varchar(45) NOT NULL,
+  `ap_company` varchar(45) DEFAULT NULL,
+  `ap_desc` varchar(255) DEFAULT NULL,
+  `ap_term` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`apid`),
+  KEY `apply_uid_fk_idx` (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `apply_experience` (
+  `ap_exid` int(11) NOT NULL AUTO_INCREMENT,
+  `apid` int(11) DEFAULT NULL,
+  `exid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ap_exid`),
+  KEY `apply_exp_apid_fk` (`apid`),
+  KEY `apply_exp_exid_fk` (`exid`),
+  CONSTRAINT `apply_exp_apid_fk` FOREIGN KEY (`apid`) REFERENCES `apply` (`apid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `apply_exp_exid_fk` FOREIGN KEY (`exid`) REFERENCES `experience` (`exid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+CREATE TABLE `apply_portfolio` (
+  `ap_pid` int(11) NOT NULL AUTO_INCREMENT,
+  `apid` int(11) DEFAULT NULL,
+  `pid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ap_pid`),
+  KEY `apply_port_apid_fk` (`apid`),
+  KEY `apply_port_pid_fk` (`pid`),
+  CONSTRAINT `apply_port_apid_fk` FOREIGN KEY (`apid`) REFERENCES `apply` (`apid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `apply_port_pid_fk` FOREIGN KEY (`pid`) REFERENCES `portfolio` (`pid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+CREATE TABLE `applyterm` (
+  `aptid` int(11) NOT NULL AUTO_INCREMENT,
+  `ap_term` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`aptid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

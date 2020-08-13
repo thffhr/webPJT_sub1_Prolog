@@ -10,7 +10,9 @@
         <b-container>
           <b-row>
             <b-col class="my-auto" align-self="stretch center">
-              <!-- 파일형식 제한두기 accept="image/jpeg,video/*[, MIME_TYPES]" -->
+              <b-form-text class="mb-2" id="profile-help">
+                프로필 클릭 시, 이미지 변경이 가능합니다.
+              </b-form-text>
               <input
                 type="file"
                 ref="profileImg"
@@ -20,8 +22,6 @@
               />
 
               <button id="profileImgBtn" @click="$refs.profileImg.click()">
-                <!-- 사용자의 프로필사진 url 첨부 -->
-                <!-- <b-avatar src="" size="10rem" ref="uploadItemImage" ></b-avatar> -->
                 <img
                   class="profileImg"
                   ref="uploadItemImage"
@@ -29,38 +29,41 @@
                   src
                   style="width: 10rem; height: 10rem;"
                 />
-                <p class="mt-2 mb-0">프로필 변경</p>
               </button>
+              <br />
+              <!-- 프로필 삭제 아직 덜만듦!!!!! -->
+              <b-button
+                class="mt-2"
+                size="sm"
+                variant="light"
+                id="deleteImg"
+                @click=""
+              >
+                프로필 삭제
+              </b-button>
             </b-col>
             <b-col>
               <b-container>
                 <b-row class="my-1">
-                  <b-col role="group" cols="9">
+                  <b-col role="group" cols="8">
                     <b-form-text id="email-help">
-                      아이디, 닉네임, 이메일 변경 시 중복확인이
-                      필요합니다.
+                      이메일 변경 시 인증이 필요합니다.
                     </b-form-text>
                   </b-col>
                 </b-row>
-                <!-- <b-row class="my-1">
-                    <b-col role="group" cols="9">
-                      <b-form-input
-                        id="uid"
-                        v-model="uid"
-                        :state="uidState"
-                        aria-describedby="uid-help uid-feedback"
-                        placeholder="아이디를 입력해주세요"
-                        trim
-                        type="text"
-                      ></b-form-input>
-                      <b-form-invalid-feedback id="uid-feedback">필수 입력값입니다.</b-form-invalid-feedback>
-                    </b-col>
-                    <b-col class="align-self-center">
-                      <span class="DuplicationCheck" @click="uidDuplicationCheck">중복확인</span>
-                    </b-col>
-                </b-row>-->
                 <b-row class="my-1">
-                  <b-col role="group" cols="9">
+                  <b-col role="group" cols="8">
+                    <b-form-input
+                      disabled
+                      id="uid"
+                      v-model="uid"
+                      trim
+                      type="text"
+                    ></b-form-input>
+                  </b-col>
+                </b-row>
+                <b-row class="my-1">
+                  <b-col role="group" cols="8">
                     <b-form-input
                       id="nickName"
                       v-model="nickName"
@@ -70,14 +73,13 @@
                       trim
                       type="text"
                     ></b-form-input>
-                    <b-form-invalid-feedback id="nickName-feedback">필수 입력값입니다.</b-form-invalid-feedback>
-                  </b-col>
-                  <b-col class="align-self-center">
-                    <span @click="nickNameDuplicationCheck">중복확인</span>
+                    <b-form-invalid-feedback id="nickName-feedback">{{
+                      nicknameFeedback
+                    }}</b-form-invalid-feedback>
                   </b-col>
                 </b-row>
                 <b-row class="my-1">
-                  <b-col role="group" cols="9">
+                  <b-col role="group" cols="8">
                     <b-form-input
                       id="email"
                       v-model="email"
@@ -87,14 +89,23 @@
                       trim
                       type="text"
                     ></b-form-input>
-                    <b-form-invalid-feedback id="email-feedback">이메일 형식이 맞지 않습니다.</b-form-invalid-feedback>
+                    <b-form-invalid-feedback id="email-feedback">
+                      {{ emailFeedback }}
+                    </b-form-invalid-feedback>
                   </b-col>
                   <b-col class="align-self-center">
-                    <span @click="emailDuplicationCheck">중복확인</span>
+                    <b-button
+                      size="sm"
+                      variant="light"
+                      id="emailAuthentication"
+                      @click="emailAuthentication"
+                    >
+                      메일 인증
+                    </b-button>
                   </b-col>
                 </b-row>
                 <b-row class="my-1">
-                  <b-col role="group" class="password-wrap" cols="9">
+                  <b-col role="group" class="password-wrap" cols="8">
                     <b-form-input
                       id="password"
                       v-model="password"
@@ -107,14 +118,13 @@
                     <span :class="{ active: passwordType === 'text' }">
                       <i class="fas fa-eye"></i>
                     </span>
-                    <b-form-invalid-feedback id="password-feedback">
-                      비밀번호는 8자리 이상 문자, 숫자로
-                      작성해주세요.
-                    </b-form-invalid-feedback>
+                    <b-form-invalid-feedback id="password-feedback">{{
+                      passwordFeedback
+                    }}</b-form-invalid-feedback>
                   </b-col>
                 </b-row>
                 <b-row class="my-1">
-                  <b-col role="group" class="password-wrap" cols="9">
+                  <b-col role="group" class="password-wrap" cols="8">
                     <b-form-input
                       id="password-confirm"
                       v-model="passwordConfirm"
@@ -127,8 +137,7 @@
                       <i class="fas fa-eye"></i>
                     </span>
                     <b-form-invalid-feedback id="password-feedback">
-                      비밀번호를 정확히
-                      입력해주세요.
+                      비밀번호를 정확히 입력해주세요.
                     </b-form-invalid-feedback>
                   </b-col>
                 </b-row>
@@ -139,7 +148,9 @@
       </b-card-text>
       <div class="ml-auto">
         <b-button @click="update" href="#" class="ml-2 mr-2">수정완료</b-button>
-        <b-button @click="userdelete" href="#" class="ml-2 mr-2">회원탈퇴</b-button>
+        <b-button @click="userdelete" href="#" class="ml-2 mr-2"
+          >회원탈퇴</b-button
+        >
       </div>
       <!-- <em>Footer Slot</em> -->
     </b-card>
@@ -186,29 +197,79 @@ export default {
   data: () => {
     return {
       constants,
+      uid: localStorage["uid"],
+      nickName: localStorage["nickname"],
       email: localStorage["email"],
-      nickName: localStorage["uid"],
       password: "",
       passwordConfirm: "",
       passwordType: "password",
       passwordConfirmType: "password",
-      NicknameCheck: false,
-      EmailCheck: false,
-      // profileImg: [],
+      uidFeedback: "",
+      nicknameFeedback: "",
+      emailFeedback: "",
+      passwordFeedback: "",
+      uidDupcheck: true,
+      nickDupcheck: true,
+      emailDupcheck: true,
+      emailAuthcheck: true,
+      passwordDupcheck: true,
+      newPassword: "",
     };
   },
   computed: {
     nickNameState() {
-      return this.nickName.length > 0 ? true : false;
+      if (this.nickName.length > 0 ? true : false) {
+        if (localStorage["nickname"] != this.nickName) {
+          let form = new FormData();
+          form.append("nickname", this.nickName);
+          axios
+            .post(this.$SERVER_URL + "/account/signup/nicknamecheck", form)
+            .then((response) => {
+              this.nickDupcheck = response.data.status;
+            })
+            .catch((error) => {
+              console.log(error.response);
+            });
+        }
+        if (this.nickDupcheck) {
+          return true;
+        } else {
+          this.nicknameFeedback = "닉네임이 중복되었습니다.";
+          return false;
+        }
+      } else {
+        this.nicknameFeedback = "필수 입력값입니다.";
+        return false;
+      }
     },
     emailState() {
       if (
         this.email.indexOf("@") < 0 ||
         this.email.indexOf("@") >= this.email.indexOf(".com")
       ) {
+        this.emailFeedback = "이메일 형식이 맞지 않습니다.";
         return false;
       } else {
-        return true;
+        console.log(localStorage["email"]);
+        console.log(this.email);
+        if (localStorage["email"] != this.email) {
+          let form = new FormData();
+          form.append("email", this.email);
+          axios
+            .post(this.$SERVER_URL + "/account/signup/emailcheck", form)
+            .then((response) => {
+              this.emailDupcheck = response.data.status;
+            })
+            .catch((error) => {
+              console.log(error.response);
+            });
+        }
+        if (this.emailDupcheck) {
+          return true;
+        } else {
+          this.emailFeedback = "이메일이 중복되었습니다.";
+          return false;
+        }
       }
     },
     passwordState() {
@@ -220,6 +281,12 @@ export default {
           !pattern2.test(this.password) ||
           this.password.length < 8
         ) {
+          this.passwordFeedback =
+            "비밀번호는 8자리 이상 문자, 숫자로 작성해주세요.";
+          return false;
+        } else if (localStorage["password"] == this.password) {
+          this.passwordFeedback =
+            "변경하려는 비밀번호와 이전 비밀번호가 동일합니다.";
           return false;
         } else {
           return true;
@@ -236,7 +303,6 @@ export default {
       }
     },
   },
-
   methods: {
     uploadImage(event) {
       const formData = new FormData();
@@ -265,103 +331,71 @@ export default {
           }
         });
     },
-
-    nickNameDuplicationCheck() {
-      let form = new FormData();
-      form.append("nickname", this.nickName);
-
-      axios
-        .post(this.$SERVER_URL + "/account/signup/nicknamecheck", form)
-        .then((response) => {
-          console.log(response);
-          if (response.data.status) {
-            this.NicknameCheck = true;
-            console.log(this.NicknameCheck);
-            alert("사용 가능한 닉네임입니다.");
-          } else {
-            alert("닉네임이 중복되었습니다.");
-          }
-        })
-        .catch((error) => {
-          console.log(error.response);
-        });
-    },
-
-    emailDuplicationCheck() {
-      if (
-        this.email.indexOf("@") < 0 ||
-        this.email.indexOf("@") >= this.email.indexOf(".com")
-      ) {
-        alert("이메일을 정확히 입력해주세요.");
-      } else {
-        const Email = this.email;
-
-        let form = new FormData();
-        form.append("email", this.email);
-
+    emailAuthentication() {
+      if (localStorage["email"] != this.email) {
         axios
-          .post(this.$SERVER_URL + `/account/signup/emailcheck`, form)
+          .put(this.$SERVER_URL + "/email/auth", {
+            subject: "블로그 가입 인증 메일입니다.",
+            toEmail: this.email,
+          })
           .then((response) => {
-            if (response.data.status) {
-              console.log(response);
-              this.EmailCheck = true;
-              console.log(this.EmailCheck);
-              axios
-                .put(this.$SERVER_URL + "/email/auth", {
-                  subject: "블로그 가입 인증 메일입니다.",
-                  toEmail: Email,
-                })
-                .then((response) => {
-                  console.log(response);
-                  alert(
-                    "회원가입 인증 메일이 발송되었습니다. 메일을 확인해 주세요."
-                  );
-                })
-                .catch((error) => {
-                  console.log(error.response);
-                });
-            } else {
-              alert("이메일이 중복되었습니다.");
-            }
+            console.log(response);
+            this.emailAuthcheck = false;
+            alert("회원가입 인증 메일이 발송되었습니다. 메일을 확인해 주세요.");
           })
           .catch((error) => {
             console.log(error.response);
           });
+      } else {
+        alert("이메일 변경 시에만 인증이 필요합니다.");
       }
     },
     update() {
-      console.log(localStorage["uid"]);
-      console.log(localStorage["email"]);
-      var pattern1 = /[0-9]/;
-      var pattern2 = /[a-zA-Z]/;
-      if (this.NicknameCheck && this.EmailCheck && this.password) {
-        if (
-          !pattern1.test(password) ||
-          !pattern2.test(password) ||
-          password.length < 8
-        ) {
-          alert("비밀번호는 8자리 이상 문자, 숫자로 구성하여야 합니다.");
+      if (!this.emailAuthcheck) {
+        axios
+          .delete(this.$SERVER_URL + `/email/${this.email}`, this.email)
+          .then((response) => {
+            if (response.data.status == true) {
+              this.emailAuthcheck = true;
+            }
+          })
+          .catch((error) => {
+            console.log(error.response);
+            alert("이메일 인증이 완료되지 않았습니다.");
+          });
+      }
+      if (
+        this.uidDupcheck &&
+        this.nickDupcheck &&
+        this.emailDupcheck &&
+        this.emailAuthcheck
+      ) {
+        if (this.password.length) {
+          this.newPassword = this.password;
         } else {
-          axios
-            .put(this.$SERVER_URL + `/account/update/${localStorage["uid"]}`, {
-              email: this.email,
-              password: this.password,
-              nickName: this.nickName,
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.data.status) {
-                alert("회원정보가 수정되었습니다!");
-              } else {
-                alert("수정된 정보가 반영되지 않았습니다.");
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          this.newPassword = localStorage["password"];
         }
+
+        axios
+          .put(this.$SERVER_URL + `/account`, {
+            uid: localStorage["uid"],
+            nickname: this.nickName,
+            email: this.email,
+            password: this.newPassword,
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.data.status) {
+              alert("회원정보가 수정되었습니다!");
+            } else {
+              alert("수정된 정보가 반영되지 않았습니다.");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
-        alert("닉네임과 이메일 모두 중복확인이 필요합니다.");
+        alert("변경할 정보를 다시 확인해주세요.");
       }
     },
 
@@ -380,7 +414,7 @@ export default {
             localStorage.removeItem("createDate");
             constants.IS_LOGED_IN = false;
             alert("회원정보가 삭제되었습니다");
-            $router.push;
+            this.$router.push({ name: constants.URL_TYPE.MAIN.LOGINHOME });
           }
         })
         .catch((error) => {
@@ -410,12 +444,8 @@ export default {
 .profileImg {
   border-radius: 50%;
 }
-
-.DuplicationCheck:hover {
+#emailAuthentication:hover {
   cursor: pointer;
-}
-
-.DuplicationCheck:hover {
-  cursor: pointer;
+  opacity: 0.5;
 }
 </style>

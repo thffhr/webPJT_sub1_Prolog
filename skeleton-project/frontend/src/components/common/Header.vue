@@ -7,7 +7,7 @@
         v-bind:to="{ name: constants.URL_TYPE.MAIN.LOGINHOME }"
       >
         <!-- 로고 이미지 -->
-        <b-img :src="require(`@/assets/img/top_logo.jpg`)" width="150"></b-img>
+        <b-img :src="require(`@/assets/img/logo2-5.png`)" width="50"></b-img>
       </router-link>
     </h1>
     <!-- 로그인 시에만 사용자 메뉴 보이기 -->
@@ -28,7 +28,8 @@
             style="width: 2rem; height: 2rem;"
           />
 
-          <div id="userName" :uid="uid">{{ uid }}</div>님, 환영합니다.
+          <div id="userName" :uid="uid">{{ nickname }}</div>
+          님, 환영합니다.
         </template>
 
         <b-dropdown-item href="#" @click="logout">로그아웃</b-dropdown-item>
@@ -57,29 +58,27 @@ export default {
   props: ["isHeader"],
   computed: {},
   watch: {},
-  data: function () {
+  data: function() {
     return {
       constants,
       uid: localStorage["uid"],
+      nickname: localStorage["nickname"],
       profileImgsrc:
         "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png",
     };
   },
   created() {
-    console.log(constants.IS_PROFILEIMG_UPLOAD);
+    // console.log(constants.IS_PROFILEIMG_UPLOAD);
     if (constants.IS_LOGED_IN) {
-      // profileImgsrc = localStorage["profileImg"];
       axios
         .get(this.$SERVER_URL + `/account/ckprofile/${localStorage["uid"]}`)
         .then((response) => {
           if (response.data.status) {
-            console.log(response);
+            // console.log(response);
             if (response.data.object == null) {
-              console.log("등록된 프로필 이미지가 없습니다.");
-              // profileImgsrc =
-              //   "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png";
+              // console.log("등록된 프로필 이미지가 없습니다.");
             } else {
-              console.log("등록된 프로필 이미지가 있습니다.");
+              // console.log("등록된 프로필 이미지가 있습니다.");
               this.profileImgsrc =
                 this.$SERVER_URL + `/account/profile/${localStorage["uid"]}`;
             }
@@ -93,9 +92,9 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("uid");
-      localStorage.removeItem("password");
+      localStorage.removeItem("nickname");
       localStorage.removeItem("email");
-      localStorage.removeItem("createDate");
+      localStorage.removeItem("password");
       constants.IS_LOGED_IN = false;
       this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
     },

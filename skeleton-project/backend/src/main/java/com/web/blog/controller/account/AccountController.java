@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.user.LoginRequest;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.UserUpdateRequest;
 import com.web.blog.service.user.UserService;
@@ -33,12 +34,11 @@ public class AccountController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/account/login")
+    @PostMapping("/account/login")
     @ApiOperation(value = "유저 로그인(uid 혹은 email로 로그인 가능)")
-    public Object login(@RequestParam(required = true) final String emailOrUid,
-            @RequestParam(required = true) final String password) throws Exception {
-
-        return userService.login(emailOrUid, password);
+    public Object login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
+        System.out.println(loginRequest.toEntity().getPassword());
+        return userService.login(loginRequest);
     }
 
     @PostMapping("/account")
@@ -59,12 +59,11 @@ public class AccountController {
      * RequestParam :get, post RequestBody : get, post, put, delete filter추가로 cors
      * 해결
      */
-    @PutMapping("/account/{uid}")
+    @PutMapping("/account")
     @ApiOperation(value = "유저 정보 수정하기")
-    public Object updateUser(@PathVariable("uid") String uid, @Valid @RequestBody UserUpdateRequest updateRequest)
-            throws Exception {
+    public Object updateUser(@Valid @RequestBody UserUpdateRequest updateRequest) throws Exception {
 
-        return userService.updateUser(uid, updateRequest);
+        return userService.updateUser(updateRequest);
     }
 
     @PostMapping("/account/signup/emailcheck")
@@ -120,6 +119,12 @@ public class AccountController {
     @GetMapping(path = { "/account/ckprofile/{uid}" })
     public ResponseEntity<BasicResponse> checkProfile(@PathVariable("uid") String uid) throws Exception {
         return userService.getProfile(uid);
+    }
+
+    @ApiOperation(value = "프로필 이미지 삭제")
+    @PostMapping("/account/profile/delete/{uid}")
+    public ResponseEntity<BasicResponse> deleteImage(@PathVariable("uid") String uid) throws Exception {
+        return userService.deleteProfile(uid);
     }
 
     // public static String byteArrayToBinaryString(byte[] b) {

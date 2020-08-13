@@ -17,17 +17,17 @@ public class TagExperienceTagResponse {
 
     @ApiModelProperty(required = true)
     @NotNull
-    String tag_Name;
+    String tagName;
 
     @ApiModelProperty(required = true)
     @NotNull
     boolean state;
     
     @Builder
-    public TagExperienceTagResponse(int tid,String tag_Name, boolean state){
+    public TagExperienceTagResponse(int tid,String tagName, boolean state){
         this.state = state;
         this.tid = tid;
-        this.tag_Name = tag_Name;
+        this.tagName = tagName;
     }
 
     @Override
