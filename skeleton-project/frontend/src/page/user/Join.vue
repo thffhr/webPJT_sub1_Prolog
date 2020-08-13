@@ -297,13 +297,11 @@ export default {
         this.emailDupcheck &&
         this.passwordCheck
       ) {
-        alert("여긴옴")
         axios
           .delete(this.$SERVER_URL + `/email/${this.email}`, this.email)
           .then((response) => {
             if (response.data.status) {
               let form = new FormData();
-              alert("여긴오니")
               axios
                 .post(this.$SERVER_URL + `/account`, {
                   uid: this.uid,
@@ -313,11 +311,9 @@ export default {
                 })
                 .then((response) => {
                   if (response.data.status == true) {
-                    alert(
-                      "회원가입이 완료되었습니다. 모달은 아직 직접 닫아야 돼요^^ ㅈㅅㅈㅅ"
-                    );
-                    // 모달 닫히게 하는 법 좀 누가 알려줘라~!!
-                    // document.getElementById('modalClosed').click()
+                    document.getElementByClass("close").click();
+                    this.$emit("close");
+                    alert("회원가입이 완료되었습니다.");
                   }
                 })
                 .catch((error) => {

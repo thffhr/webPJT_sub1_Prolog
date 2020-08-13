@@ -92,7 +92,7 @@ export default new Router({
     },
     // 포트폴리오 세부정보
     {
-      path: "/PortfolioDetails",
+      path: "/PortfolioDetails/:pid",
       name: constants.URL_TYPE.POST.PORTFOLIODETAILS,
       component: PortfolioDetails,
       // props: true,
@@ -102,6 +102,6 @@ export default new Router({
       path: "/ManageApply",
       name: constants.URL_TYPE.POST.MANAGEAPPLY,
       component: ManageApply,
-    }
+    },
   ],
 });
