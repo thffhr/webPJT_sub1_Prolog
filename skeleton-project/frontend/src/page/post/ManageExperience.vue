@@ -27,7 +27,7 @@
       #No태그 여부
       <b-img
         @click="exeptNoTagClickE(isIncludeNoTag)"
-        :pressed.sync="NoTagImgSrcT"
+        :pressed.sync="isIncludeNoTag"
         style="cursor:pointer"
         v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)"
         width="20px"
@@ -377,7 +377,7 @@ export default {
         }
         return cnt;
       });
-
+    },
     getTag() {
       axios
         .get(this.$SERVER_URL + `/experience/Tags`, {
