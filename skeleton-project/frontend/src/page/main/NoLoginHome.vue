@@ -3,7 +3,12 @@
     <b-container>
       <b-row align-v="center">
         <b-col cols="12" lg="6">
-          <b-img :src="require(`@/assets/img/logo.jpg`)" contain width="538" class="mt-4 mb-1"></b-img>
+          <b-img
+            :src="require(`@/assets/img/logo.jpg`)"
+            contain
+            width="538"
+            class="mt-4 mb-1"
+          ></b-img>
           <div class="m-5">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
             perspiciatis suscipit quidem illum nihil quas perferendis omnis,
@@ -32,7 +37,9 @@
           <button
             class="findUser text-secondary m-1"
             @click="$bvModal.show('findUserModal')"
-          >아이디 또는 비밀번호를 잊으셨나요?</button>
+          >
+            아이디 또는 비밀번호를 잊으셨나요?
+          </button>
           <b-modal id="findUserModal" hide-footer>
             <template v-slot:modal-title>아이디 찾기</template>
             <div class="d-block text-center">
