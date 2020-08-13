@@ -244,7 +244,6 @@ export default {
   },
   methods: {
     login() {
-      alert(this.emailOrUid + "-" + this.password);
       axios
         .post(this.$SERVER_URL + "/account/login/", {
           uidOrEmail: this.emailOrUid,
