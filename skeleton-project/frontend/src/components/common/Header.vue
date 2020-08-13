@@ -108,7 +108,7 @@ export default {
   /* position: absolute; */
   top: 0;
   /* padding: 0px; */
-  background-color: #eee;
+  background-color: #e7e7e7;
   height: 65px;
 }
 #blogLogo {
