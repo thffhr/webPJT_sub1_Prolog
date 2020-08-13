@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
-
+ 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
 public class ApplyController {
