@@ -158,14 +158,9 @@
     <b-container>
       <b-row align-v="center">
         <b-col cols="12" lg="6">
-          <b-img
-            :src="require(`@/assets/img/logo.jpg`)"
-            contain
-            width="538"
-            class="mt-4 mb-1"
-          ></b-img>
+          <b-img :src="require(`@/assets/img/logo.jpg`)" contain width="538" class="mt-4 mb-1"></b-img>
           <div class="m-5">
-            <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat -->
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
             perspiciatis suscipit quidem illum nihil quas perferendis omnis,
             dignissimos ab recusandae sunt aspernatur maiores architecto dolor
             at similique animi facere incidunt!

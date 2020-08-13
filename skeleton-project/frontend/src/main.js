@@ -2,8 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import Carousel3d from "vue-carousel-3d";
-import VModal from 'vue-js-modal'
-
+import VModal from "vue-js-modal";
 
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
@@ -16,18 +15,18 @@ Vue.use(BootstrapVueIcons);
 Vue.use(Carousel3d);
 
 //모달
-Vue.use(VModal, { dynamicDefault: { draggable: true, resizable: true } })
+Vue.use(VModal, { dynamicDefault: { draggable: true, resizable: true } });
 
 // 서버 주소 전역 변수
 // EC - "/api"
-// 개발 - "http://localhost:8080/api" 
-Vue.prototype.$SERVER_URL =  "http://localhost:8080/api";
-
+Vue.prototype.$SERVER_URL = "/api";
+// 개발 - "http://localhost:8080/api"
+// Vue.prototype.$SERVER_URL =  "http://localhost:8080/api";
 
 /* eslint-disable no-new */
 new Vue({
   el: "#app",
   router,
   components: { App },
-  template: "<App/>"
+  template: "<App/>",
 });
