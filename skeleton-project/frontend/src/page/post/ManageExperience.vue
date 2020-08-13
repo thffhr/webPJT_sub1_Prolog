@@ -341,13 +341,6 @@ export default {
         }
     },
 
-      if (cnt > 0 || (experience.tags.length == 0 && this.isIncludeNoTag)) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-
     getTag() {
       axios
       .get(this.$SERVER_URL + `/experience/Tags`, {
@@ -391,14 +384,26 @@ export default {
       tag.state = !tag.state;
     },
 
-    addExp: function () {
+    addExp: function(){      
       var date = new Date();
       var year = date.getFullYear();
-      var month = date.getMonth() + 1;
+      var month = date.getMonth()+1;
       var day = date.getDate();
 
-      if (day < 10) day = "0" + day;
-      if (month < 10) month = "0" + month;
+      if(day<10) day = "0"+day;
+      if(month<10) month = "0"+month;
+       
+      var startdate = year+"-"+month+"-"+day;
+      
+      //alert(this.uid);
+        axios
+      .post(this.$SERVER_URL + `/experience`, {
+        title:"제목",uid:this.uid, 
+      })
+      .then((response) => {
+        response.data.object.startdate = startdate;
+        response.data.object.enddate = startdate;
+        response.data.object.imgsrc = "icons8-pencil-24.png";
 
 
         //경험이 아예없으면
@@ -408,14 +413,16 @@ export default {
         }
         else {
             response.data.object.tags = [];
-            this.experiences.push(response.data.object);
-          }
-        })
-        .catch((error) => {
-          //alert("실패");
-          console.log(error);
-        });
+          this.experiences.push(response.data.object);
+          } 
+          
+      })
+      .catch((error) => {
+        //alert("실패");
+        console.log(error); 
+      });
     },
+
 
     deleteE: function(exid,experience){      
     
