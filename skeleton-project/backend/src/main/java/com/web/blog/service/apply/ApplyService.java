@@ -19,4 +19,12 @@ public interface ApplyService {
 
     ResponseEntity<BasicResponse> deleteApply(String uid, int apid);
 
+    ResponseEntity<BasicResponse> portfolioInApply(String uid, int apid);
+
+    ResponseEntity<BasicResponse> portfolioOutOfApply(String uid, int apid);
+
+    ResponseEntity<BasicResponse> experienceInApply(String uid, int apid);
+
+    ResponseEntity<BasicResponse> experienceOutOfApply(String uid, int apid);
+
 }
