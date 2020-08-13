@@ -28,13 +28,10 @@
            <!-- 동그라미 -->
           <div   v-bind:style = "mystyle" class="img-circle col-md-2">
             <div class="content">
-              
-                <div v-for="experienceTag in experience.tags" :key="experienceTag.tid">
-                       #{{experienceTag.tagName}}
-          
-               
-                </div>
-              
+              <div
+                v-for="experienceTag in experience.tags"
+                :key="experienceTag.tid"
+              >#{{experienceTag.tagName}}</div>
             </div>
           </div>
 
@@ -101,15 +98,42 @@
               </div>
           </div>
 
-      <!--버튼-->
-      <div class="col-md-1">
-           <p class="icon-right" style="margin-bottom: 0;">
-              <b-img  @click="clickeEdit(experience)" :pressed.sync="experience.clicked" style="cursor:pointer" v-bind:src="require(`@/assets/img/${experience.imgsrc}`)" width="15px"></b-img>
-              <b-img  @click="deleteE(exid, experience)" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
+          <!--버튼-->
+          <div class="col-md-1">
+            <p class="icon-right" style="margin-bottom: 0;">
+              <b-img
+                @click="clickeEdit(experience)"
+                :pressed.sync="experience.clicked"
+                style="cursor:pointer"
+                v-bind:src="require(`@/assets/img/${experience.imgsrc}`)"
+                width="15px"
+              ></b-img>
+              <b-img
+                @click="deleteE(exid, experience)"
+                style="cursor:pointer"
+                v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
+                width="15px"
+              ></b-img>
             </p>
+          </div>
+        </div>
+        <!-- /.col-lg-4 -->
       </div>
-        
-        </div><!-- /.col-lg-4 -->
+    </div>
+    <!-- /.row -->
+
+    <!-- (+) 버튼 -->
+    <div class="row">
+      <div class="col-button-custom">
+        <div>
+          <b-img
+            v-on:click="addExp"
+            :src="require(`@/assets/img/icons8-plus-50.png`)"
+            width="60px"
+            v-bind:style="buttonStyle"
+            v-on:mouseover="change_button"
+            v-on:mouseout="origin_button"
+          ></b-img>
         </div>
       </div>
       </div><!-- /.row -->
@@ -127,25 +151,35 @@
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
 
-      <!-- START THE FEATURETTES -->
+    <!-- START THE FEATURETTES -->
 
-      <hr class="featurette-divider">
+    <hr class="featurette-divider" />
 
-      <div class="row featurette">
-        <div class="col-md-7">
-          <h2 class="featurette-heading"> 경험을 적어보세요~! <span class="text-muted">반드시 도움이 될거에요.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" src="https://t1.daumcdn.net/cfile/tistory/21151B4E53E83DAF2C" alt="Generic placeholder image">
-        </div>
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">
+          경험을 적어보세요~!
+          <span class="text-muted">반드시 도움이 될거에요.</span>
+        </h2>
+        <p
+          class="lead"
+        >Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+      </div>
+      <div class="col-md-5">
+        <img
+          class="featurette-image img-responsive center-block"
+          src="https://t1.daumcdn.net/cfile/tistory/21151B4E53E83DAF2C"
+          alt="Generic placeholder image"
+        />
       </div>
 
       <hr class="featurette-divider">
     </div>
 
-    
+    <hr class="featurette-divider" />
 
+    <hr class="featurette-divider" />
+  </div>
 </template>
 
 <script>
@@ -161,25 +195,25 @@ export default {
 
       tagText:"",
       tags: [],
-      uid : localStorage["uid"],
+      uid: localStorage["uid"],
       experiences: [],
       noTagExperiences: [],
       selectedTags: [],
-      isIncludeNoTag  : true,
+      isIncludeNoTag: true,
       NoTagImgSrcT: "icons8-doorbell-50.png",
-      ex:[],
+      ex: [],
       experienceTags: {
         "": [],
       },
       mystyle: {
-        width :"",
-        height : "",
-        opacity: ""
+        width: "",
+        height: "",
+        opacity: "",
       },
-      buttonStyle:{
-        width :"",
-        opacity: ""
-      }
+      buttonStyle: {
+        width: "",
+        opacity: "",
+      },
     };
   },
   beforeCreate () {
@@ -208,8 +242,8 @@ export default {
       })
       .then((response) => {
         // alert(this.$SERVER_URL + `/experience/Tags`);
-       console.log(response.data.object);
-       //
+        console.log(response.data.object);
+        //
         this.tags = response.data.object;
           Array.prototype.forEach.call(this.tags, t =>
           Object.assign(t, {imgsrc:"icons8-plus-64.png"}),
@@ -237,48 +271,45 @@ export default {
         },
       })
       .then((response) => {
-        
         console.log(response);
         console.log(response.data.object);
         this.experiences = response.data.object;
         console.log(response.data.object[0].portfolioTags);
 
-          Array.prototype.forEach.call(this.experiences, t =>
-          Object.assign(t, {imgsrc:"icons8-pencil-24.png"}),
-          )
-        
+        Array.prototype.forEach.call(this.experiences, (t) =>
+          Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
+        );
       })
       .catch((error) => {
-        console.log(error);   
-          this.experiences = [];
+        console.log(error);
+        this.experiences = [];
       });
 
 
     
   },
-   methods: {
-    editTodo: function(todo) {
+  methods: {
+    editTodo: function (todo) {
       this.editedTodo = todo;
     },
-    changebgcolor: function() {
+    changebgcolor: function () {
       this.mystyle.opacity = "0.7";
     },
-    originalcolor: function() {
+    originalcolor: function () {
       this.mystyle.opacity = "0.6";
     },
-    change_button: function(){
+    change_button: function () {
       this.buttonStyle.opacity = "1";
       this.buttonStyle.width = "61px";
     },
-    origin_button: function(){
+    origin_button: function () {
       this.buttonStyle.opacity = "0.6";
-        this.buttonStyle.width = "60px";
+      this.buttonStyle.width = "60px";
     },
 
-    exeptNoTagClickE: function(isIncludeNoTag){
+    exeptNoTagClickE: function (isIncludeNoTag) {
       //alert("바뀔 값" + isIncludeNoTag);
-       this.isIncludeNoTag = !this.isIncludeNoTag;
-
+      this.isIncludeNoTag = !this.isIncludeNoTag;
     },
 
     showTag(tag){
@@ -310,8 +341,14 @@ export default {
         }
     },
 
+      if (cnt > 0 || (experience.tags.length == 0 && this.isIncludeNoTag)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
 
-    getTag(){
+    getTag() {
       axios
       .get(this.$SERVER_URL + `/experience/Tags`, {
         params: {
@@ -340,8 +377,7 @@ export default {
         //alert("실패");
       });
     },
-  
-    
+
     filtering(tag) {
        
       //tag가 선택되어있다면
@@ -353,30 +389,16 @@ export default {
         tag.imgsrc = "icons8-close-window-26.png";
       }
       tag.state = !tag.state;
-     
     },
 
-
-    addExp: function(){      
+    addExp: function () {
       var date = new Date();
       var year = date.getFullYear();
-      var month = date.getMonth()+1;
+      var month = date.getMonth() + 1;
       var day = date.getDate();
 
-      if(day<10) day = "0"+day;
-      if(month<10) month = "0"+month;
-       
-      var startdate = year+"-"+month+"-"+day;
-      
-      //alert(this.uid);
-        axios
-      .post(this.$SERVER_URL + `/experience`, {
-        title:"제목",uid:this.uid, 
-      })
-      .then((response) => {
-        response.data.object.startdate = startdate;
-        response.data.object.enddate = startdate;
-        response.data.object.imgsrc = "icons8-pencil-24.png";
+      if (day < 10) day = "0" + day;
+      if (month < 10) month = "0" + month;
 
 
         //경험이 아예없으면
@@ -386,14 +408,13 @@ export default {
         }
         else {
             response.data.object.tags = [];
-          this.experiences.push(response.data.object);
-          } 
-          
-      })
-      .catch((error) => {
-        //alert("실패");
-        console.log(error); 
-      });
+            this.experiences.push(response.data.object);
+          }
+        })
+        .catch((error) => {
+          //alert("실패");
+          console.log(error);
+        });
     },
 
     deleteE: function(exid,experience){      
@@ -411,19 +432,17 @@ export default {
       });
     },
 
-
-    clickeEdit:function(experience){
+    clickeEdit: function (experience) {
       experience.clicked = !experience.clicked;
       //저장하기
-      if(!experience.clicked){ 
+      if (!experience.clicked) {
         this.editE(experience);
         experience.imgsrc = "icons8-pencil-24.png";
-        }
+      }
       //수정하기
-      else{ 
+      else {
         experience.imgsrc = "icons8-save-close-64.png";
-        
-        }
+      }
       //alert(experience.clicked);
     },
 
@@ -542,64 +561,61 @@ export default {
       });
 
     },
-
   },
 };
 </script>
 
 <style>
-
-.box-table{
-   border: 1px solid #888888;
-   box-shadow: 0 0 2px rgb(111, 111, 111);
+.box-table {
+  border: 1px solid #888888;
+  box-shadow: 0 0 2px rgb(111, 111, 111);
   margin: 100px;
   padding: 2%;
   background: #eeeeee;
   opacity: 0.8;
-
 }
 .img-circle {
-    position: relative;
-    background:#000000;
-    
-    border-radius: 50%;
-    height: 200px;
-    width: 200px;
-    opacity: 0.6;
-        background-size: cover;
-      margin-left: auto;
+  position: relative;
+  background: #000000;
+
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+  opacity: 0.6;
+  background-size: cover;
+  margin-left: auto;
 
   margin-right: auto;
-      
-    border: 3px solid #222222;
-    box-shadow: 0 0 8px rgb(111, 111, 111);
+
+  border: 3px solid #222222;
+  box-shadow: 0 0 8px rgb(111, 111, 111);
 }
 
-.img-circle .content{
-      width: 65%;
-      height: 65%;
-      text-align: center;
-         position: relative;
-         transform: translate(25%, 30%);
-         font-size:15px;
-         color: white;
-         margin-top: auto;
-         margin-bottom: auto;
-    }
+.img-circle .content {
+  width: 65%;
+  height: 65%;
+  text-align: center;
+  position: relative;
+  transform: translate(25%, 30%);
+  font-size: 15px;
+  color: white;
+  margin-top: auto;
+  margin-bottom: auto;
+}
 
-    .txt_line p{
-        overflow: hidden;
-       text-overflow: ellipsis; 
-      width: 250px;
+.txt_line p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px;
 
-       white-space: normal;
-      line-height: 1.2;
-      max-height: 2.4em; 
+  white-space: normal;
+  line-height: 1.2;
+  max-height: 2.4em;
 
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-    }
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
 
   .icon-right{
       text-align: end;
@@ -627,19 +643,27 @@ export default {
     text-align: left;
 }
 
-.col-cotents h2{
-    text-align: center;
+.row-custom {
+  margin-top: 4%;
+  margin-bottom: 4%;
 }
 
-
-.date-align{
-    text-align: right ;
+.col-custom {
+  width: 100%;
+  margin-left: 8%;
+  margin-right: 8%;
 }
 
-.col-button-custom{
-  margin-left: auto;
- margin-right: auto;
-   
+.col-cotents {
+  text-align: left;
+}
+
+.col-cotents h2 {
+  text-align: center;
+}
+
+.date-align {
+  text-align: right;
 }
 .tag-custom{
   width:30%;
@@ -716,4 +740,8 @@ export default {
 
 }
 
+.col-button-custom {
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>
