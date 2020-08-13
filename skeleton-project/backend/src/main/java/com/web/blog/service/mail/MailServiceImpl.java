@@ -30,8 +30,8 @@ public class MailServiceImpl implements MailService {
     private final String from = "wotjd4315@gmail.com";
 
     //
-    final BasicResponse result = new BasicResponse();
-    ResponseEntity response = null;
+    BasicResponse result = new BasicResponse();
+    ResponseEntity<BasicResponse> response = null;
 
     public String MailMakeCode() {
 
@@ -94,7 +94,6 @@ public class MailServiceImpl implements MailService {
     public ResponseEntity<BasicResponse> compareEmailCode(final String code, final String email) {
 
         final Optional<Mail> Opt = mailDao.findMailByEmailAndCode(email, code);
-        final BasicResponse result = new BasicResponse();
 
         if (Opt.isPresent()) { // 인증코드가 일치
 
@@ -118,8 +117,6 @@ public class MailServiceImpl implements MailService {
     @Override
     public ResponseEntity<BasicResponse> deleteEmailCode(final String email) {
         final Optional<Mail> Opt = mailDao.findMailByEmail(email);
-        ResponseEntity response = null;
-        final BasicResponse result = new BasicResponse();
 
         // 1은 인증된 데이터
         if (Opt.isPresent() && Opt.get().getAuthorized() == 1) {

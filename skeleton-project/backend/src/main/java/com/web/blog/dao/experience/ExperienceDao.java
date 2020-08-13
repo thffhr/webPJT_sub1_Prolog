@@ -16,4 +16,6 @@ public interface ExperienceDao extends JpaRepository<Experience, Integer> {
     @Query(value = "select e from Experience as e, ExperienceTag as et WHERE e.uid = :uid And et.tag.tid = :tid And et.experience.exid = e.exid", nativeQuery = false)
     List<Experience> getExperienceByTag(@Param("uid") String uid, @Param("tid") int tid);
 
+    Experience findExperienceByExid(int exid);
+
 }
