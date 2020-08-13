@@ -142,7 +142,7 @@
       <b-row align-v="center">-->
       <div id="Contact">
         <h3 class="m-3">Contact for</h3>
-        <p>TeamLP@nocontact.here</p>
+        <p>TeamLP팀장박석우@nocontact.here</p>
         <p>123-456-7890</p>
       </div>
       <!-- </b-row>
@@ -244,7 +244,7 @@ export default {
   },
   methods: {
     login() {
-      alert(this.emailOrUid + "-" + this.password)
+      alert(this.emailOrUid + "-" + this.password);
       axios
         .post(this.$SERVER_URL + "/account/login/", {
           uidOrEmail: this.emailOrUid,
