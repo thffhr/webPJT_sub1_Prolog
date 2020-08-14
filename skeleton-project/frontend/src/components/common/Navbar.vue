@@ -1,6 +1,6 @@
 <template>
-  <div id="navigationBar">
-    <b-collapse id="collapse_navbar" v-if="constants.IS_LOGED_IN">
+  <div id="navigationBar" @mouseover="openCol" @mouseleave="closeCol">
+    <b-collapse id="collapse_navbar" ref="navbar" v-if="constants.IS_LOGED_IN">
       <b-navbar id="pageMenue">
         <b-navbar-nav class="ml-auto mr-auto">
           <b-nav-item class="mr-5" href="#">
@@ -28,9 +28,11 @@
         </b-navbar-nav>
       </b-navbar>
     </b-collapse>
-    <div id="navBtn" v-if="constants.IS_LOGED_IN" v-b-toggle.collapse_navbar>
+    <div id="navBtn" v-if="constants.IS_LOGED_IN">
+      <!-- v-b-toggle.collapse_navbar -->
+      <!-- ref="navBtn"  -->
       <!-- <b-icon-chevron-compact-down class="mr-auto ml-auto"> -->
-      </b-icon-chevron-compact-down>
+      <!-- </b-icon-chevron-compact-down> -->
     </div>
   </div>
 </template>
@@ -42,6 +44,16 @@ export default {
     return {
       constants,
     };
+  },
+  methods: {
+    openCol() {
+      let navbar = this.$refs.navbar;
+      navbar.show = true;
+    },
+    closeCol() {
+      let navbar = this.$refs.navbar;
+      navbar.show = false;
+    },
   },
 };
 </script>
