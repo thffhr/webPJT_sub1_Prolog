@@ -28,10 +28,10 @@
           class="LoginBtn mr-5"
           @click="$bvModal.show('LoginModal')"
           style="text-align: center; cursor: pointer;"
-          >로그인</b-button
+          >Login</b-button
         >
         <b-modal id="LoginModal" hide-footer>
-          <template v-slot:modal-title>로그인</template>
+          <template v-slot:modal-title></template>
           <div class="d-block text-center">
             <div class="custom-login-style">
               <b-form-input
@@ -40,7 +40,6 @@
                 placeholder="이메일 혹은 아이디를 입력해주세요"
                 type="text"
                 style="width: 60%;"
-                class="mt-1 mb-1"
               ></b-form-input>
 
               <b-form-input
@@ -49,20 +48,19 @@
                 type="password"
                 placeholder="영문, 숫자 혼용 8자 이상"
                 style="width: 60%;"
-                class="mt-1 mb-1"
               ></b-form-input>
               <span class="findUser text-secondary"
                 >아이디 또는 비밀번호를 잊으셨나요?</span
               >
             </div>
-            <b-button @click="login" class="mt-3">로그인</b-button>
+            <b-button @click="login">Login</b-button>
           </div>
         </b-modal>
         <b-button
           class="JoinBtn"
           @click="$bvModal.show('JoinModal')"
           style="text-align: center; cursor: pointer;"
-          >회원가입</b-button
+          >Join Us</b-button
         >
         <b-modal id="JoinModal" hide-footer>
           <template v-slot:modal-title>
@@ -70,7 +68,7 @@
             <small class="mb-2">회원 정보를 입력해주세요.</small>
           </template>
           <div class="d-block text-center">
-            <Join @close="close" />
+            <Join />
           </div>
         </b-modal>
       </div>
@@ -144,14 +142,56 @@
       <b-row align-v="center">-->
       <div id="Contact">
         <h3 class="m-3">Contact for</h3>
-        <p>TeamLP@nocontact.here</p>
+        <p>TeamLP팀장박석우@nocontact.here</p>
         <p>123-456-7890</p>
       </div>
       <!-- </b-row>
       </b-container>-->
     </div>
 
-    <!-- <br />
+    <!-- <b-container>
+      <b-row align-v="center">
+        <div id="discription"></div>
+      </b-row>
+      <b-row align-v="center"></b-row>
+    </b-container>
+    <b-container>
+      <b-row align-v="center">
+        <b-col cols="12" lg="6">
+          <b-img :src="require(`@/assets/img/logo.jpg`)" contain width="538" class="mt-4 mb-1"></b-img>
+          <div class="m-5">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
+            perspiciatis suscipit quidem illum nihil quas perferendis omnis,
+            dignissimos ab recusandae sunt aspernatur maiores architecto dolor
+            at similique animi facere incidunt!
+          </div>
+        </b-col>
+
+        <b-col cols="12" lg="6">
+          <div class="custom-login-style">
+            <b-form-input
+              v-model="emailOrUid"
+              id="emailOrUid"
+              placeholder="이메일 혹은 아이디를 입력해주세요"
+              type="text"
+              style="width: 60%;"
+            ></b-form-input>
+
+            <b-form-input
+              @keyup.enter="login"
+              v-model="password"
+              type="password"
+              placeholder="영문, 숫자 혼용 8자 이상"
+              style="width: 60%;"
+            ></b-form-input>
+          </div>
+          <div style="text-align: center;" class="mt-3">
+            <b-button class="mr-2" @click="login">로그인</b-button>
+            <router-link :to="{ name: constants.URL_TYPE.USER.JOIN }">
+              <b-button>회원가입</b-button>
+            </router-link>
+          </div>
+          <br />
           <div style="text-align: center;">
             <span
               class="findUser text-secondary"
@@ -167,7 +207,7 @@
           </b-modal>
         </b-col>
       </b-row>
-    </b-container> -->
+    </b-container>-->
   </div>
 </template>
 
@@ -175,13 +215,14 @@
 import constants from "../../lib/constants.js";
 import axios from "axios";
 
+import Join from "../../page/user/Join.vue";
 import FindUserByEmail from "../../page/user/FindUserByEmail.vue";
 
 //const SERVER_URL = "http://localhost:8080";
 
 export default {
   name: "NoLoginHome",
-  components: { FindUserByEmail },
+  components: { FindUserByEmail, Join },
   props: [],
   computed: {},
   watch: {},
@@ -204,19 +245,21 @@ export default {
   methods: {
     login() {
       axios
-        .post(this.$SERVER_URL + "/account/login/", { uidOrEmail: this.emailOrUid, password: this.password }
-        )
+        .post(this.$SERVER_URL + "/account/login/", {
+          uidOrEmail: this.emailOrUid,
+          password: this.password,
+        })
         .then((response) => {
           console.log(response);
           if (response.data.data == "success") {
-            //   console.log("response.data.object")
-            // document.getElementById("closeBtn").click();
             localStorage.setItem("uid", response.data.object.uid);
-            localStorage.setItem("password", response.data.object.password);
+            localStorage.setItem("nickname", response.data.object.nickname);
             localStorage.setItem("email", response.data.object.email);
-            localStorage.setItem("createDate", response.data.object.createDate);
+            localStorage.setItem("password", response.data.object.password);
             constants.IS_LOGED_IN = true;
-            this.$router.go({ name: constants.URL_TYPE.MAIN.LOGINHOME });
+            // alert("로그인 되었습니다!");
+            location.href = "/#/logedin";
+            // this.$router.go({ name: constants.URL_TYPE.MAIN.LOGINHOME });
           } else {
             alert("이메일 또는 비밀번호가 잘못되었습니다.");
           }
@@ -225,19 +268,54 @@ export default {
           console.log(error.response);
         });
     },
-    close() {
-      this.$bvModal.hide("JoinModal");
-    },
   },
 };
 </script>
 
 <style>
-.nologinHome {
-  margin-top: 50px;
+#nologinHome {
+  background-color: #270949;
+  padding-top: 50px;
+  color: #e7e7e7;
+  text-align: center;
+}
+#nologinHomeContainer {
+  width: 100%;
+  margin: 0;
+}
+.BackColor {
+  background-color: #e7e7e7;
+}
+#Home {
+  margin: 150px auto;
+}
+#AboutUs {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+#AboutUsCarousel {
+  margin: 0 auto;
+}
+#Ourservice {
+  color: black;
+  width: 100%;
+}
+#service {
+  background-color: #b6b6b6;
+  border-radius: 10px;
+  padding: 40px 20px;
+  margin: 100px 0;
+}
+#Contact {
+  color: black;
+  padding-bottom: 100px;
 }
 #findUser:hover {
   cursor: pointer;
   text-align: center;
+}
+.custom-login-style {
+  text-align: -webkit-center;
 }
 </style>
