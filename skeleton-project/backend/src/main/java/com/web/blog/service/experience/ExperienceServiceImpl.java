@@ -7,10 +7,8 @@ import com.web.blog.dao.experience.ExperienceDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.experience.ETag;
 import com.web.blog.model.experience.ETagCreateRequest;
-import com.web.blog.model.experience.ETagDeleteRequest;
 import com.web.blog.model.experience.Experience;
 import com.web.blog.model.experience.ExperienceCreateRequest;
-import com.web.blog.model.experience.ExperienceCreateResponse;
 import com.web.blog.model.experience.ExperienceFindTagResponse;
 import com.web.blog.model.experience.ExperienceUpdateRequest;
 import com.web.blog.model.join.ExperienceTag;
@@ -103,7 +101,8 @@ public class ExperienceServiceImpl implements ExperienceService {
                 // System.out.println(et.getTag());
             }
             resList.add(ExperienceFindTagResponse.builder().uid(e.getUid()).exid(e.getExid()).title(e.getTitle())
-                    .startdate(e.getStartdate()).enddate(e.getEnddate()).contents(e.getContents()).tags(tags).clicked(false).build());
+                    .startdate(e.getStartdate()).enddate(e.getEnddate()).contents(e.getContents()).tags(tags)
+                    .clicked(false).build());
         }
 
         if (!list.isEmpty()) {
@@ -132,12 +131,8 @@ public class ExperienceServiceImpl implements ExperienceService {
         for (Experience i : list) {
             List<ExperienceTag> experienceTags = i.getExperienceTags();
             for (ExperienceTag j : experienceTags) {
-                hs.add(TagExperienceTagResponse
-                    .builder()
-                    .tid(j.getTag().getTid())
-                    .tagName(j.getTag().getTagName())
-                    .state(false)
-                        .build());
+                hs.add(TagExperienceTagResponse.builder().tid(j.getTag().getTid()).tagName(j.getTag().getTagName())
+                        .state(false).build());
 
                 System.out.println(j.getTag());
             }
@@ -156,8 +151,6 @@ public class ExperienceServiceImpl implements ExperienceService {
         response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
         return response;
     }
-
-
 
     @Override
     public ResponseEntity<BasicResponse> createETag(ETagCreateRequest request) throws Exception {
@@ -185,24 +178,24 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
-    public ResponseEntity<BasicResponse> deleteTagFromEx(int tid, int exid){
-         try{
-             System.out.println(tid + " - " + exid);
-              //etagDao.deleteByExidAndTid(request.getExid(), request.getTid());
-              Optional<ETag> opt = etagDao.findByExidAndTid(exid, tid);
-                etagDao.deleteById(opt.get().getExtid());
-                result.status = true;
-                result.data = "경험에서 태그 삭제 성공";
-                result.object = null;
-                response = new ResponseEntity<>(result, HttpStatus.OK);
-              
-          } catch(Exception e) {         
-              result.status = false;
-              result.data = "경험 태그 삭제 실패";
-              result.object = null;
-              response = new ResponseEntity<>(result, HttpStatus.OK);
-          }
-          return response;
+    public ResponseEntity<BasicResponse> deleteTagFromEx(int tid, int exid) {
+        try {
+            System.out.println(tid + " - " + exid);
+            // etagDao.deleteByExidAndTid(request.getExid(), request.getTid());
+            Optional<ETag> opt = etagDao.findByExidAndTid(exid, tid);
+            etagDao.deleteById(opt.get().getExtid());
+            result.status = true;
+            result.data = "경험에서 태그 삭제 성공";
+            result.object = null;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception e) {
+            result.status = false;
+            result.data = "경험 태그 삭제 실패";
+            result.object = null;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        return response;
     }
 
 }
