@@ -1,6 +1,10 @@
 <template>
-  <div class="nologinHome">
-    <b-navbar class="nologinMenue ml-auto mr-auto" type="dark" v-if="!constants.IS_LOGED_IN">
+  <div id="nologinHome">
+    <b-navbar
+      class="nologinMenue ml-auto mr-auto"
+      type="dark"
+      v-if="!constants.IS_LOGED_IN"
+    >
       <b-navbar-nav class="ml-auto mr-auto">
         <b-nav-item class="mr-5" href="#Home">Home</b-nav-item>
         <b-nav-item class="mr-5" href="#AboutUs">About Us</b-nav-item>
@@ -8,17 +12,22 @@
         <b-nav-item class="mr-5" href="#Contact">Contact</b-nav-item>
       </b-navbar-nav>
     </b-navbar>
-
     <div id="Home">
-      <b-img :src="require(`@/assets/img/logo2-2.png`)" contain width="500" id="HomeLogo"></b-img>
+      <b-img
+        :src="require(`@/assets/img/logo2-2.png`)"
+        contain
+        width="500"
+        id="HomeLogo"
+      ></b-img>
       <div style="text-align: center;" class="mt-3">
         <b-button
           class="LoginBtn mr-5"
           @click="$bvModal.show('LoginModal')"
           style="text-align: center; cursor: pointer;"
-        >로그인</b-button>
+          >로그인</b-button
+        >
         <b-modal id="LoginModal" hide-footer>
-          <template v-slot:modal-title></template>
+          <template v-slot:modal-title>로그인</template>
           <div class="d-block text-center">
             <div class="custom-login-style">
               <b-form-input
@@ -26,6 +35,7 @@
                 id="emailOrUid"
                 placeholder="이메일 혹은 아이디를 입력해주세요"
                 type="text"
+                class="mt-1 mb-1"
                 style="width: 60%;"
               ></b-form-input>
 
@@ -34,18 +44,22 @@
                 v-model="password"
                 type="password"
                 placeholder="영문, 숫자 혼용 8자 이상"
+                class="mt-1 mb-1"
                 style="width: 60%;"
               ></b-form-input>
-              <span class="findUser text-secondary">아이디 또는 비밀번호를 잊으셨나요?</span>
+              <span class="findUser text-secondary"
+                >아이디 또는 비밀번호를 잊으셨나요?</span
+              >
             </div>
-            <b-button @click="login">Login</b-button>
+            <b-button class="mt-3" @click="login">로그인</b-button>
           </div>
         </b-modal>
         <b-button
           class="JoinBtn"
           @click="$bvModal.show('JoinModal')"
           style="text-align: center; cursor: pointer;"
-        >회원가입</b-button>
+          >회원가입</b-button
+        >
         <b-modal id="JoinModal" hide-footer>
           <template v-slot:modal-title>
             <p class="mt-2 mb-2">회원가입</p>
@@ -88,20 +102,28 @@
         </b-carousel>
       </div>
     </div>
+
     <div class="BackColor">
       <div id="Ourservice">
         <b-row align-h="center" class="pt-5 mb-1">
           <h5>취업을 위해 열심히 참여했던 활동과 프로젝트들...</h5>
         </b-row>
         <b-row align-h="center" class="m-1">
-          <h5>정작 필요할 땐 안보이고, 기억이 나지 않아 어려움을 겪고 계신가요?</h5>
+          <h5>
+            정작 필요할 땐 안보이고, 기억이 나지 않아 어려움을 겪고 계신가요?
+          </h5>
         </b-row>
         <b-row align-h="center" class="m-1">
           <h5>
             그렇다면
             <div id="smallLogo1">
-              <b-img :src="require(`@/assets/img/logo2-6.png`)" contain width="100"></b-img>
-            </div>에서 아래와 같은 기능을 사용해보세요.
+              <b-img
+                :src="require(`@/assets/img/logo2-6.png`)"
+                contain
+                width="100"
+              ></b-img>
+            </div>
+            에서 아래와 같은 기능을 사용해보세요.
           </h5>
         </b-row>
         <b-row align-h="center">
@@ -143,60 +165,17 @@
           <h5>지금 시작해보세요.</h5>
         </b-row>
       </div>
-      <hr />
+
       <div id="Contact">
         <h3 class="m-3">Contact for</h3>
-        <p>TeamLP팀장박석우@nocontact.here</p>
+        <p>TeamLP@nocontact.here</p>
         <p>123-456-7890</p>
       </div>
       <!-- </b-row>
       </b-container>-->
     </div>
 
-    <!-- <b-container>
-      <b-row align-v="center">
-        <div id="discription"></div>
-      </b-row>
-      <b-row align-v="center"></b-row>
-    </b-container>
-    <b-container>
-      <b-row align-v="center">
-        <b-col cols="12" lg="6">
-          <b-img :src="require(`@/assets/img/logo.jpg`)" contain width="538" class="mt-4 mb-1"></b-img>
-          <div class="m-5">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
-            perspiciatis suscipit quidem illum nihil quas perferendis omnis,
-            dignissimos ab recusandae sunt aspernatur maiores architecto dolor
-            at similique animi facere incidunt!
-          </div>
-        </b-col>
-
-        <b-col cols="12" lg="6">
-          <div class="custom-login-style">
-            <b-form-input
-              v-model="emailOrUid"
-              id="emailOrUid"
-              placeholder="이메일 혹은 아이디를 입력해주세요"
-              type="text"
-              style="width: 60%;"
-            ></b-form-input>
-
-            <b-form-input
-              @keyup.enter="login"
-              v-model="password"
-              type="password"
-              placeholder="영문, 숫자 혼용 8자 이상"
-              style="width: 60%;"
-            ></b-form-input>
-          </div>
-          <div style="text-align: center;" class="mt-3">
-            <b-button class="mr-2" @click="login">로그인</b-button>
-            <router-link :to="{ name: constants.URL_TYPE.USER.JOIN }">
-              <b-button>회원가입</b-button>
-            </router-link>
-          </div>
-          <br />
-          <div style="text-align: center;">
+    <!-- <div style="text-align: center;">
             <span
               class="findUser text-secondary"
               @click="$bvModal.show('findUserModal')"
@@ -208,10 +187,7 @@
             <div class="d-block text-center">
               <FindUserByEmail />
             </div>
-          </b-modal>
-        </b-col>
-      </b-row>
-    </b-container>-->
+          </b-modal> -->
   </div>
 </template>
 
@@ -258,13 +234,12 @@ export default {
           if (response.data.data == "success") {
             localStorage.setItem("uid", response.data.object.uid);
             localStorage.setItem("nickname", response.data.object.nickname);
-            localStorage.setItem("password", response.data.object.password);
             localStorage.setItem("email", response.data.object.email);
             localStorage.setItem("password", response.data.object.password);
             constants.IS_LOGED_IN = true;
             // alert("로그인 되었습니다!");
-            location.href = "/#/logedin";
-            // this.$router.go({ name: constants.URL_TYPE.MAIN.LOGINHOME });
+            // location.href = "/#/logedin";
+            this.$router.go({ name: constants.URL_TYPE.MAIN.LOGINHOME });
           } else {
             alert("이메일 또는 비밀번호가 잘못되었습니다.");
           }
@@ -278,7 +253,7 @@ export default {
 </script>
 
 <style>
-.nologinHome {
+#nologinHome {
   background-color: #270949;
   padding-top: 50px;
   color: #e7e7e7;
