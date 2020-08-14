@@ -1,12 +1,6 @@
 <template>
-  <div id="nologinHome">
-    <!-- <b-container id="nologinHomeContainer">
-    <b-row align-v="center">-->
-    <b-navbar
-      class="nologinMenue ml-auto mr-auto"
-      type="dark"
-      v-if="!constants.IS_LOGED_IN"
-    >
+  <div class="nologinHome">
+    <b-navbar class="nologinMenue ml-auto mr-auto" type="dark" v-if="!constants.IS_LOGED_IN">
       <b-navbar-nav class="ml-auto mr-auto">
         <b-nav-item class="mr-5" href="#Home">Home</b-nav-item>
         <b-nav-item class="mr-5" href="#AboutUs">About Us</b-nav-item>
@@ -14,22 +8,15 @@
         <b-nav-item class="mr-5" href="#Contact">Contact</b-nav-item>
       </b-navbar-nav>
     </b-navbar>
-    <!-- </b-row>
-    <b-row align-v="center">-->
+
     <div id="Home">
-      <b-img
-        :src="require(`@/assets/img/logo2-2.png`)"
-        contain
-        width="500"
-        id="HomeLogo"
-      ></b-img>
+      <b-img :src="require(`@/assets/img/logo2-2.png`)" contain width="500" id="HomeLogo"></b-img>
       <div style="text-align: center;" class="mt-3">
         <b-button
           class="LoginBtn mr-5"
           @click="$bvModal.show('LoginModal')"
           style="text-align: center; cursor: pointer;"
-          >Login</b-button
-        >
+        >로그인</b-button>
         <b-modal id="LoginModal" hide-footer>
           <template v-slot:modal-title></template>
           <div class="d-block text-center">
@@ -49,9 +36,7 @@
                 placeholder="영문, 숫자 혼용 8자 이상"
                 style="width: 60%;"
               ></b-form-input>
-              <span class="findUser text-secondary"
-                >아이디 또는 비밀번호를 잊으셨나요?</span
-              >
+              <span class="findUser text-secondary">아이디 또는 비밀번호를 잊으셨나요?</span>
             </div>
             <b-button @click="login">Login</b-button>
           </div>
@@ -60,8 +45,7 @@
           class="JoinBtn"
           @click="$bvModal.show('JoinModal')"
           style="text-align: center; cursor: pointer;"
-          >Join Us</b-button
-        >
+        >회원가입</b-button>
         <b-modal id="JoinModal" hide-footer>
           <template v-slot:modal-title>
             <p class="mt-2 mb-2">회원가입</p>
@@ -73,8 +57,6 @@
         </b-modal>
       </div>
     </div>
-    <!-- </b-row>
-    <b-row align-v="center">-->
 
     <div id="AboutUs">
       <div id="AboutUsCarousel">
@@ -106,11 +88,22 @@
         </b-carousel>
       </div>
     </div>
-    <!-- </b-row>
-
-    <b-row align-v="center">-->
     <div class="BackColor">
       <div id="Ourservice">
+        <b-row align-h="center" class="pt-5 mb-1">
+          <h5>취업을 위해 열심히 참여했던 활동과 프로젝트들...</h5>
+        </b-row>
+        <b-row align-h="center" class="m-1">
+          <h5>정작 필요할 땐 안보이고, 기억이 나지 않아 어려움을 겪고 계신가요?</h5>
+        </b-row>
+        <b-row align-h="center" class="m-1">
+          <h5>
+            그렇다면
+            <div id="smallLogo1">
+              <b-img :src="require(`@/assets/img/logo2-6.png`)" contain width="100"></b-img>
+            </div>에서 아래와 같은 기능을 사용해보세요.
+          </h5>
+        </b-row>
         <b-row align-h="center">
           <b-col cols="3">
             <div id="service">
@@ -137,9 +130,20 @@
             </div>
           </b-col>
         </b-row>
+        <b-row align-h="center" class="m-1">
+          <h5>당신의 기록이 쌓이고 나면</h5>
+        </b-row>
+        <b-row align-h="center" class="m-1">
+          <h5>태그를 기반으로 나만의 키워드를 찾을 수 있고,</h5>
+        </b-row>
+        <b-row align-h="center" class="m-1">
+          <h5>포트폴리오 제출용 링크도 생성 가능하답니다!</h5>
+        </b-row>
+        <b-row align-h="center" class="mt-1 mb-5">
+          <h5>지금 시작해보세요.</h5>
+        </b-row>
       </div>
-      <!-- </b-row>
-      <b-row align-v="center">-->
+      <hr />
       <div id="Contact">
         <h3 class="m-3">Contact for</h3>
         <p>TeamLP팀장박석우@nocontact.here</p>
@@ -254,6 +258,7 @@ export default {
           if (response.data.data == "success") {
             localStorage.setItem("uid", response.data.object.uid);
             localStorage.setItem("nickname", response.data.object.nickname);
+            localStorage.setItem("password", response.data.object.password);
             localStorage.setItem("email", response.data.object.email);
             localStorage.setItem("password", response.data.object.password);
             constants.IS_LOGED_IN = true;
@@ -273,7 +278,7 @@ export default {
 </script>
 
 <style>
-#nologinHome {
+.nologinHome {
   background-color: #270949;
   padding-top: 50px;
   color: #e7e7e7;
@@ -300,16 +305,23 @@ export default {
 #Ourservice {
   color: black;
   width: 100%;
+  text-align: center;
+  padding: 50px 0;
+}
+#smallLogo1 {
+  display: inline;
+  margin-left: 10px;
+  margin-right: -5px;
 }
 #service {
   background-color: #b6b6b6;
   border-radius: 10px;
   padding: 40px 20px;
-  margin: 100px 0;
+  margin: 50px 0;
 }
 #Contact {
   color: black;
-  padding-bottom: 100px;
+  padding: 30px 0;
 }
 #findUser:hover {
   cursor: pointer;

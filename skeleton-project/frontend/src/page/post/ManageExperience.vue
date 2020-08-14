@@ -1,40 +1,44 @@
 <template>
-  <div class="container">
+  <div class="manageEx">
     <!-- Three columns of text below the carousel -->
     <!-- 모든 태그들 -->
-    <div class="row box-table">
-      <div
-        class="adge tag-margin-custom mr-3 badge-secondary badge-pill"
-        v-for="tag in tags"
-        :key="tag.tid"
-      >
-        <div v-if="showTag(tag)">
-          #{{ tag.tagName }}
-          <b-img
-            @click="filtering(tag)"
-            :pressed.sync="tag.state"
-            
-            variant="primary"
-            style="cursor:pointer"
-            v-bind:src="require(`@/assets/img/${tag.imgsrc}`)"
-            width="20px"
-          ></b-img>
+    <div id="tagMenue">
+      <div class="row box-table">
+        <div v-if="tags.length > 0">
+          <div
+            class="adge tag-margin-custom mr-3 badge-secondary badge-pill"
+            v-for="tag in tags"
+            :key="tag.tid"
+          >
+            <div v-if="showTag(tag)">
+              #{{ tag.tagName }}
+              <b-img
+                @click="filtering(tag)"
+                :pressed.sync="tag.state"
+                variant="primary"
+                style="cursor:pointer"
+                v-bind:src="require(`@/assets/img/${tag.imgsrc}`)"
+                width="20px"
+              ></b-img>
+            </div>
+          </div>
+        </div>
+        <div v-else>
+          태그가 없습니다.
         </div>
       </div>
-      <!-- /.col-lg-2 -->
-    </div>
-    <!-- /.row -->
-    <div class="noTag mt-3 mb-3">
-      #No태그 여부
-      <b-img
-        @click="exeptNoTagClickE()"
-        style="cursor:pointer"
-        :pressed.sync="this.isIncludeNoTag"
-        v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)"
-        width="20px"
-      ></b-img>
-    </div>
 
+      <h6 class="noTag mt-3 mb-3" @click="exeptNoTagClickE()">
+        태그 없는 게시물 숨기기
+        <!-- <b-icon icon="hand-index-thumb"></b-icon> -->
+        <b-img
+          style="cursor:pointer"
+          :pressed.sync="this.isIncludeNoTag"
+          v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)"
+          width="20px"
+        ></b-img>
+      </h6>
+    </div>
 
     <!-- 경험목록 -->
     <div id="experienceList">
@@ -212,32 +216,29 @@
     </div>
     <!-- /.row -->
 
-      <!-- START THE FEATURETTES -->
+    <!-- START THE FEATURETTES -->
 
-      <hr class="featurette-divider">
+    <!-- <hr class="featurette-divider" /> -->
 
     <div class="row featurette">
-      <div class="col-md-7">
-        <h2 class="featurette-heading">
-          경험을 적어보세요~!
-          <span class="text-muted">반드시 도움이 될거에요.</span>
-        </h2>
-        <p class="lead">
-          Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id
-          ligula porta felis euismod semper. Praesent commodo cursus magna, vel
-          scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
-        </p>
-      </div>
-      <div class="col-md-5">
+      <!-- <div class="col-md-7"> -->
+      <h3
+        class="featurette-heading mr-auto ml-auto mt-3"
+        v-if="experiences.length == 0"
+      >
+        활동 경험을 기록해보세요.
+      </h3>
+      <!-- </div> -->
+      <!-- <div class="col-md-5">
         <img
           class="featurette-image img-responsive center-block"
           src="https://t1.daumcdn.net/cfile/tistory/21151B4E53E83DAF2C"
           alt="Generic placeholder image"
         />
-      </div>
+      </div> -->
     </div>
 
-    <hr class="featurette-divider" />
+    <!-- <hr class="featurette-divider" /> -->
   </div>
 </template>
 
@@ -253,32 +254,30 @@ export default {
     return {
       tagText: "",
       tags: [],
-      uid : localStorage["uid"],
+      uid: localStorage["uid"],
       experiences: [],
       noTagExperiences: [],
       selectedTags: [],
-      isIncludeNoTag  : true,
+      isIncludeNoTag: true,
       NoTagImgSrcT: "icons8-doorbell-50.png",
-      ex:[],
+      ex: [],
       experienceTags: {
         "": [],
       },
       mystyle: {
-        width :"",
-        height : "",
-        opacity: ""
+        width: "",
+        height: "",
+        opacity: "",
       },
-      buttonStyle:{
-        width :"",
-        opacity: ""
-      }
+      buttonStyle: {
+        width: "",
+        opacity: "",
+      },
     };
   },
   beforeCreate() {},
   computed: {
-    nickNameState() {
-      
-    },
+    nickNameState() {},
   },
 
   created() {
@@ -295,8 +294,8 @@ export default {
       })
       .then((response) => {
         // alert(this.$SERVER_URL + `/experience/Tags`);
-       console.log(response.data.object);
-       //
+        console.log(response.data.object);
+        //
         this.tags = response.data.object;
         Array.prototype.forEach.call(this.tags, (t) =>
           Object.assign(t, { imgsrc: "icons8-plus-64.png" })
@@ -321,20 +320,18 @@ export default {
         },
       })
       .then((response) => {
-        
         console.log(response);
         console.log(response.data.object);
         this.experiences = response.data.object;
         console.log(response.data.object[0].portfolioTags);
 
-          Array.prototype.forEach.call(this.experiences, t =>
-          Object.assign(t, {imgsrc:"icons8-pencil-24.png"}),
-          )
-        
+        Array.prototype.forEach.call(this.experiences, (t) =>
+          Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
+        );
       })
       .catch((error) => {
-        console.log(error);   
-          this.experiences = [];
+        console.log(error);
+        this.experiences = [];
       });
   },
   methods: {
@@ -353,13 +350,12 @@ export default {
     },
     origin_button: function() {
       this.buttonStyle.opacity = "0.6";
-        this.buttonStyle.width = "60px";
+      this.buttonStyle.width = "60px";
     },
 
     exeptNoTagClickE: function() {
       //lert("바뀔 값" + this.isIncludeNoTag);
-       this.isIncludeNoTag = !this.isIncludeNoTag;
-
+      this.isIncludeNoTag = !this.isIncludeNoTag;
     },
 
     showTag(tag) {
@@ -372,9 +368,6 @@ export default {
 
     //하나의 프로젝트를 보여줄거?
     showProject(experience) {
-
-      
-
       var selectedTags = this.selectedTags;
       var cnt = 0;
       experience.tags.forEach(function(tag) {
@@ -383,14 +376,15 @@ export default {
         }
       });
 
-      if (cnt==selectedTags.length  || (experience.tags.length==0 && this.isIncludeNoTag)) {
-          return true
-        } else {
-          return false
-        }
-
+      if (
+        cnt == selectedTags.length ||
+        (experience.tags.length == 0 && this.isIncludeNoTag)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     },
-
 
     getTag() {
       axios
@@ -419,8 +413,7 @@ export default {
           //alert("실패");
         });
     },
-  
-    
+
     filtering(tag) {
       //tag가 선택되어있다면
       if (this.selectedTags.includes(tag.tid)) {
@@ -432,64 +425,59 @@ export default {
         tag.imgsrc = "icons8-close-window-26.png";
       }
       tag.state = !tag.state;
-     
     },
 
-    addExp: function(){      
+    addExp: function() {
       var date = new Date();
       var year = date.getFullYear();
-      var month = date.getMonth()+1;
+      var month = date.getMonth() + 1;
       var day = date.getDate();
 
-      if(day<10) day = "0"+day;
-      if(month<10) month = "0"+month;
-       
-      var startdate = year+"-"+month+"-"+day;
-      
-      //alert(this.uid);
-        axios
-      .post(this.$SERVER_URL + `/experience`, {
-        title:"제목",uid:this.uid, 
-      })
-      .then((response) => {
-        response.data.object.startdate = startdate;
-        response.data.object.enddate = startdate;
-        response.data.object.imgsrc = "icons8-pencil-24.png";
+      if (day < 10) day = "0" + day;
+      if (month < 10) month = "0" + month;
 
       var startdate = year + "-" + month + "-" + day;
 
-        //경험이 아예없으면
-        if(response.data.status == false)
-        { 
-          experiences = response.data.object;
-        }
-        else {
+      //alert(this.uid);
+      axios
+        .post(this.$SERVER_URL + `/experience`, {
+          title: "제목",
+          uid: this.uid,
+        })
+        .then((response) => {
+          response.data.object.startdate = startdate;
+          response.data.object.enddate = startdate;
+          response.data.object.imgsrc = "icons8-pencil-24.png";
+
+          var startdate = year + "-" + month + "-" + day;
+
+          //경험이 아예없으면
+          if (response.data.status == false) {
+            experiences = response.data.object;
+          } else {
             response.data.object.tags = [];
-          this.experiences.push(response.data.object);
-          } 
-          
-      })
-      .catch((error) => {
-        //alert("실패");
-        console.log(error); 
-      });
+            this.experiences.push(response.data.object);
+          }
+        })
+        .catch((error) => {
+          //alert("실패");
+          console.log(error);
+        });
     },
 
-
-    deleteE: function(exid,experience){      
-    
-        axios
-      .delete(this.$SERVER_URL + `/experience/${experience.exid}`)
-      .then((response) => {
-        //alert(exid);
-        this.$delete(this.experiences, exid);
-        this.getTag();
-        //alert("삭제완료 " + experience.exid);
-      })
-      .catch((error) => {
-        //alert("실패");
-        console.log(error); 
-      });
+    deleteE: function(exid, experience) {
+      axios
+        .delete(this.$SERVER_URL + `/experience/${experience.exid}`)
+        .then((response) => {
+          //alert(exid);
+          this.$delete(this.experiences, exid);
+          this.getTag();
+          //alert("삭제완료 " + experience.exid);
+        })
+        .catch((error) => {
+          //alert("실패");
+          console.log(error);
+        });
     },
 
     deleteE: function(exid, experience) {
@@ -509,15 +497,14 @@ export default {
     clickeEdit: function(experience) {
       experience.clicked = !experience.clicked;
       //저장하기
-      if(!experience.clicked){ 
+      if (!experience.clicked) {
         this.editE(experience);
         experience.imgsrc = "icons8-pencil-24.png";
-        }
+      }
       //수정하기
-      else{ 
+      else {
         experience.imgsrc = "icons8-save-close-64.png";
-        
-        }
+      }
       //alert(experience.clicked);
     },
 
@@ -638,71 +625,79 @@ export default {
           console.log(error);
         });
     },
-
   },
 };
 </script>
 
 <style>
-.container {
+.manageEx {
   margin-top: 50px;
   width: 80%;
   padding: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 .box-table {
   border: 1px solid #888888;
   border-radius: 5px;
   margin-top: 50px;
+  margin-bottom: 10px;
   padding: 2%;
   background: #eeeeee;
   opacity: 0.8;
-
 }
-.noTag {
+#tagMenue {
   text-align: right;
 }
+.noTag {
+  display: inline;
+  padding: 5px;
+}
+.noTag:hover {
+  cursor: pointer;
+}
 .img-circle {
-    position: relative;
-    background:#000000;
-    
-    border-radius: 50%;
-    height: 200px;
-    width: 200px;
-    opacity: 0.6;
-        background-size: cover;
-      margin-left: auto;
+  position: relative;
+  background: #000000;
+
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+  opacity: 0.6;
+  background-size: cover;
+  margin-left: auto;
 
   margin-right: auto;
-      
-    border: 3px solid #222222;
-    box-shadow: 0 0 8px rgb(111, 111, 111);
+
+  border: 3px solid #222222;
+  box-shadow: 0 0 8px rgb(111, 111, 111);
 }
 
-.img-circle .content{
-      width: 65%;
-      height: 65%;
-      text-align: center;
-         position: relative;
-         transform: translate(25%, 30%);
-         font-size:15px;
-         color: white;
-         margin-top: auto;
-         margin-bottom: auto;
-    }
+.img-circle .content {
+  width: 65%;
+  height: 65%;
+  text-align: center;
+  position: relative;
+  transform: translate(25%, 30%);
+  font-size: 15px;
+  color: white;
+  margin-top: auto;
+  margin-bottom: auto;
+}
 
-    .txt_line p{
-        overflow: hidden;
-       text-overflow: ellipsis; 
-      width: 250px;
+.txt_line p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px;
 
-       white-space: normal;
-      line-height: 1.2;
-      max-height: 2.4em; 
+  white-space: normal;
+  line-height: 1.2;
+  max-height: 2.4em;
 
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-    }
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
 
 .icon-right {
   text-align: end;
@@ -714,19 +709,17 @@ export default {
   margin-right: 8%;
 }
 
-.col-cotents h2{
-    text-align: center;
+.col-cotents h2 {
+  text-align: center;
 }
 
-
-.date-align{
-    text-align: right ;
+.date-align {
+  text-align: right;
 }
 
-.col-button-custom{
+.col-button-custom {
   margin-left: auto;
- margin-right: auto;
-   
+  margin-right: auto;
 }
 
 .col-button-custom {
@@ -809,7 +802,7 @@ export default {
   margin-top: 30px;
 }
 
-.temp1{
+.temp1 {
   display: none;
   margin: 0;
 }
