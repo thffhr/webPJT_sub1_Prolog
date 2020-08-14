@@ -1,4 +1,4 @@
-package com.web.blog.controller.Apply;
+package com.web.blog.controller.apply;
 
 import javax.validation.Valid;
 
