@@ -2,12 +2,21 @@
   <div id="manageP">
     <!-- <ul>
       <li v-for="tag in tags" :key="tag.tid" style="display: inline-block;" class="m-1">#{{ tag.tag_Name }}</li>
-    </ul> -->
+    </ul>-->
 
     <!-- 여기부터 -->
-    <div class="tagButtons box-table2">
-      <b-button-group size="sm">
-        <div class="col-lg-12 ">
+    <div id="tagMenue" style="margin-top:50px">
+      <span
+        v-if="allTagState"
+        @click="allTagOnOff"
+        style="cursor: pointer; color: black;"
+      >태그 전체 선택 해제</span>
+      <span v-else @click="allTagOnOff" style="cursor: pointer; color: black;">태그 전체 선택</span>
+
+      <div class="tagButtons box-table2">
+        <div v-if="tags.length > 0">
+          <!-- <b-button-group size="sm"> -->
+          <!-- <div class="col-lg-12"> -->
           <b-button
             pill
             v-for="(tag, idx) in tags"
@@ -17,49 +26,42 @@
             variant="secondary"
             style="display: inline-block; color: black;"
             class="m-1"
-          >
-            #{{ tag.tagName }}
-          </b-button>
+          >#{{ tag.tagName }}</b-button>
         </div>
-      </b-button-group>
-    </div>
-    <b-container>
+        <!-- </div> -->
+        <div v-else>태그가 없습니다.</div>
+        <!-- </b-button-group> -->
+      </div>
+      <!-- <b-container>
       <b-row align-h="between">
-        <b-col cols="4">
-          <span
-            v-if="allTagState"
-            @click="allTagOnOff"
-            style="cursor: pointer; color: black;"
-            >태그 전체 선택 해제</span
-          >
-          <span
-            v-else
-            @click="allTagOnOff"
-            style="cursor: pointer; color: black;"
-            >태그 전체 선택</span
-          >
-        </b-col>
-        <b-col cols="4" style="text-align: right;">
-          <span
-            v-if="isIncludeNoTag"
-            @click="showNotagProject"
-            style="cursor: pointer; color: black;"
-            >태그없는 프로젝트 숨기기</span
-          >
-          <span
-            v-else
-            @click="showNotagProject"
-            style="cursor: pointer; text-align: right; color: black;"
-            >태그없는 프로젝트 보여주기</span
-          >
-          <!-- <span v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; color: black;">{{ showNoTag }}</span>
-          <span v-else @click="showNotagProject" style="cursor: pointer; text-align: right; color: black;">{{ showNoTag }}</span> -->
-        </b-col>
-      </b-row>
-    </b-container>
-    <!-- 여기까지 -->
+      <b-col cols="4">-->
+      <!-- </b-col>
+      <b-col cols="4" style="text-align: right;">-->
 
-    <hr />
+      <br />
+      <hr />
+
+      <span
+        v-if="isIncludeNoTag"
+        @click="showNotagProject"
+        style="cursor: pointer; color: black;"
+      >태그없는 프로젝트 숨기기</span>
+      <span
+        v-else
+        @click="showNotagProject"
+        style="cursor: pointer; text-align: right; color: black;"
+      >태그없는 프로젝트 보여주기</span>
+      <!-- 아이콘도 경험관리랑 통일 -->
+      <!-- 아래 아이콘은 임시 -->
+      <b-icon icon="hand-index"></b-icon>
+    </div>
+
+    <!-- <span v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; color: black;">{{ showNoTag }}</span>
+    <span v-else @click="showNotagProject" style="cursor: pointer; text-align: right; color: black;">{{ showNoTag }}</span>-->
+    <!-- </b-col>
+      </b-row>
+    </b-container>-->
+    <!-- 여기까지 -->
 
     <!-- <div
       v-for="portfolio in portfolios"
@@ -89,7 +91,7 @@
         <b-button href="#" variant="primary">다운로드(버튼, 미완)</b-button>
       </b-card>
     </div>
-    <hr /> -->
+    <hr />-->
 
     <!-- 위랑 동일 / 카드 형태만 다름 -->
     <b-container>
@@ -109,15 +111,12 @@
               <b-container>
                 <b-row align-h="between">
                   <b-col style="padding-left: 0;" cols="8">
-                    <b-button size="sm" variant="outline-dark"
-                      >download</b-button
-                    >
+                    <b-button size="sm" variant="outline-dark">download</b-button>
                     <b-button
                       @click="gotoDetail(portfolio.pid)"
                       size="sm"
                       variant="outline-dark"
-                      >상세보기
-                    </b-button>
+                    >상세보기</b-button>
                   </b-col>
                   <b-col style="text-align: right; padding-right: 0;" cols="4">
                     <b-img
@@ -130,18 +129,15 @@
                 </b-row>
               </b-container>
 
-              <h2 v-if="portfolio.title.length > 15">
-                {{ portfolio.title.slice(0, 15) }}...
-              </h2>
+              <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
               <h2 v-else>{{ portfolio.title }}</h2>
 
-              <small style="display: inline;"
-                >{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small
-              >
+              <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
               <!-- <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div> -->
-              <p v-if="portfolio.contents.length > 60" class="mt-2">
-                {{ portfolio.contents.slice(0, 60) }}...
-              </p>
+              <p
+                v-if="portfolio.contents.length > 60"
+                class="mt-2"
+              >{{ portfolio.contents.slice(0, 60) }}...</p>
               <p v-else class="mt-2">{{ portfolio.contents }}</p>
               <!-- 태그 출력 -->
               <div v-if="portfolio.tag.length > 4">
@@ -151,12 +147,14 @@
                   style="display: inline-block;"
                 >
                   <h4>
-                    <b-badge pill class="mr-3" id="tag" text-variant="black"
-                      >#{{ portfolioTag.tagName }}</b-badge
-                    >
+                    <b-badge
+                      pill
+                      class="mr-3"
+                      id="tag"
+                      text-variant="black"
+                    >#{{ portfolioTag.tagName }}</b-badge>
                   </h4>
-                </div>
-                ...
+                </div>...
               </div>
               <div v-else-if="portfolio.tag.length > 0">
                 <div
@@ -165,9 +163,12 @@
                   style="display: inline-block;"
                 >
                   <h4>
-                    <b-badge pill class="mr-3" id="tag" text-variant="black"
-                      >#{{ portfolioTag.tagName }}</b-badge
-                    >
+                    <b-badge
+                      pill
+                      class="mr-3"
+                      id="tag"
+                      text-variant="black"
+                    >#{{ portfolioTag.tagName }}</b-badge>
                   </h4>
                 </div>
               </div>
@@ -191,6 +192,21 @@
             ></b-img>
           </div>
         </div>
+      </div>
+      <div class="row featurette">
+        <!-- <div class="col-md-7"> -->
+        <h3
+          class="featurette-heading mr-auto ml-auto mt-3"
+          v-if="portfolios.length == 0"
+        >포트폴리오를 기록해보세요.</h3>
+        <!-- </div> -->
+        <!-- <div class="col-md-5">
+        <img
+          class="featurette-image img-responsive center-block"
+          src="https://t1.daumcdn.net/cfile/tistory/21151B4E53E83DAF2C"
+          alt="Generic placeholder image"
+        />
+        </div>-->
       </div>
     </b-container>
   </div>
@@ -285,11 +301,11 @@ export default {
           console.log(error);
         });
     },
-    change_button: function() {
+    change_button: function () {
       this.buttonStyle.opacity = "1";
       this.buttonStyle.width = "61px";
     },
-    origin_button: function() {
+    origin_button: function () {
       this.buttonStyle.opacity = "0.6";
       this.buttonStyle.width = "60px";
     },
@@ -297,7 +313,7 @@ export default {
     showProject(tagInPortfolio) {
       var selectedTags = this.selectedTags;
       var cnt = 0;
-      tagInPortfolio.tag.forEach(function(tag) {
+      tagInPortfolio.tag.forEach(function (tag) {
         if (selectedTags.includes(tag.tid)) {
           cnt++;
         }
@@ -349,7 +365,7 @@ export default {
       }
     },
 
-    deleteP: function(portfolio) {
+    deleteP: function (portfolio) {
       axios
         .delete(this.$SERVER_URL + `/portfolio/${portfolio.pid}`)
         .then((response) => {
@@ -432,15 +448,35 @@ export default {
 <style>
 #manageP {
   width: 80%;
+  padding: 0;
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;
 }
-.tagButtons {
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.box-table2 {
+  border: 1px solid #888888;
+  border-radius: 5px;
+  /* margin-top: 50px; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /* 이건 경험관리 수정할거면 같이 날려줘야함 */
+  margin-left: -15px;
+  margin-right: -15px;
+  /* 여기까지 */
+  padding: 2%;
+  background: #eeeeee;
+  opacity: 0.8;
 }
+
+#tagMenue {
+  text-align: right;
+}
+.tagButtons {
+  /* justify-content: center;s */
+  /* align-items: center; */
+  text-align: left;
+}
+
 .col-button-custom {
   margin-left: auto;
   margin-right: auto;
@@ -448,14 +484,5 @@ export default {
 
 .img-custom {
   text-align: right;
-}
-
-.box-table2 {
-  border: 1px solid #888888;
-  box-shadow: 0 0 2px rgb(111, 111, 111);
-  margin: 1%;
-  padding: 2%;
-  background: #eeeeee;
-  opacity: 0.8;
 }
 </style>
