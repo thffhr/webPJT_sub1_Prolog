@@ -3,70 +3,19 @@
 
 <div>
 
+  <div class="about"> 
+      <div class="left">
+         
 
+        <div ref="right" id="drop-target">
+        </div>
+      </div> 
 
-<div class="about"> 
-  <div>
-     <div class="left">
-        <div ref="left" id="drag-elements"> 
-          <div>Element 1</div> 
-          <div>Element 2</div> 
-          <div>Element 3</div> 
+        <div class="right"> 
+          <div id="display" ref="display1">Display</div> 
         </div> 
-      <div ref="right" id="drop-target">
-      </div>
-       </div> 
-       <div class="right"> 
-         <div id="display" ref="display1">Display</div> 
-         </div> 
-         </div>
-          </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 
-  <div id="row">
-    <drag-drop
-      :dropzones="dropGroups"
-      :dropzonesTitle="'XYZ Company Teams'"
-      :originalData="stories"
-      :originalTitle="'Tasks to be distributed'"
-      :inPlace="true"
-      :enableSave="true"
-      :enableCancel="true"
-      @dropInOriginalBucket="originalBucketDropEvent"
-      @dropInDestinationBucket="destinationBucketDropEvent"
-      @save="save"
-      @cancel="cancel"
-    >
-      <template #dd-card="{ cardData }">
-        <custom-card
-          :data="cardData"
-          @done="doneMarked"
-        />
-      </template>
-    </drag-drop>
-  </div> -->
-  
-
-
-
-
-
-
+  </div>
 
     <!-- 네비게이션 오른쪽 -->
    <div class="temp">
@@ -74,21 +23,33 @@
 
     <!-- 내용 -->
     <div class="custom-nav-right-contents ">
-    <div>
     <b-collapse id="collapse_navbar3" class="custom-pageMenue-right" >
       
-        <div class="row"> <div class="col-lg-12"><p>안녕</p></div></div>
+      <div class="custom-left-list">
         
-        <div class="row"> <div class="col-lg-3"><p>안녕</p></div> </div>
-        
-        <div class="row"> <div class="col-lg-3"><p>안녕</p></div> </div>
-        
-        <div class="row"> <div class="col-lg-3"><p>안녕</p></div></div>
-        
+        <h4 style="color:black"> 포트폴리오</h4>
+        <div class="custom-left col-lg-12">
+           <div ref="left" class="custom-drag-elements"> 
+            <div  v-for="(port, pid) in nav_port_list" :key="port.pid">
+              <div>{{port.title}}</div>
+            </div>
+          </div> 
+        </div>
+       
+       <hr class="featurette-divider">
+       <h4 style="color:black">경험</h4>
+
+        <div class="custom-left  col-lg-12">
+           <div  class="custom-drag-elements"> 
+            <div  v-for="(ex, exid) in nav_ex_list" :key="ex.exid">
+              <div>{{ex.title}}</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </b-collapse>
-    </div>
-    </div>
-    <!-- 내용 끝 -->
+
 
       <!-- 버튼 -->
      <div class="right_btn">
@@ -104,6 +65,10 @@
         </b-img>
        </div>
      </div>
+
+    </div>
+    <!-- 내용 끝 -->
+
 
   </div>
 
@@ -146,8 +111,8 @@
        <form class="fleft" name="topSearchForm" id="topSearchForm" action="/goods/search">
         <input type="hidden" name="keyword_log_flag" value="Y" />
         <div class ="search-input">
-          <b-img type="image" @click="deleteE(exid, experience)" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-search-50.png`)" width="25px"></b-img>
-          <input type="text" v-model="search_input_text" value=""  autocomplete="off" autofocus title="회사명으로 검색해보아요~" class="search_top_text" >
+          <b-img type="image" @click="searchA(search_input_text, search_input_period)" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-search-50.png`)" width="25px"></b-img>
+          <input type="text" v-on:keyup.enter="searchA(search_input_text, search_input_period)" v-model="search_input_text" value=""  autocomplete="off" autofocus title="회사명으로 검색해보아요~" class="search_top_text" >
           <input readonly type="text" v-model="search_input_period" value=""  autocomplete="off" autofocus title="기간선택해보아요~" class="search_top_period" >
           <b-img type="image" @click="calendar()" style="cursor:pointer" v-bind:src="require(`@/assets/img/icons8-calendar-50.png`)" width="25px"></b-img>
         </div>
@@ -155,7 +120,7 @@
       </div>
       
       <hr class="featurette-divider">
-    <!-- 검색 창 -->
+    <!--/ 검색 창 -->
    
    
    <!-- 케러셀 -->
@@ -273,26 +238,27 @@
 
     <!-- 목록 디테일 -->
    <div class="apply_detail">
-    <b-collapse :id="`collapse_navbar2-${apid}`" >
+   <b-collapse :id="`collapse_navbar2-${apply.apid}`" accordion="my-accordion" >
       <b-navbar class="custom-pageMenue">
         <div class="left-ex">
            경험
         </div>
-        <!-- <b-navbar-nav class="ml-auto mr-auto">
-         
-        </b-navbar-nav> -->
+     
          <div class="right-port">
            프로젝트
         </div>
       </b-navbar>
-    </b-collapse>
-    <b-img 
-      class="custom-apply-Btn" 
-      v-b-toggle= "`collapse_navbar2-${apid}`" 
-      style="cursor:pointer" 
-      v-bind:src="require(`@/assets/img/icons8-view-more-30.png`)" 
-      width="30px">
-    </b-img>
+   </b-collapse>
+      <div @click="detailClickeIndex(apply.apid)">
+        <b-img 
+          class="custom-apply-Btn" 
+          v-b-toggle= "`collapse_navbar2-${apply.apid}`" 
+          style="cursor:pointer" 
+          v-bind:src="require(`@/assets/img/icons8-view-more-30.png`)" 
+          width="30px">
+        </b-img>
+      </div>
+    </div>
     </div>
     <!-- 목록 디테일 -->
 
@@ -334,10 +300,11 @@ export default {
     return {
         slide: 0,
         sliding: null,
+        uid:"",
 
         periods: [],
         is_show:false,
-        search_input_period:"",
+        search_input_period:"미정",
         search_input_text:"",
 
         apply_lists:[],
@@ -347,85 +314,36 @@ export default {
         leftNavImgsrc:"icons8-arrow-right-64.png",
         intervalid1:"",
 
-         list1: [
-        { name: "John", id: 1 },
-        { name: "Joao", id: 2 },
-        { name: "Jean", id: 3 },
-        { name: "Gerard", id: 4 }
-      ],
-      list2: [
-        { name: "Juan", id: 5 },
-        { name: "Edgard", id: 6 },
-        { name: "Johnson", id: 7 }
-      ]
-
-,
-       stories: [
-        {
-          title: 'Strategy 101',
-          description: 'Create a draft of business plan',
-          time: '3 days',
-          done: false
-        },
-        {
-          title: 'Strategy 102',
-          description: 'Finalize the plan',
-          time: '4 days',
-          done: false
-        },
-        {
-          title: 'Tech diagram',
-          description: 'Draw the tech data',
-          time: '4 days',
-          done: false
-        },
-        {
-          title: 'Place Holder',
-          description: 'Data Science Team',
-          time: '5 days',
-          done: false
-        }
-      ],
-
-      dropGroups: [
-        {
-          name: 'Business Team',
-          children: []
-        },
-        {
-          name: 'Tech Dept',
-          children: []
-        },
-        {
-          name: 'Marketing Dept',
-          children: []
-        }
-      ]
+        nav_port_list:[],
+        nav_ex_list:[],
+        
     };
   }
   ,
 
   mounted(){ 
-    const { right, display1, left } = this.$refs;
+    
+     const { right, display1, left } = this.$refs;
      dragula([ left, right  ],{ revertOnSpill: true  } ).on('drop', el =>
       { 
+        alert("길이" + this.nav_port_list.length);
         if(right.children.length > 0) 
-        { 
-          display1.innerHTML = right.innerHTML
-           }
-           else{ 
-             display1.innerHTML = "Display"
+          { 
+            display1.innerHTML = right.innerHTML
+          }
+        else{ 
+            display1.innerHTML = "Display"
               }
-               }) 
-               }
+            }
+          ) 
+      }
 ,
   created() {
-
-
+  
      //지원기간 가져오기, 없을경우만
     if(constants.APPLY_PERIOD == null){
       axios
-        .get(this.$SERVER_URL + `/temp`, {
+        .get(this.$SERVER_URL + `/period`, {
         
         })
         .then((response) => {
@@ -454,6 +372,12 @@ export default {
         console.log(response)
         console.log(response.data.object);
         this.apply_lists = response.data.object;
+
+        //보여주기 안보여주기
+        for(var i=0; i<this.apply_lists.length; i++){
+          this.isShowDetailStyle.push(false);
+        }
+
         console.log(response.data.object[0].portfolioTags);
         
       })
@@ -493,7 +417,6 @@ export default {
 
           //검색어 있으면
           this.$modal.hide('example');
-          alert(period);
       }
       ,
 
@@ -544,7 +467,83 @@ export default {
    },
     log: function(evt) {
       window.console.log(evt);
-    }
+    },
+    searchA: function(text, period){
+        
+          if(period == "미정") period = "";
+
+          axios
+          .get(this.$SERVER_URL + `/apply/search`, {
+            params: {
+              uid: localStorage["uid"],
+              searchTxt : text,
+              period : period
+            },
+          })
+          .then((response) => {
+            
+            console.log(response)
+            console.log(response.data.object);
+            this.apply_lists = response.data.object;
+            console.log(response.data.object[0].portfolioTags);
+
+        //보여주기 안보여주기
+        for(var i=0; i<this.apply_lists.length; i++){
+          this.isShowDetailStyle.push(false);
+        }
+
+            
+          })
+          .catch((error) => {
+            console.log(error);   
+          });
+
+
+    },
+    detailClickeIndex:function(apid){
+      //alert(apid);
+
+      //네비에 없는 경험가져오기
+      this.getExInNav(apid);
+
+      //네비에 없는 프로젝트가져오기
+      this.getPortInNav(apid);
+    },
+
+    getPortInNav:function (apid) {
+       axios
+        .get(this.$SERVER_URL + `/apply/outportfolio`, {params: {
+              uid: localStorage["uid"],
+              apid: apid
+            }})
+        .then((response) => {
+
+        //alert("넵 ec")
+         //this.nav_port_list.splice(0,this.nav_port_list.length+1);
+         this.nav_port_list = response.data.object;
+         console.log(response.data.object);
+         
+        
+        })
+        .catch((error) => {
+        });
+      
+    },
+    getExInNav:function (apid) {
+      axios
+        .get(this.$SERVER_URL + `/apply/outexp`, {params: {
+              uid: localStorage["uid"],
+              apid: apid
+            }})
+        .then((response) => {
+          //alert("넵 port")
+         this.nav_ex_list = response.data.object;
+        console.log(response.data.object);
+        
+        })
+        .catch((error) => {
+        });
+    },
   }
 };
 </script>
@@ -569,7 +568,7 @@ export default {
     
     border-bottom: 3px solid #00000022;
     height: 45px;
-    background: #eeeeeeff;
+    background: #e7e7e7ff;
 }
 
 .search_top_text {
@@ -584,7 +583,7 @@ export default {
     
     border-bottom: 3px solid #00000022;
     height: 45px;
-    background: #eeeeeeff;
+    background: #e7e7e7ff;
 }
 
 .custom_search_container{
@@ -657,6 +656,7 @@ export default {
 
    margin-right: auto;
       
+    border-top: 1.5px solid #22222222;  
     border-left: 1.5px solid #22222222;
     border-right: 1.5px solid #22222222;
     border-bottom: 1.5px solid #22222222;
@@ -684,7 +684,8 @@ export default {
 
 .temp{
       display: -webkit-box;
-          position: fixed;
+      position: fixed;
+      z-index: 11;
 }
 
 .custom-pageMenue-right{
@@ -693,9 +694,10 @@ export default {
     background-color: #eeeeee;
     color: white;
 
-    opacity: 0.6;
+    opacity: 0.9;
    min-height: 50rem;
    min-width: 7rem;
+   width: 50%;
 
       
     border-left: 1.5px solid #22222222;
@@ -707,21 +709,43 @@ export default {
 }
 
 .custom-nav-right-contents{
-  
+  display: flex;
    margin-right: auto;
       
 }
 
 .right_btn{
-      transform: translate(0%, 50%);
+  transform: translate(0%, 50%);
           min-height: 50rem;
           
-    margin-left: 5%;
 }
 
+.contents_list{
+  display: inline;
+}
 
+.custom-left {
+  position: relative;
+ }
 
-.left {float: left;position: relative;width: 50%;height: 100%; } .right {float: left;position: relative;width: 40%;margin-left: 5%;height: 100%; } #display {background: #2d2d2d;border: 10px solid #000000;border-radius: 5px;font-size: 2em;color: white;height: 100px;min-width:200px;text-align: center;padding: 1em;display:table-cell;vertical-align:middle; } #drag-elements {display: block;background-color: #dfdfdf;border-radius: 5px;min-height: 50px;margin: 0 auto;padding: 2em; } #drag-elements > div {text-align: center;float: left;padding: 1em;margin: 0 1em 1em 0;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);border-radius: 100px;border: 2px solid #ececec;background: #F7F7F7;transition: all .5s ease; } #drag-elements > div:active {-webkit-animation: wiggle 0.3s 0s infinite ease-in;animation: wiggle 0.3s 0s infinite ease-in;opacity: .6;border: 2px solid #000; } #drag-elements > div:hover {border: 2px solid gray;background-color: #e5e5e5; } #drop-target {border: 2px dashed #D9D9D9;border-radius: 5px;min-height: 50px;margin: 0 auto;margin-top: 10px;padding: 2em;display: block;text-align: center; } #drop-target > div {text-align: center;float: left;padding: 1em;margin: 0 1em 1em 0;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);border-radius: 100px;border: 2px solid #ececec;background: #F7F7F7;transition: all .5s ease; } #drop-target > div:active {-webkit-animation: wiggle 0.3s 0s infinite ease-in;animation: wiggle 0.3s 0s infinite ease-in;opacity: .6;border: 2px solid #000; } @-webkit-keyframes wiggle {0% {-webkit-transform: rotate(0deg);}25% {-webkit-transform: rotate(2deg);}75% {-webkit-transform: rotate(-2deg);}100% {-webkit-transform: rotate(0deg);} } @keyframes wiggle {0% {transform: rotate(-2deg);}25% {transform: rotate(2deg);}75% {transform: rotate(-2deg);}100% {transform: rotate(0deg);} } .gu-mirror {position: fixed !important;margin: 0 !important;z-index: 9999 !important;padding: 1em; } .gu-hide {display: none !important; } .gu-unselectable {-webkit-user-select: none !important;-moz-user-select: none !important;-ms-user-select: none !important;user-select: none !important; } .gu-transit {opacity: 0.5;-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";filter: alpha(opacity=50); } .gu-mirror {opacity: 0.5;-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";filter: alpha(opacity=50); }
+ .custom-left-list{
+  height: 100%;  
+ }
+
+.left {float: left;position: relative;width: 50%;height: 100%; } 
+.right {float: left;position: relative;width: 40%;margin-left: 5%;height: 100%; } 
+#display {background: #2d2d2d;border: 10px solid #000000;border-radius: 5px;font-size: 2em;color: white;height: 100px;min-width:200px;text-align: center;padding: 1em;display:table-cell;vertical-align:middle; } 
+#drop-target {border: 2px dashed #D9D9D9;border-radius: 5px;min-height: 50px;margin: 0 auto;margin-top: 10px;padding: 2em;display: block;text-align: center; } 
+#drop-target > div {text-align: center;float: left;padding: 1em;margin: 0 1em 1em 0;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);border-radius: 100px;border: 2px solid #ececec;background: #F7F7F7;transition: all .5s ease; } 
+#drop-target > div:active {-webkit-animation: wiggle 0.3s 0s infinite ease-in;animation: wiggle 0.3s 0s infinite ease-in;opacity: .6;border: 2px solid #000; } @-webkit-keyframes wiggle {0% {-webkit-transform: rotate(0deg);}25% {-webkit-transform: rotate(2deg);}75% {-webkit-transform: rotate(-2deg);}100% {-webkit-transform: rotate(0deg);} } @keyframes wiggle {0% {transform: rotate(-2deg);}25% {transform: rotate(2deg);}75% {transform: rotate(-2deg);}100% {transform: rotate(0deg);} } 
+.gu-mirror {position: fixed !important;margin: 0 !important;z-index: 9999 !important;padding: 1em; } .gu-hide {display: none !important; } .gu-unselectable {-webkit-user-select: none !important;-moz-user-select: none !important;-ms-user-select: none !important;user-select: none !important; } 
+.gu-transit {opacity: 0.5;-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";filter: alpha(opacity=50); } .gu-mirror {opacity: 0.5;-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";filter: alpha(opacity=50); }
+
+.custom-drag-elements {display: inline-block;  height:100%; background-color: #dfdfdf;border-radius: 5px;min-height: 50px;margin: 0 auto;padding: 2em; } 
+.custom-drag-elements > div { width:40%; text-align: center;float: left;padding: 1em;margin: 0 1em 1em 0;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);border-radius: 100px;border: 2px solid #ececec;background: #F7F7F7;transition: all .5s ease; } 
+.custom-drag-elements > div:active {-webkit-animation: wiggle 0.3s 0s infinite ease-in;animation: wiggle 0.3s 0s infinite ease-in;opacity: .6;border: 2px solid #000; } 
+.custom-drag-elements > div:hover {border: 2px solid #9c85ff;background-color: #7a63ff; } 
+
 
 
 </style>

@@ -86,4 +86,12 @@ public class ApplyController {
         return applyService.experienceOutOfApply(uid, apid);
     }
 
+    @GetMapping("/apply/search")
+    @ApiOperation(value = "검색에 대한 지원목록 가져오기")
+    public ResponseEntity<BasicResponse> findListBySearch(@RequestParam(required = true) String uid,
+    @RequestParam(required = false) String searchTxt, @RequestParam(required = false) String period) {
+        return applyService.findListBySearch(uid,searchTxt,period);
+    }
+
+
 }

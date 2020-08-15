@@ -14,6 +14,7 @@ import com.web.blog.model.apply.Apply;
 import com.web.blog.model.apply.ApplyCreateRequest;
 import com.web.blog.model.apply.ApplyExperience;
 import com.web.blog.model.apply.ApplyPortfolio;
+import com.web.blog.model.apply.ApplyTerm;
 import com.web.blog.model.apply.ApplyUpdateRequest;
 import com.web.blog.model.experience.Experience;
 import com.web.blog.model.portfolio.Portfolio;
@@ -269,4 +270,27 @@ public class ApplyServiceImpl implements ApplyService {
         response = new ResponseEntity<>(result, HttpStatus.OK);
         return response;
     }
+
+    @Override
+    public ResponseEntity<BasicResponse> findListBySearch(String uid,String searchTxt, String period) {
+        
+        String tempTxt = searchTxt==null ? "" : searchTxt;
+        String tempPeriod = period==null ? "" : period;
+
+        List<Apply> applyOpt = applyDao.findListBySearch(uid, tempTxt, tempPeriod);
+        System.out.println(applyOpt);
+        if (applyOpt.size() ==0) {
+            result.status = false;
+            result.data = "존재하지 않는 지원내역입니다.";
+            result.object = null;
+        } else {
+            result.status = true;
+            result.data = "지원내역 출력";
+            result.object = applyOpt;
+        }
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+        return response;
+    }
+
+ 
 }
