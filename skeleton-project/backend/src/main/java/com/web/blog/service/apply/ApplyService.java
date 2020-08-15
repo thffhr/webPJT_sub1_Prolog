@@ -26,5 +26,8 @@ public interface ApplyService {
     ResponseEntity<BasicResponse> experienceInApply(String uid, int apid);
 
     ResponseEntity<BasicResponse> experienceOutOfApply(String uid, int apid);
+    
+    ResponseEntity<BasicResponse>  findListBySearch (String uid,String searchTxt, String period);
+
 
 }
