@@ -10,6 +10,7 @@
             v-for="tag in tags"
             :key="tag.tid"
           >
+            <!-- 아이콘 말고 색깔 바뀌는걸로 해주세요...! -->
             <div v-if="showTag(tag)">
               #{{ tag.tagName }}
               <b-img
@@ -51,25 +52,53 @@
                 <b-col cols="3">
                   <!-- 제목 -->
                   <p v-if="experience.clicked">
-                    <input v-model="experience.title" @blur="experience.clicked = true" />
+                    <b-form-input
+                      placeholder="제목을 입력해주세요."
+                      v-model="experience.title"
+                      @blur="experience.clicked = true"
+                      style="width:200px"
+                    ></b-form-input>
+                    <!-- <input v-model="experience.title" @blur="experience.clicked = true" /> -->
                   </p>
                   <div v-else>
                     <h2>{{ experience.title }}</h2>
                   </div>
                   <!-- 날짜 -->
-                  <p v-if="experience.clicked">
-                    <input
+                  <div v-if="experience.clicked">
+                    <b-form-input
                       class="txt_line"
+                      style="display:inline; width:150px;"
                       placeholder="2020-00-00"
                       v-model="experience.startdate"
+                      @blur="
+                        experience.clicked = true;
+                        $emit('update');
+                      "
+                      @keyup.enter="$emit('update')"
+                    ></b-form-input>
+                    <!-- <input
+                        class="txt_line"
+                        placeholder="2020-00-00"
+                        v-model="experience.startdate"
+                        @blur="
+                        experience.clicked = true;
+                        $emit('update');
+                      "
+                        @keyup.enter="$emit('update')"
+                    />-->
+                    ~
+                    <b-form-input
+                      class="txt_line"
+                      style="width:150px"
+                      placeholder="2020-00-00"
+                      v-model="experience.enddate"
                       @blur="
                       experience.clicked = true;
                       $emit('update');
                     "
                       @keyup.enter="$emit('update')"
-                    />
-                    ~
-                    <input
+                    ></b-form-input>
+                    <!-- <input
                       class="txt_line"
                       placeholder="2020-00-00"
                       v-model="experience.enddate"
@@ -78,8 +107,8 @@
                       $emit('update');
                     "
                       @keyup.enter="$emit('update')"
-                    />
-                  </p>
+                    />-->
+                  </div>
                   <div class="date-align" v-else>
                     <small>
                       {{ experience.startdate }} ~
@@ -89,18 +118,12 @@
                 </b-col>
                 <b-col align-self="stretch" cols="8">
                   <!-- 태그 -->
-                  <div
-                    class="tag"
-                    v-for="experienceTag in experience.tags"
-                    :key="experienceTag.tid"
-                  >#{{ experienceTag.tagName }}</div>
                   <!-- 태그 수정 -->
                   <div class="editor_tag" v-if="experience.clicked">
                     <!-- exid도잇어야함 -->
                     <div v-for="(experienceTag, tid) in experience.tags" :key="experienceTag.tid">
                       <span class="txt_tag">
-                        <span>#</span>
-                        <span>{{ experienceTag.tagName }}</span>
+                        <div class="tag">#{{ experienceTag.tagName }}</div>
                         <b-img
                           @click="
                           deleteTag(
@@ -120,9 +143,10 @@
                       </span>
                     </div>
 
-                    <span class="inp_tag">
-                      <span>#</span>
-                      <div style="inline-block" value="태그" placeholder="Tag입력">
+                    <div class="inp_tag mt-1">
+                      <div class="mt-auto mb-auto mr-1">
+                        #
+                        <!-- <div style="inline-block" value="태그" placeholder="Tag입력"> -->
                         <input
                           id="tagText"
                           v-model="tagText"
@@ -132,26 +156,50 @@
                           type="text"
                           class="tf_g"
                           placeholder="태그입력"
-                          style="box-sizing: content-box; width: 50px;"
+                          style="box-sizing: content-box; width: 100px; height:24px"
                         />
                       </div>
-                    </span>
+                      <!-- <input
+                        id="tagText"
+                        v-model="tagText"
+                        v-on:keyup.enter="
+                          addTag(experience.tags, experience.exid, tagText)
+                        "
+                        type="text"
+                        class="tf_g"
+                        placeholder="태그입력"
+                        style="box-sizing: content-box; width: 100px; height:24px"
+                      />-->
+                      <!-- </div> -->
+                    </div>
+                  </div>
+                  <!-- 태그 출력 -->
+                  <div v-else>
+                    <div v-if="experience.tags.length>0">
+                      <div
+                        class="tag"
+                        v-for="experienceTag in experience.tags"
+                        :key="experienceTag.tid"
+                      >#{{ experienceTag.tagName }}</div>
+                    </div>
+                    <div v-else>태그를 추가해주세요.</div>
                   </div>
                   <!-- 내용 -->
                   <p v-if="experience.clicked">
-                    <textarea
-                      style="width:100%"
-                      value="기본내용"
-                      placeholder="Contents"
+                    <b-form-textarea
+                      value="Contents"
+                      placeholder="내용을 입력하세요."
+                      rows="3"
                       v-model="experience.contents"
                       @blur="
                       experience.clicked = true;
                       $emit('update');
                     "
                       @keyup.enter="$emit('update')"
-                    ></textarea>
+                    ></b-form-textarea>
+                    <!-- <textarea></textarea> -->
                   </p>
-                  <div v-else class="mt-3">
+                  <div v-else class="mt-3 mb-3">
                     <p class="txt_line">{{ experience.contents }}</p>
                   </div>
                 </b-col>
@@ -183,7 +231,7 @@
     <!-- 경험목록 끝 -->
 
     <!-- (+) 버튼 -->
-    <div id="exPlusBtn" v-on:click="addExp" style="width:350px; margin:0 auto">
+    <div id="exPlusBtn" v-on:click="addExp" style="width:350px; margin: 30px auto">
       <div v-if="experiences.length == 0">
         <div class="row">
           <div class="col-button-custom">
@@ -421,6 +469,7 @@ export default {
         .post(this.$SERVER_URL + `/experience`, {
           title: "제목",
           uid: this.uid,
+          contents: "내용을 입력해주세요.",
         })
         .then((response) => {
           response.data.object.startdate = startdate;
@@ -670,6 +719,7 @@ export default {
   margin-bottom: auto;
 }
 
+/* 이 부분 잘 모르겠다 */
 .txt_line p {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -679,8 +729,7 @@ export default {
   line-height: 1.2;
   max-height: 2.4em;
 
-  margin-left: auto;
-  margin-right: auto;
+  /* margin: auto; */
   text-align: center;
 }
 
@@ -727,7 +776,7 @@ export default {
 .txt_tag {
   display: flex;
   position: relative;
-  margin: 16px 26px 0 0;
+  margin: 0 15px 0 0;
   font-size: 13px;
   vertical-align: top;
 
@@ -761,6 +810,12 @@ export default {
   vertical-align: top;
   outline: none;
   background: #eeeeee;
+}
+
+input::placeholder {
+  color: black;
+  text-decoration-color: black;
+  font-style: italic;
 }
 
 .txt_tag .tf_g {
