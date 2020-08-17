@@ -94,30 +94,21 @@
     <hr />-->
 
     <!-- 위랑 동일 / 카드 형태만 다름 -->
-    <b-container>
-      <b-row align-v="start" class="ml-5">
-        <div
-          v-for="portfolio in portfolios"
-          :key="portfolio.pid"
-          style="display: inline-block;"
-          class="columns is-multiline"
-        >
-          <b-card
-            v-if="showProject(portfolio)"
-            style="background: lightgrey; width:20rem; height:26rem;"
-            class="m-2"
-          >
-            <div>
-              <b-container>
+    <!-- <b-container>
+    <b-row align-v="start">-->
+    <div
+      v-for="portfolio in portfolios"
+      :key="portfolio.pid"
+      style="display: inline-block;"
+      class="columns is-multiline"
+    >
+      <b-card v-if="showProject(portfolio)" class="poCard m-3" @click="gotoDetail(portfolio.pid)">
+        <!-- v-bind:style="cardColor"
+        v-on:mouseover="change_color()"
+        v-on:mouseout="origin_color()"-->
+        <div>
+          <!-- <b-container>
                 <b-row align-h="between">
-                  <b-col style="padding-left: 0;" cols="8">
-                    <b-button size="sm" variant="outline-dark">download</b-button>
-                    <b-button
-                      @click="gotoDetail(portfolio.pid)"
-                      size="sm"
-                      variant="outline-dark"
-                    >상세보기</b-button>
-                  </b-col>
                   <b-col style="text-align: right; padding-right: 0;" cols="4">
                     <b-img
                       @click="deleteP(portfolio)"
@@ -127,88 +118,79 @@
                     ></b-img>
                   </b-col>
                 </b-row>
-              </b-container>
+          </b-container>-->
+          <div id="downloadBtn">
+            <b-icon icon="cloud-download" font-scale="1.2"></b-icon>
+          </div>
+          <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
+          <h2 v-else>{{ portfolio.title }}</h2>
 
-              <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
-              <h2 v-else>{{ portfolio.title }}</h2>
-
-              <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
-              <!-- <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div> -->
-              <p
-                v-if="portfolio.contents.length > 60"
-                class="mt-2"
-              >{{ portfolio.contents.slice(0, 60) }}...</p>
-              <p v-else class="mt-2">{{ portfolio.contents }}</p>
-              <!-- 태그 출력 -->
-              <div v-if="portfolio.tag.length > 4">
-                <div
-                  v-for="portfolioTag in portfolio.tag.slice(0, 4)"
-                  :key="portfolioTag.tid"
-                  style="display: inline-block;"
-                >
-                  <h4>
-                    <b-badge
-                      pill
-                      class="mr-3"
-                      id="tag"
-                      text-variant="black"
-                    >#{{ portfolioTag.tagName }}</b-badge>
-                  </h4>
-                </div>...
-              </div>
-              <div v-else-if="portfolio.tag.length > 0">
-                <div
-                  v-for="portfolioTag in portfolio.tag.slice(0, 4)"
-                  :key="portfolioTag.tid"
-                  style="display: inline-block;"
-                >
-                  <h4>
-                    <b-badge
-                      pill
-                      class="mr-3"
-                      id="tag"
-                      text-variant="black"
-                    >#{{ portfolioTag.tagName }}</b-badge>
-                  </h4>
-                </div>
-              </div>
-              <div v-else>태그를 추가해보세요</div>
+          <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
+          <!-- <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div> -->
+          <p
+            v-if="portfolio.contents.length > 60"
+            class="mt-3"
+          >{{ portfolio.contents.slice(0, 60) }}...</p>
+          <p v-else class="mt-3">{{ portfolio.contents }}</p>
+          <!-- 태그 출력 -->
+          <div id="tags">
+            <div v-if="portfolio.tag.length > 3">
+              <div
+                v-for="portfolioTag in portfolio.tag.slice(0, 3)"
+                :key="portfolioTag.tid"
+                style="display: inline-block;"
+              >
+                <h4>
+                  <b-badge
+                    pill
+                    class="mr-2"
+                    id="tag"
+                    text-variant="black"
+                  >#{{ portfolioTag.tagName }}</b-badge>
+                </h4>
+              </div>...
             </div>
-          </b-card>
-        </div>
-      </b-row>
-
-      <!-- (+) 버튼 -->
-      <div class="row mt-3 mb-3">
-        <div class="col-button-custom">
-          <div>
-            <b-img
-              v-on:click="addProject"
-              :src="require(`@/assets/img/icons8-plus-50.png`)"
-              width="60px"
-              v-bind:style="buttonStyle"
-              v-on:mouseover="change_button"
-              v-on:mouseout="origin_button"
-            ></b-img>
+            <div v-else-if="portfolio.tag.length > 0" class="tags">
+              <div
+                v-for="portfolioTag in portfolio.tag"
+                :key="portfolioTag.tid"
+                style="display: inline-block;"
+              >
+                <h4>
+                  <b-badge
+                    pill
+                    class="mr-2"
+                    id="tag"
+                    text-variant="black"
+                  >#{{ portfolioTag.tagName }}</b-badge>
+                </h4>
+              </div>...
+            </div>
+            <div v-else class="tags">태그를 추가해보세요</div>
           </div>
         </div>
+      </b-card>
+    </div>
+    <!-- </b-row>
+    </b-container>-->
+    <!-- (+) 버튼 -->
+    <div id="poPlusBtn" v-on:click="addProject">
+      <div v-if="portfolios.length == 0">
+        <div class="row">
+          <div class="col-button-custom">
+            <b-icon icon="journal-plus" font-scale="5"></b-icon>
+          </div>
+        </div>
+        <div class="row">
+          <h3 class="mr-auto ml-auto mt-3">활동 경험을 기록해보세요.</h3>
+        </div>
       </div>
-      <div class="row featurette">
-        <!-- <div class="col-md-7"> -->
-        <h3
-          class="featurette-heading mr-auto ml-auto mt-3"
-          v-if="portfolios.length == 0"
-        >포트폴리오를 기록해보세요.</h3>
-        <!-- </div> -->
-        <!-- <div class="col-md-5">
-        <img
-          class="featurette-image img-responsive center-block"
-          src="https://t1.daumcdn.net/cfile/tistory/21151B4E53E83DAF2C"
-          alt="Generic placeholder image"
-        />
-        </div>-->
+      <div class="row" v-else>
+        <div class="col-button-custom">
+          <b-icon icon="plus-circle" font-scale="3"></b-icon>
+        </div>
       </div>
-    </b-container>
+    </div>
   </div>
 </template>
 
@@ -301,14 +283,14 @@ export default {
           console.log(error);
         });
     },
-    change_button: function () {
-      this.buttonStyle.opacity = "1";
-      this.buttonStyle.width = "61px";
-    },
-    origin_button: function () {
-      this.buttonStyle.opacity = "0.6";
-      this.buttonStyle.width = "60px";
-    },
+    // change_button: function () {
+    //   this.buttonStyle.opacity = "1";
+    //   this.buttonStyle.width = "61px";
+    // },
+    // origin_button: function () {
+    //   this.buttonStyle.opacity = "0.6";
+    //   this.buttonStyle.width = "60px";
+    // },
 
     showProject(tagInPortfolio) {
       var selectedTags = this.selectedTags;
@@ -432,6 +414,12 @@ export default {
       // console.log(pid);
       this.$router.push({ path: `/PortfolioDetails/${pid}` });
     },
+    // change_color() {
+    //   this.cardColor.background = "light gray";
+    // },
+    // origin_color() {
+    //   this.cardColor.background = "#bedcff";
+    // },
   },
   computed: {
     // showNoTag: function() {
@@ -467,7 +455,6 @@ export default {
   background: #eeeeee;
   opacity: 0.8;
 }
-
 #tagMenue {
   text-align: right;
 }
@@ -476,7 +463,34 @@ export default {
   /* align-items: center; */
   text-align: left;
 }
-
+.card.poCard {
+  background-color: lightgrey;
+  width: 23rem;
+  height: 20rem;
+}
+.poCard:hover {
+  background-color: #bedcff;
+  cursor: pointer;
+}
+#downloadBtn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+#downloadBtn:hover {
+  cursor: pointer;
+}
+#tags {
+  position: absolute;
+  bottom: 15px;
+}
+#poPlusBtn {
+  margin: 30px 10px;
+}
+#poPlusBtn:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
 .col-button-custom {
   margin-left: auto;
   margin-right: auto;

@@ -1,60 +1,104 @@
 <template>
-  <div>
-
+  <div id="poDetail">
+    <b-icon id="backToList" @click="backToList" icon="chevron-left" font-scale="2"></b-icon>
     <b-container>
       <b-row>
-        <b-col md="6">
-
-          <h2 v-if="!updateTitleState" class="title" style="color: grey; display:inline-block; margin-left: auto;">
+        <b-col md="1"></b-col>
+      </b-row>
+      <b-row>
+        <b-col md="5">
+          <h2
+            v-if="!updateTitleState"
+            class="title"
+            style="display:inline-block; margin-left: auto;"
+          >
             {{pjtDetail.title}}
-            <b-icon icon="pencil" aria-hidden="true" style="margin-left: 1rem; cursor: pointer;" @click="updateTitle();"></b-icon>
+            <b-img
+              @click="updateTitle()"
+              style="margin-left: 1rem; cursor: pointer;"
+              v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
+              width="15px"
+              class="mr-2 mt-auto mb-auto"
+            ></b-img>
             <!-- {{router.params.pid}} -->
           </h2>
           <h2 v-else class="title" style="color: grey; margin-left: auto;">
-            <input ref="titleInput" size=23% :value="pjtDetail.title" @input="pjtDetail.title = $event.target.value" @keyup.enter="sendUpdateInfo(); updateTitle()" style="display: inline-block;">
-            <!-- <b-img :src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px" style="display: inline-block; margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateTitle()"></b-img> -->
-            <b-icon icon="check-circle" aria-hidden="true" style="margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateTitle()"></b-icon>
+            <input
+              ref="titleInput"
+              size="23%"
+              :value="pjtDetail.title"
+              @input="pjtDetail.title = $event.target.value"
+              @keyup.enter="sendUpdateInfo(); updateTitle()"
+              style="display: inline-block;"
+            />
+            <b-img
+              @click="sendUpdateInfo(); updateTitle()"
+              style="margin-left: 1rem; cursor: pointer;"
+              v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
+              width="15px"
+              class="mr-2 mt-auto mb-auto"
+            ></b-img>
             <!-- {{router.params.pid}} -->
           </h2>
         </b-col>
         <b-col md="6">
-
           <div style="text-align: right;">
-          <b-button size="sm" variant="outline-dark"> 
-            <b-icon-box-arrow-down class="mr-1"></b-icon-box-arrow-down>전체 파일 다운로드
-          </b-button>
+            <b-button size="sm" variant="outline-dark">
+              <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체 파일 다운로드
+            </b-button>
           </div>
-
         </b-col>
       </b-row>
     </b-container>
-  
-    
+
     <div class="tabs">
       <!-- <b-tabs content-class align="center"> -->
       <b-tabs content-class fill>
         <b-tab title="프로젝트 정보" active>
           <b-container class="tabContents">
             <b-row>
-
-              <b-col v-if="!updateDateState" class="mt-4 mb-2">
+              <b-col v-if="!updateDateState" class="mt-5 mb-3">
                 <span>프로젝트 진행 기간 : {{pjtDetail.start_date}} ~ {{pjtDetail.end_date}}</span>
-                <b-icon icon="pencil" aria-hidden="true" style="margin-left: 1rem; cursor: pointer;" @click="updateDate()"></b-icon>
+                <b-img
+                  @click="updateDate()"
+                  style="margin-left: 1rem; cursor: pointer;"
+                  v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
+                  width="15px"
+                  class="mr-2"
+                ></b-img>
               </b-col>
-              
-              <b-col v-else class="mt-4 mb-2">
-                <p style="display: inline-block;">프로젝트 진행 기간 : <input ref="start_dateInput" :value="pjtDetail.start_date" @input="pjtDetail.start_date = $event.target.value" @keyup.enter="sendUpdateInfo(); updateDate()" size=4> ~ <input :value="pjtDetail.end_date" @input="pjtDetail.end_date = $event.target.value" @keyup.enter="sendUpdateInfo(); updateDate()" size=4></p>
+              <b-col v-else class="mt-4 mb-4">
+                <p style="display: inline-block;">
+                  프로젝트 진행 기간 :
+                  <input
+                    ref="start_dateInput"
+                    :value="pjtDetail.start_date"
+                    @input="pjtDetail.start_date = $event.target.value"
+                    @keyup.enter="sendUpdateInfo(); updateDate()"
+                    size="4"
+                  /> ~
+                  <input
+                    :value="pjtDetail.end_date"
+                    @input="pjtDetail.end_date = $event.target.value"
+                    @keyup.enter="sendUpdateInfo(); updateDate()"
+                    size="4"
+                  />
+                </p>
                 <!-- <b-img :src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px" style="display: inline-block; margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateDate()"></b-img> -->
-                <b-icon icon="check-circle" aria-hidden="true" style="margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateDate()"></b-icon>
+                <b-img
+                  @click="sendUpdateInfo(); updateDate()"
+                  style="margin-left: 1rem; cursor: pointer;"
+                  v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
+                  width="15px"
+                  class="mr-2"
+                ></b-img>
               </b-col>
-
             </b-row>
             <b-row>
-              <b-col class="mt-2 mb-2">
-                <h5>
-                  <div v-if="pjtDetail.tag.length > 0">
-                    <!-- 태그 -->
-                    <!-- <div v-if="updateP">
+              <b-col class="mt-3 mb-3">
+                <div>
+                  <!-- 태그 -->
+                  <!-- <div v-if="updateP">
                       <div v-for="(experienceTag,tid) in experience.tags" :key="experienceTag.tid">
                         <span class="txt_tag">
                           <span>#</span>
@@ -83,75 +127,94 @@
                           />
                         </div>
                       </span>
-                    </div>-->
-                    <b-badge
-                      v-for="(ptag, j) in pjtDetail.tag"
-                      :key="j"
-                      pill
-                      class="mr-3 mt-2"
-                      id="tag"
-                      text-variant="black"
-                    >{{ ptag.tagName }}
+                  </div>-->
+                  <div v-for="(ptag, j) in pjtDetail.tag" :key="j" class="tag mr-3 mt-2">
+                    {{ ptag.tagName }}
                     <!-- <b-img :src="require(`@/assets/img/icons8-trash-24.png`)" width="15px" style="margin-left: 5%; cursor: pointer;" @click="deleteTag(ptag.tid)"></b-img> -->
-                    <b-icon icon="x" aria-hidden="true" style="margin-left: 6%; cursor: pointer;" @click="deleteTag(ptag.tid)"></b-icon>
-                    </b-badge>
-
-                      <input class="input-tag" v-model="newTag" @keyup.enter="addNewTag(newTag)" placeholder="새로운 태그를 추가해보세요">
-                      <b-icon icon="plus" aria-hidden="true" style="margin-left: 5 %; cursor: pointer;" @click="addNewTag(newTag)"></b-icon>
-
+                    <b-icon
+                      icon="x"
+                      aria-hidden="true"
+                      style="margin-left: 1px; cursor: pointer;"
+                      @click="deleteTag(ptag.tid)"
+                    ></b-icon>
                   </div>
-                  <div v-else>
-                    <b-icon-plus-square class="mr-1"></b-icon-plus-square>
-                    <small>태그를 추가해보세요.</small>
-                  </div>
-                </h5>
+
+                  <b-form-input
+                    class="inp_tag"
+                    v-model="newTag"
+                    @keyup.enter="addNewTag(newTag)"
+                    placeholder="새 태그 입력"
+                    style="box-sizing: content-box; width: 100px; height:24px"
+                  ></b-form-input>
+                  <!-- <b-icon
+                    icon="plus"
+                    aria-hidden="true"
+                    style="margin-left: 5 %; cursor: pointer;"
+                    
+                  ></b-icon>-->
+                </div>
               </b-col>
             </b-row>
             <b-row>
-              <b-col class="mt-2 mb-2">
-                <h5>프로젝트 정의</h5>
-
-                <span v-if="!updateContentsState">{{ pjtDetail.contents }}
-                  <b-icon icon="pencil" aria-hidden="true" style="margin-left: 1rem; cursor: pointer;" @click="updateContents"></b-icon>
-                </span>
-                <span v-else>
-                  <textarea ref="contentsInput" class="textarea-contents" :value="pjtDetail.contents" @input="pjtDetail.contents = $event.target.value"></textarea>
+              <b-col class="mt-3 mb-3">
+                <h5>
+                  프로젝트 정의
+                  <b-img
+                    v-if="!updateContentsState"
+                    @click="updateContents"
+                    style="margin-left: 1rem; cursor: pointer;"
+                    v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
+                    width="15px"
+                    class="mr-2"
+                  ></b-img>
+                  <b-img
+                    v-else
+                    @click="sendUpdateInfo(); updateContents()"
+                    style="margin-left: 1rem; cursor: pointer;"
+                    v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
+                    width="15px"
+                    class="mr-2"
+                  ></b-img>
+                </h5>
+                <div v-if="!updateContentsState" class="mt-3 mb-3">{{ pjtDetail.contents }}</div>
+                <div v-else class="mt-3 mb-3">
+                  <textarea
+                    ref="contentsInput"
+                    class="textarea-contents"
+                    :value="pjtDetail.contents"
+                    @input="pjtDetail.contents = $event.target.value"
+                  ></textarea>
                   <!-- <b-img :src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px" style="display: inline-block; margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateContents()"></b-img> -->
-                  <b-icon icon="check-circle" aria-hidden="true" style="margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateContents()"></b-icon>
-                </span>
-
+                </div>
               </b-col>
             </b-row>
           </b-container>
           <div></div>
         </b-tab>
         <b-tab title=" 파일 목록 ">
-          <div class="tabContents">
-            <b-container class="tabContents">
-              <div v-if="pjtDetail.files.length>0">
-                <b-row
-                  v-for="(id, m) in pjtDetail.files"
-                  :key="m"
-                  class="mr-3"
-                  id="file"
-                  text-variant="black"
-                >
-                  <b-col class="mt-4 mb-2">
-                    {{ id.fileName }}
-                    <b-button size="sm" variant="outline-dark">
-                      <b-icon-box-arrow-down class="mr-1"></b-icon-box-arrow-down>파일 다운로드
-                    </b-button>
-                  </b-col>
-                </b-row>
-              </div>
-              <div v-else>
-                <small>파일을 추가해보세요.</small>
-              </div>
-              <b-row>
-                <b-icon-plus-square class="mr-1" @click="uploadFile"></b-icon-plus-square>
+          <b-container class="tabContents">
+            <div v-if="pjtDetail.files.length>0">
+              <b-row
+                v-for="(id, m) in pjtDetail.files"
+                :key="m"
+                class="mr-3"
+                id="file"
+                text-variant="black"
+              >
+                <b-col class="mt-4 mb-2">
+                  {{ id.fileName }}
+                  <!-- 파일 다운로드 -->
+                  <b-button size="sm" variant="outline-dark">
+                    <b-icon-download class="mr-1"></b-icon-download>
+                  </b-button>
+                </b-col>
               </b-row>
-            </b-container>
-          </div>
+            </div>
+            <div v-else>파일을 추가해보세요.</div>
+            <b-row>
+              <!-- <b-icon-plus-square class="mr-1" @click="uploadFile"></b-icon-plus-square> -->
+            </b-row>
+          </b-container>
         </b-tab>
         <!-- <b-tab title="Disabled" disabled>
           <p class="tabContents">I'm a disabled tab!</p>
@@ -162,6 +225,7 @@
 </template>
 
 <script>
+import constants from "../../lib/constants.js";
 import axios from "axios";
 
 export default {
@@ -195,104 +259,104 @@ export default {
   },
   methods: {
     updateDate() {
-      this.updateDateState = !this.updateDateState
+      this.updateDateState = !this.updateDateState;
       if (this.updateDateState == true) {
         this.$nextTick(() => {
-          this.$refs.start_dateInput.focus()
-        })
+          this.$refs.start_dateInput.focus();
+        });
       }
     },
     updateContents() {
-      this.updateContentsState = !this.updateContentsState
+      this.updateContentsState = !this.updateContentsState;
       if (this.updateContentsState == true) {
         this.$nextTick(() => {
-          this.$refs.contentsInput.focus()
-        })
+          this.$refs.contentsInput.focus();
+        });
       }
     },
     updateTitle() {
-      this.updateTitleState = !this.updateTitleState
+      this.updateTitleState = !this.updateTitleState;
       if (this.updateTitleState == true) {
         this.$nextTick(() => {
-          this.$refs.titleInput.focus()
-        })
+          this.$refs.titleInput.focus();
+        });
       }
     },
     sendUpdateInfo() {
       axios
-      .put(this.$SERVER_URL + `/portfolio`, {
-        uid: this.uid,
-        pid: this.pjtDetail.pid,
-        title: this.pjtDetail.title,
-        contents: this.pjtDetail.contents,
-        startDate: this.pjtDetail.start_date,
-        endDate: this.pjtDetail.end_date,
-      })
-      .then((response) => {
-        // alert('수정완료')
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+        .put(this.$SERVER_URL + `/portfolio`, {
+          uid: this.uid,
+          pid: this.pjtDetail.pid,
+          title: this.pjtDetail.title,
+          contents: this.pjtDetail.contents,
+          startDate: this.pjtDetail.start_date,
+          endDate: this.pjtDetail.end_date,
+        })
+        .then((response) => {
+          // alert('수정완료')
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     deleteTag(tid) {
       axios
-      .delete((this.$SERVER_URL + `/tag`), {
-        data: {
-        pid: this.pjtDetail.pid,
-        tid: tid,
-      }})
-      .then((response) => {
-        // alert('태그삭제')
-        // 태그 다시 받아야 새로고침효과
-        axios
-        .get(this.$SERVER_URL + `/portfolio/${this.pjtDetail.pid}`, {
-          params: { pid: this.pjtDetail.pid },
+        .delete(this.$SERVER_URL + `/tag`, {
+          data: {
+            pid: this.pjtDetail.pid,
+            tid: tid,
+          },
         })
         .then((response) => {
-          if (response.data.status) {
-            this.pjtDetail = response.data.object;
-          }
-        });
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    },
-    addNewTag(newTag) {
-      console.log(this.pjtDetail.pid)
-      console.log(newTag)
-      if (newTag.length == 0 || newTag.length > 10) {
-        alert("1자 이상 10자 이하로 입력해주세요")
-      }
-      else {
-        let form = new FormData();
-        form.append("pid", this.pjtDetail.pid)
-        form.append("tag", newTag)
-        axios
-        .post(this.$SERVER_URL + `/portfolio/tag`, form)
-        .then((response) => {
-          // alert("태그!")
-          // 태그 다시 받아야 새로고침효과..
+          // alert('태그삭제')
+          // 태그 다시 받아야 새로고침효과
           axios
-          .get(this.$SERVER_URL + `/portfolio/${this.pjtDetail.pid}`, {
-            params: { pid: this.pjtDetail.pid },
-          })
-          .then((response) => {
-            if (response.data.status) {
-              this.pjtDetail = response.data.object;
-            }
-          });
-          this.newTag = ""
+            .get(this.$SERVER_URL + `/portfolio/${this.pjtDetail.pid}`, {
+              params: { pid: this.pjtDetail.pid },
+            })
+            .then((response) => {
+              if (response.data.status) {
+                this.pjtDetail = response.data.object;
+              }
+            });
         })
         .catch((error) => {
-          console.log(error)
-        })
+          console.log(error);
+        });
+    },
+    addNewTag(newTag) {
+      console.log(this.pjtDetail.pid);
+      console.log(newTag);
+      if (newTag.length == 0 || newTag.length > 10) {
+        alert("1자 이상 10자 이하로 입력해주세요");
+      } else {
+        let form = new FormData();
+        form.append("pid", this.pjtDetail.pid);
+        form.append("tag", newTag);
+        axios
+          .post(this.$SERVER_URL + `/portfolio/tag`, form)
+          .then((response) => {
+            // alert("태그!")
+            // 태그 다시 받아야 새로고침효과..
+            axios
+              .get(this.$SERVER_URL + `/portfolio/${this.pjtDetail.pid}`, {
+                params: { pid: this.pjtDetail.pid },
+              })
+              .then((response) => {
+                if (response.data.status) {
+                  this.pjtDetail = response.data.object;
+                }
+              });
+            this.newTag = "";
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     },
     uploadFile() {
       const formData = new FormData();
-      formData.append()
+      formData.append();
     },
 
     uploadImage(event) {
@@ -322,18 +386,33 @@ export default {
           }
         });
     },
+    backToList() {
+      this.$router.push({ name: constants.URL_TYPE.POST.MANAGEPORTFOLIO });
+    },
   },
 };
 </script>
 
 <style>
+#poDetail {
+  margin-top: 50px;
+}
+#backToList {
+  position: absolute;
+  left: 8%;
+  margin: 5px;
+}
+#backToList:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
 .active {
   background-color: rgb(212, 211, 211) !important;
   border-bottom-color: rgb(212, 211, 211) !important;
 }
 .tabContents {
   background-color: rgb(212, 211, 211);
-  padding: 10px;
+  padding: 20px 0;
   text-align: left;
 }
 .tabs {
@@ -350,16 +429,26 @@ export default {
   width: 90%;
   height: 20rem;
 }
-.input-tag {
-  background-color: lightslategrey;
-  border-radius: 20px;
-  height: 23px;
-  width: 15rem;
-  margin-top: 5px;
-  border: 2px;
+.tag {
+  display: inline;
   color: white;
+  padding: 5px 10px;
+  background-color: #4b5f83;
+  border-radius: 100px;
+  margin: 5px;
 }
-input::placeholder {
-  color: yellow;
+.inp_tag {
+  /* background-color: lightslategrey; */
+  /* color: black; */
+  display: flex;
+  font-size: 13px;
+  /* height: 30px; */
+  display: inline-block;
+  margin: auto 2px;
+  border: 0;
+  color: #270949;
+  /* vertical-align: top; */
+  outline: none;
+  background: #eeeeee;
 }
 </style>

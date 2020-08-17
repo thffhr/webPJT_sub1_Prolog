@@ -15,12 +15,16 @@
                   src="https://cdn1.iconfinder.com/data/icons/flat-business-icons/128/folder-512.png"
                   style="width: 5rem; height: 5rem;"
                 />
-                {{ pjtAll[i].title }}
-                <b-button size="sm" variant="outline-dark">download</b-button>
-                <b-button @click="gotoDetail(pjtAll[i].pid)" size="sm" variant="outline-dark">상세보기</b-button>
-                <!-- <b-button size="sm" variant="outline-dark">상세보기</b-button> -->
-                <!-- @click="gotopdetail"  -->
+                <span
+                  class="gotoDetail pr-2 pl-2"
+                  @click="gotoDetail(pjtAll[i].pid)"
+                >{{ pjtAll[i].title }}</span>
+
+                <!-- <b-button  size="sm" variant="outline-dark">상세보기</b-button> -->
               </h2>
+              <div id="downloadBtn">
+                <b-icon icon="cloud-download" font-scale="1.2"></b-icon>
+              </div>
 
               <small class="ml-2">
                 <!-- 날짜 -->
@@ -107,7 +111,7 @@ export default {
   border-radius: 5px;
   padding: auto;
 }
-#carousel_card:hover {
+.gotoDetail:hover {
   cursor: pointer;
 }
 #tags {
@@ -120,6 +124,14 @@ export default {
   padding: 5px 10px;
   background-color: #4b5f83;
   border-radius: 100px;
+}
+#downloadBtn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+#downloadBtn:hover {
+  cursor: pointer;
 }
 .projectImage {
   -webkit-filter: grayscale(100%);
