@@ -3,6 +3,8 @@ package com.web.blog.controller.apply;
 import javax.validation.Valid;
 
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.apply.ApplyAddOrDeleteERequest;
+import com.web.blog.model.apply.ApplyAddOrDeletePRequest;
 import com.web.blog.model.apply.ApplyCreateRequest;
 import com.web.blog.model.apply.ApplyUpdateRequest;
 import com.web.blog.service.apply.ApplyService;
@@ -95,26 +97,26 @@ public class ApplyController {
 
     @PostMapping("/apply/addPortfolio")
     @ApiOperation(value = "지원목록에 포폴추가")
-    public ResponseEntity<BasicResponse> addPortfolio(@RequestParam int apid, @RequestParam int pid) {
-        return applyService.addPortfolio(apid, pid);
+    public ResponseEntity<BasicResponse> addPortfolio(@RequestBody ApplyAddOrDeletePRequest request) {
+        return applyService.addPortfolio(request);
     }
 
     @PostMapping("/apply/addExp")
     @ApiOperation(value = "지원목록에 경험추가")
-    public ResponseEntity<BasicResponse> addExp(@RequestParam int apid, @RequestParam int exid) {
-        return applyService.addExp(apid, exid);
+    public ResponseEntity<BasicResponse> addExp(@RequestBody ApplyAddOrDeleteERequest request) {
+        return applyService.addExp(request);
     }
 
     @DeleteMapping("/apply/deletePortfolio")
     @ApiOperation(value = "지원목록에서 포폴제거")
-    public ResponseEntity<BasicResponse> deletePortfolio(@RequestParam int apid, @RequestParam int pid) {
-        return applyService.deletePortfolio(apid, pid);
+    public ResponseEntity<BasicResponse> deletePortfolio(@RequestBody ApplyAddOrDeletePRequest request) {
+        return applyService.deletePortfolio(request);
     }
 
     @DeleteMapping("/apply/deleteExp")
-    @ApiOperation(value = "지원목록에서 포폴제거")
-    public ResponseEntity<BasicResponse> deleteExp(@RequestParam int apid, @RequestParam int exid) {
-        return applyService.deleteExp(apid, exid);
+    @ApiOperation(value = "지원목록에서 경험제거")
+    public ResponseEntity<BasicResponse> deleteExp(@RequestBody ApplyAddOrDeleteERequest request) {
+        return applyService.deleteExp(request);
     }
 
 }
