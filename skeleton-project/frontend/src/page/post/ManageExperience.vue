@@ -10,6 +10,7 @@
             v-for="tag in tags"
             :key="tag.tid"
           >
+            <!-- 아이콘 말고 색깔 바뀌는걸로 해주세요...! -->
             <div v-if="showTag(tag)">
               #{{ tag.tagName }}
               <b-img
@@ -23,10 +24,11 @@
             </div>
           </div>
         </div>
-        <div v-else>
-          태그가 없습니다.
-        </div>
+        <div v-else>태그가 없습니다.</div>
       </div>
+
+      <br />
+      <hr />
 
       <h6 class="noTag mt-3 mb-3" @click="exeptNoTagClickE()">
         태그 없는 게시물 숨기기
@@ -45,92 +47,85 @@
       <div v-for="(experience, exid) in experiences" :key="experience.exid">
         <div class="card-copy" v-if="showProject(experience)">
           <div class="row card-body">
-            <div class="col-custom row-custom" style="display:inline-flex">
-              <!-- 동그라미 -->
-              <div v-bind:style="mystyle" class="img-circle col-md-2">
-                <div class="content">
-                  <div
-                    v-for="experienceTag in experience.tags"
-                    :key="experienceTag.tid"
-                  >
-                    #{{ experienceTag.tagName }}
+            <b-container>
+              <b-row>
+                <b-col cols="3">
+                  <!-- 제목 -->
+                  <p v-if="experience.clicked">
+                    <b-form-input
+                      placeholder="제목을 입력해주세요."
+                      v-model="experience.title"
+                      @blur="experience.clicked = true"
+                      style="width:200px"
+                    ></b-form-input>
+                    <!-- <input v-model="experience.title" @blur="experience.clicked = true" /> -->
+                  </p>
+                  <div v-else>
+                    <h2>{{ experience.title }}</h2>
                   </div>
-                </div>
-              </div>
-
-              <div class="col-md-9 col-cotents">
-                <!-- 제목 -->
-                <p v-if="experience.clicked">
-                  <input
-                    v-model="experience.title"
-                    @blur="experience.clicked = true"
-                  />
-                </p>
-                <div v-else>
-                  <h2>{{ experience.title }}</h2>
-                </div>
-
-                <!-- 날짜 -->
-                <p v-if="experience.clicked">
-                  <input
-                    class="txt_line"
-                    placeholder="2020-00-00"
-                    v-model="experience.startdate"
-                    @blur="
+                  <!-- 날짜 -->
+                  <div v-if="experience.clicked">
+                    <b-form-input
+                      class="txt_line"
+                      style="display:inline; width:150px;"
+                      placeholder="2020-00-00"
+                      v-model="experience.startdate"
+                      @blur="
+                        experience.clicked = true;
+                        $emit('update');
+                      "
+                      @keyup.enter="$emit('update')"
+                    ></b-form-input>
+                    <!-- <input
+                        class="txt_line"
+                        placeholder="2020-00-00"
+                        v-model="experience.startdate"
+                        @blur="
+                        experience.clicked = true;
+                        $emit('update');
+                      "
+                        @keyup.enter="$emit('update')"
+                    />-->
+                    ~
+                    <b-form-input
+                      class="txt_line"
+                      style="width:150px"
+                      placeholder="2020-00-00"
+                      v-model="experience.enddate"
+                      @blur="
                       experience.clicked = true;
                       $emit('update');
                     "
-                    @keyup.enter="$emit('update')"
-                  />
-                  ~
-                  <input
-                    class="txt_line"
-                    placeholder="2020-00-00"
-                    v-model="experience.enddate"
-                    @blur="
+                      @keyup.enter="$emit('update')"
+                    ></b-form-input>
+                    <!-- <input
+                      class="txt_line"
+                      placeholder="2020-00-00"
+                      v-model="experience.enddate"
+                      @blur="
                       experience.clicked = true;
                       $emit('update');
                     "
-                    @keyup.enter="$emit('update')"
-                  />
-                </p>
-                <div class="date-align" v-else>
-                  <small
-                    >{{ experience.startdate }} ~
-                    {{ experience.enddate }}</small
-                  >
-                </div>
-                <!-- 내용 -->
-                <p v-if="experience.clicked">
-                  <textarea
-                    style="width:100%"
-                    value="기본내용"
-                    placeholder="Contents"
-                    v-model="experience.contents"
-                    @blur="
-                      experience.clicked = true;
-                      $emit('update');
-                    "
-                    @keyup.enter="$emit('update')"
-                  >
-                  </textarea>
-                </p>
-                <div v-else>
-                  <p class="txt_line">{{ experience.contents }}</p>
-                </div>
-
-                <!-- 태그 -->
-                <div class="editor_tag" v-if="experience.clicked">
-                  <!-- exid도잇어야함 -->
-                  <div
-                    v-for="(experienceTag, tid) in experience.tags"
-                    :key="experienceTag.tid"
-                  >
-                    <span class="txt_tag">
-                      <span>#</span>
-                      <span>{{ experienceTag.tagName }}</span>
-                      <b-img
-                        @click="
+                      @keyup.enter="$emit('update')"
+                    />-->
+                  </div>
+                  <div class="date-align" v-else>
+                    <small>
+                      {{ experience.startdate }} ~
+                      {{ experience.enddate }}
+                    </small>
+                  </div>
+                </b-col>
+                <b-col align-self="stretch" cols="8">
+                  <!-- 태그 -->
+                  <!-- 태그 수정 -->
+                  <div class="editor_tag" v-if="experience.clicked">
+                    <!-- exid도잇어야함 -->
+                    <div v-for="(experienceTag, tid) in experience.tags" :key="experienceTag.tid">
+                      <span class="txt_tag">
+                        <div class="tag">#{{ experienceTag.tagName }}</div>
+                        <b-img
+                          @click="
                           deleteTag(
                             experience.tags,
                             experienceTag,
@@ -138,24 +133,33 @@
                             experience
                           )
                         "
-                        style="width:18px; height:18px; cursor:pointer"
-                        v-bind:src="
+                          style="width:18px; height:18px; cursor:pointer"
+                          v-bind:src="
                           require(`@/assets/img/icons8-close-window-50.png`)
                         "
-                      >
-                        <span>삭제</span>
-                      </b-img>
-                    </span>
-                  </div>
+                        >
+                          <span>삭제</span>
+                        </b-img>
+                      </span>
+                    </div>
 
-                  <span class="inp_tag">
-                    <span>#</span>
-                    <div
-                      style="inline-block"
-                      value="태그"
-                      placeholder="Tag입력"
-                    >
-                      <input
+                    <div class="inp_tag mt-1">
+                      <div class="mt-auto mb-auto mr-1">
+                        #
+                        <!-- <div style="inline-block" value="태그" placeholder="Tag입력"> -->
+                        <input
+                          id="tagText"
+                          v-model="tagText"
+                          v-on:keyup.enter="
+                          addTag(experience.tags, experience.exid, tagText)
+                        "
+                          type="text"
+                          class="tf_g"
+                          placeholder="태그입력"
+                          style="box-sizing: content-box; width: 100px; height:24px"
+                        />
+                      </div>
+                      <!-- <input
                         id="tagText"
                         v-model="tagText"
                         v-on:keyup.enter="
@@ -164,78 +168,100 @@
                         type="text"
                         class="tf_g"
                         placeholder="태그입력"
-                        style="box-sizing: content-box; width: 50px;"
-                      />
+                        style="box-sizing: content-box; width: 100px; height:24px"
+                      />-->
+                      <!-- </div> -->
                     </div>
-                  </span>
-                </div>
-              </div>
-
-              <!--버튼-->
-              <div class="col-md-1">
-                <p class="icon-right" style="margin-bottom: 0;">
-                  <b-img
-                    @click="clickeEdit(experience)"
-                    :pressed.sync="experience.clicked"
-                    style="cursor:pointer"
-                    v-bind:src="require(`@/assets/img/${experience.imgsrc}`)"
-                    width="15px"
-                  ></b-img>
-                  <b-img
-                    @click="deleteE(exid, experience)"
-                    style="cursor:pointer"
-                    v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
-                    width="15px"
-                  ></b-img>
-                </p>
-              </div>
+                  </div>
+                  <!-- 태그 출력 -->
+                  <div v-else>
+                    <div v-if="experience.tags.length>0">
+                      <div
+                        class="tag"
+                        v-for="experienceTag in experience.tags"
+                        :key="experienceTag.tid"
+                      >#{{ experienceTag.tagName }}</div>
+                    </div>
+                    <div v-else>태그를 추가해주세요.</div>
+                  </div>
+                  <!-- 내용 -->
+                  <p v-if="experience.clicked">
+                    <b-form-textarea
+                      value="Contents"
+                      placeholder="내용을 입력하세요."
+                      rows="3"
+                      v-model="experience.contents"
+                      @blur="
+                      experience.clicked = true;
+                      $emit('update');
+                    "
+                      @keyup.enter="$emit('update')"
+                    ></b-form-textarea>
+                    <!-- <textarea></textarea> -->
+                  </p>
+                  <div v-else class="mt-3 mb-3">
+                    <p class="txt_line">{{ experience.contents }}</p>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-container>
+            <!--버튼-->
+            <div style="display:inline; margin-right:20px">
+              <!-- <p class="icon-right" style="margin-bottom: 0;"> -->
+              <b-img
+                @click="clickeEdit(experience)"
+                :pressed.sync="experience.clicked"
+                style="cursor:pointer"
+                v-bind:src="require(`@/assets/img/${experience.imgsrc}`)"
+                width="15px"
+                class="mr-2"
+              ></b-img>
+              <b-img
+                @click="deleteE(exid, experience)"
+                style="cursor:pointer"
+                v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
+                width="15px"
+              ></b-img>
+              <!-- </p> -->
             </div>
-            <!-- /.col-lg-4 -->
           </div>
         </div>
       </div>
-      <!-- /.row -->
     </div>
     <!-- 경험목록 끝 -->
 
     <!-- (+) 버튼 -->
-    <div class="row">
-      <div class=" col-button-custom">
-        <div>
-          <b-img
+    <div id="exPlusBtn" v-on:click="addExp" style="width:350px; margin: 30px auto">
+      <div v-if="experiences.length == 0">
+        <div class="row">
+          <div class="col-button-custom">
+            <b-icon icon="journal-plus" font-scale="5"></b-icon>
+            <!-- <b-img
             v-on:click="addExp"
             :src="require(`@/assets/img/icons8-plus-50.png`)"
             width="60px"
             v-bind:style="buttonStyle"
             v-on:mouseover="change_button"
             v-on:mouseout="origin_button"
-          ></b-img>
+            ></b-img>-->
+          </div>
         </div>
-      </div>
-      <!-- /.col-lg-4 -->
-    </div>
-    <!-- /.row -->
 
-    <!-- START THE FEATURETTES -->
+        <div class="row">
+          <h3 class="mr-auto ml-auto mt-3">활동 경험을 기록해보세요.</h3>
 
-    <!-- <hr class="featurette-divider" /> -->
-
-    <div class="row featurette">
-      <!-- <div class="col-md-7"> -->
-      <h3
-        class="featurette-heading mr-auto ml-auto mt-3"
-        v-if="experiences.length == 0"
-      >
-        활동 경험을 기록해보세요.
-      </h3>
-      <!-- </div> -->
-      <!-- <div class="col-md-5">
-        <img
+          <!-- <img
           class="featurette-image img-responsive center-block"
           src="https://t1.daumcdn.net/cfile/tistory/21151B4E53E83DAF2C"
           alt="Generic placeholder image"
-        />
-      </div> -->
+          />-->
+        </div>
+      </div>
+      <div class="row" v-else>
+        <div class="col-button-custom">
+          <b-icon icon="plus-circle" font-scale="3"></b-icon>
+        </div>
+      </div>
     </div>
 
     <!-- <hr class="featurette-divider" /> -->
@@ -264,15 +290,15 @@ export default {
       experienceTags: {
         "": [],
       },
-      mystyle: {
-        width: "",
-        height: "",
-        opacity: "",
-      },
-      buttonStyle: {
-        width: "",
-        opacity: "",
-      },
+      // mystyle: {
+      //   width: "",
+      //   height: "",
+      //   opacity: "",
+      // },
+      // buttonStyle: {
+      //   width: "",
+      //   opacity: "",
+      // },
     };
   },
   beforeCreate() {},
@@ -335,25 +361,25 @@ export default {
       });
   },
   methods: {
-    editTodo: function(todo) {
+    editTodo: function (todo) {
       this.editedTodo = todo;
     },
-    changebgcolor: function() {
+    changebgcolor: function () {
       this.mystyle.opacity = "0.7";
     },
-    originalcolor: function() {
+    originalcolor: function () {
       this.mystyle.opacity = "0.6";
     },
-    change_button: function() {
-      this.buttonStyle.opacity = "1";
-      this.buttonStyle.width = "61px";
-    },
-    origin_button: function() {
-      this.buttonStyle.opacity = "0.6";
-      this.buttonStyle.width = "60px";
-    },
+    // change_button: function () {
+    //   this.buttonStyle.opacity = "1";
+    //   this.buttonStyle.width = "61px";
+    // },
+    // origin_button: function () {
+    //   this.buttonStyle.opacity = "0.6";
+    //   this.buttonStyle.width = "60px";
+    // },
 
-    exeptNoTagClickE: function() {
+    exeptNoTagClickE: function () {
       //lert("바뀔 값" + this.isIncludeNoTag);
       this.isIncludeNoTag = !this.isIncludeNoTag;
     },
@@ -370,7 +396,7 @@ export default {
     showProject(experience) {
       var selectedTags = this.selectedTags;
       var cnt = 0;
-      experience.tags.forEach(function(tag) {
+      experience.tags.forEach(function (tag) {
         if (selectedTags.includes(tag.tid)) {
           cnt++;
         }
@@ -427,7 +453,7 @@ export default {
       tag.state = !tag.state;
     },
 
-    addExp: function() {
+    addExp: function () {
       var date = new Date();
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
@@ -443,6 +469,7 @@ export default {
         .post(this.$SERVER_URL + `/experience`, {
           title: "제목",
           uid: this.uid,
+          contents: "내용을 입력해주세요.",
         })
         .then((response) => {
           response.data.object.startdate = startdate;
@@ -465,7 +492,7 @@ export default {
         });
     },
 
-    deleteE: function(exid, experience) {
+    deleteE: function (exid, experience) {
       axios
         .delete(this.$SERVER_URL + `/experience/${experience.exid}`)
         .then((response) => {
@@ -480,7 +507,7 @@ export default {
         });
     },
 
-    deleteE: function(exid, experience) {
+    deleteE: function (exid, experience) {
       axios
         .delete(this.$SERVER_URL + `/experience/${experience.exid}`)
         .then((response) => {
@@ -494,7 +521,7 @@ export default {
         });
     },
 
-    clickeEdit: function(experience) {
+    clickeEdit: function (experience) {
       experience.clicked = !experience.clicked;
       //저장하기
       if (!experience.clicked) {
@@ -508,7 +535,7 @@ export default {
       //alert(experience.clicked);
     },
 
-    editE: function(experience) {
+    editE: function (experience) {
       axios
         .put(this.$SERVER_URL + `/experience`, {
           id: experience.exid,
@@ -526,7 +553,7 @@ export default {
         });
     },
 
-    deleteTag: function(tags, experienceTag, idx, experience) {
+    deleteTag: function (tags, experienceTag, idx, experience) {
       axios
         .delete(
           this.$SERVER_URL +
@@ -569,7 +596,7 @@ export default {
           alert("삭제실패");
         });
     },
-    addTag: function(tags, exid, tagText) {
+    addTag: function (tags, exid, tagText) {
       this.tagText = "";
       //alert(this.uid);
       axios
@@ -611,7 +638,7 @@ export default {
           console.log(error);
         });
     },
-    addTagLink: function(tags, exid, tid, tagText) {
+    addTagLink: function (tags, exid, tid, tagText) {
       axios
         .post(this.$SERVER_URL + `/experience/tag`, {
           exid: exid,
@@ -656,7 +683,14 @@ export default {
 .noTag:hover {
   cursor: pointer;
 }
-.img-circle {
+#exPlusBtn {
+  margin: 30px 10px;
+}
+#exPlusBtn:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+/* .img-circle {
   position: relative;
   background: #000000;
 
@@ -671,7 +705,7 @@ export default {
 
   border: 3px solid #222222;
   box-shadow: 0 0 8px rgb(111, 111, 111);
-}
+} */
 
 .img-circle .content {
   width: 65%;
@@ -685,6 +719,7 @@ export default {
   margin-bottom: auto;
 }
 
+/* 이 부분 잘 모르겠다 */
 .txt_line p {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -694,8 +729,7 @@ export default {
   line-height: 1.2;
   max-height: 2.4em;
 
-  margin-left: auto;
-  margin-right: auto;
+  /* margin: auto; */
   text-align: center;
 }
 
@@ -714,7 +748,7 @@ export default {
 }
 
 .date-align {
-  text-align: right;
+  text-align: left;
 }
 
 .col-button-custom {
@@ -726,15 +760,23 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
-.tag-custom {
+.tag {
+  display: inline;
+  color: white;
+  padding: 5px 10px;
+  background-color: #4b5f83;
+  border-radius: 100px;
+  margin: 5px;
+}
+/* .tag-custom {
   width: 30%;
   display: flex;
-}
+} */
 
 .txt_tag {
   display: flex;
   position: relative;
-  margin: 16px 26px 0 0;
+  margin: 0 15px 0 0;
   font-size: 13px;
   vertical-align: top;
 
@@ -770,6 +812,12 @@ export default {
   background: #eeeeee;
 }
 
+input::placeholder {
+  color: black;
+  text-decoration-color: black;
+  font-style: italic;
+}
+
 .txt_tag .tf_g {
   display: inline-block;
   margin: 0;
@@ -791,7 +839,7 @@ export default {
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
-  background-color: #ffffffaa;
+  background-color: #bedcff;
   background-clip: border-box;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 5px;

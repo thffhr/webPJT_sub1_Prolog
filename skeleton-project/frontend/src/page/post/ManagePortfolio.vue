@@ -6,38 +6,66 @@
 
     <!-- <ul>
       <li v-for="tag in tags" :key="tag.tid" style="display: inline-block;" class="m-1">#{{ tag.tag_Name }}</li>
-    </ul> -->
+    </ul>-->
 
     <!-- 여기부터 -->
-    <div class="tagButtons box-table2">
-      <b-button-group size="sm">
-        <div class="col-lg-12 ">
-        <b-button
-          pill
-          v-for="(tag, idx) in tags"
-          :key="idx"
-          :pressed="tagState(tag)"
-          @click="filtering(tag)"
-          variant="secondary"
-          style="display: inline-block; color: black;"
-          class="m-1"
-        >
-          #{{ tag.tagName }}
-        </b-button>
-        </div>
-      </b-button-group>
-    </div>
-    <b-container>
-      <b-row align-h="between">
-        <b-col cols="4" v-if="allTagState" @click="allTagOnOff" style="cursor: pointer; color: white;">태그 전체 선택 해제</b-col>
-        <b-col cols="4" v-else @click="allTagOnOff" style="cursor: pointer; color: white;">태그 전체 선택</b-col>
-        <b-col cols="4" v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; text-align: right; color: white;">태그없는 프로젝트 숨기기</b-col>
-        <b-col cols="4" v-else @click="showNotagProject" style="cursor: pointer; text-align: right; color: white;">태그없는 프로젝트 보여주기</b-col>
-    </b-row>
-    </b-container>
-    <!-- 여기까지 -->
+    <div id="tagMenue" style="margin-top:50px">
+      <span
+        v-if="allTagState"
+        @click="allTagOnOff"
+        style="cursor: pointer; color: black;"
+      >태그 전체 선택 해제</span>
+      <span v-else @click="allTagOnOff" style="cursor: pointer; color: black;">태그 전체 선택</span>
 
-    <hr />
+      <div class="tagButtons box-table2">
+        <div v-if="tags.length > 0">
+          <!-- <b-button-group size="sm"> -->
+          <!-- <div class="col-lg-12"> -->
+          <b-button
+            pill
+            v-for="(tag, idx) in tags"
+            :key="idx"
+            :pressed="tagState(tag)"
+            @click="filtering(tag)"
+            variant="secondary"
+            style="display: inline-block; color: black;"
+            class="m-1"
+          >#{{ tag.tagName }}</b-button>
+        </div>
+        <!-- </div> -->
+        <div v-else>태그가 없습니다.</div>
+        <!-- </b-button-group> -->
+      </div>
+      <!-- <b-container>
+      <b-row align-h="between">
+      <b-col cols="4">-->
+      <!-- </b-col>
+      <b-col cols="4" style="text-align: right;">-->
+
+      <br />
+      <hr />
+
+      <span
+        v-if="isIncludeNoTag"
+        @click="showNotagProject"
+        style="cursor: pointer; color: black;"
+      >태그없는 프로젝트 숨기기</span>
+      <span
+        v-else
+        @click="showNotagProject"
+        style="cursor: pointer; text-align: right; color: black;"
+      >태그없는 프로젝트 보여주기</span>
+      <!-- 아이콘도 경험관리랑 통일 -->
+      <!-- 아래 아이콘은 임시 -->
+      <b-icon icon="hand-index"></b-icon>
+    </div>
+
+    <!-- <span v-if="isIncludeNoTag" @click="showNotagProject" style="cursor: pointer; color: black;">{{ showNoTag }}</span>
+    <span v-else @click="showNotagProject" style="cursor: pointer; text-align: right; color: black;">{{ showNoTag }}</span>-->
+    <!-- </b-col>
+      </b-row>
+    </b-container>-->
+    <!-- 여기까지 -->
 
     <!-- <div
       v-for="portfolio in portfolios"
@@ -67,76 +95,106 @@
         <b-button href="#" variant="primary">다운로드(버튼, 미완)</b-button>
       </b-card>
     </div>
-    <hr /> -->
+    <hr />-->
 
     <!-- 위랑 동일 / 카드 형태만 다름 -->
-    <b-container>
-      <b-row align-v="start" class="ml-5">
-        <div
-          v-for="portfolio in portfolios"
-          :key="portfolio.pid"
-          style="display: inline-block;"
-          class="columns is-multiline"
-        >
-          <b-card v-if="showProject(portfolio)" style="background: lightgrey; width:20rem; height:26rem;" class="m-2">
-            <div>
-              <!-- 수정 삭제 img -->
-              <div class="img-custom">
-              <b-img @click="gotoDetail(portfolio.pid)" style="cursor:pointer; margin-right: 8%" v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)" width="15px"></b-img>
-              <b-img @click="deleteP(portfolio)" style="cursor:pointer;" v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
-              </div>
-              
-              <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
-              <h2 v-else>{{ portfolio.title }}</h2>
-              
-              <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
-              <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div>
-              <p
-                v-if="portfolio.contents.length > 60"
-                class="mt-2"
-              >{{ portfolio.contents.slice(0, 60) }}...</p>
-              <p v-else class="mt-2">{{ portfolio.contents }}</p>
-              <!-- 태그 출력 -->
-              <div v-if="portfolio.tag.length > 4">
+    <!-- <b-container>
+    <b-row align-v="start">-->
+    <div
+      v-for="portfolio in portfolios"
+      :key="portfolio.pid"
+      style="display: inline-block;"
+      class="columns is-multiline"
+    >
+      <b-card v-if="showProject(portfolio)" class="poCard m-3" @click="gotoDetail(portfolio.pid)">
+        <!-- v-bind:style="cardColor"
+        v-on:mouseover="change_color()"
+        v-on:mouseout="origin_color()"-->
+        <div>
+          <!-- <b-container>
+                <b-row align-h="between">
+                  <b-col style="text-align: right; padding-right: 0;" cols="4">
+                    <b-img
+                      @click="deleteP(portfolio)"
+                      style="cursor:pointer;"
+                      v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
+                      width="15px"
+                    ></b-img>
+                  </b-col>
+                </b-row>
+          </b-container>-->
+          <div id="downloadBtn">
+            <b-icon icon="cloud-download" font-scale="1.2"></b-icon>
+          </div>
+          <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
+          <h2 v-else>{{ portfolio.title }}</h2>
+
+          <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
+          <!-- <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div> -->
+          <p
+            v-if="portfolio.contents.length > 60"
+            class="mt-3"
+          >{{ portfolio.contents.slice(0, 60) }}...</p>
+          <p v-else class="mt-3">{{ portfolio.contents }}</p>
+          <!-- 태그 출력 -->
+          <div id="tags">
+            <div v-if="portfolio.tag.length > 3">
               <div
-                v-for="portfolioTag in portfolio.tag.slice(0, 4)"
+                v-for="portfolioTag in portfolio.tag.slice(0, 3)"
                 :key="portfolioTag.tid"
                 style="display: inline-block;"
               >
                 <h4>
-                  <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
+                  <b-badge
+                    pill
+                    class="mr-2"
+                    id="tag"
+                    text-variant="black"
+                  >#{{ portfolioTag.tagName }}</b-badge>
                 </h4>
               </div>...
-              </div>
-              <div v-else-if="portfolio.tag.length > 0">
-                <div
-                v-for="portfolioTag in portfolio.tag.slice(0, 4)"
+            </div>
+            <div v-else-if="portfolio.tag.length > 0" class="tags">
+              <div
+                v-for="portfolioTag in portfolio.tag"
                 :key="portfolioTag.tid"
                 style="display: inline-block;"
               >
                 <h4>
-                  <b-badge pill class="mr-3" id="tag" text-variant="black">#{{ portfolioTag.tagName }}</b-badge>
+                  <b-badge
+                    pill
+                    class="mr-2"
+                    id="tag"
+                    text-variant="black"
+                  >#{{ portfolioTag.tagName }}</b-badge>
                 </h4>
-              </div>
-              </div>
-              <div v-else>태그를 추가해보세요</div>
+              </div>...
             </div>
-          </b-card>      
-          <!-- <hr> -->
-
+            <div v-else class="tags">태그를 추가해보세요</div>
+          </div>
         </div>
-      </b-row>
-
-      <!-- (+) 버튼 -->
-      <div class="row mt-3 mb-3">
-        <div class="col-button-custom">
-            <div>
-              <b-img v-on:click="addProject" :src="require(`@/assets/img/icons8-plus-50.png`)" width="60px" v-bind:style = "buttonStyle" v-on:mouseover = "change_button" v-on:mouseout = "origin_button"></b-img>
-            </div>
+      </b-card>
+    </div>
+    <!-- </b-row>
+    </b-container>-->
+    <!-- (+) 버튼 -->
+    <div id="poPlusBtn" v-on:click="addProject">
+      <div v-if="portfolios.length == 0">
+        <div class="row">
+          <div class="col-button-custom">
+            <b-icon icon="journal-plus" font-scale="5"></b-icon>
+          </div>
+        </div>
+        <div class="row">
+          <h3 class="mr-auto ml-auto mt-3">활동 경험을 기록해보세요.</h3>
         </div>
       </div>
-
-    </b-container>
+      <div class="row" v-else>
+        <div class="col-button-custom">
+          <b-icon icon="plus-circle" font-scale="3"></b-icon>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -233,19 +291,19 @@ export default {
               console.log(error); 
             });
     },
-    change_button: function(){
-      this.buttonStyle.opacity = "1";
-      this.buttonStyle.width = "61px";
-    },
-    origin_button: function(){
-      this.buttonStyle.opacity = "0.6";
-      this.buttonStyle.width = "60px";
-    },
+    // change_button: function () {
+    //   this.buttonStyle.opacity = "1";
+    //   this.buttonStyle.width = "61px";
+    // },
+    // origin_button: function () {
+    //   this.buttonStyle.opacity = "0.6";
+    //   this.buttonStyle.width = "60px";
+    // },
 
     showProject(tagInPortfolio) {
       var selectedTags = this.selectedTags;
       var cnt = 0;
-      tagInPortfolio.tag.forEach(function(tag) {
+      tagInPortfolio.tag.forEach(function (tag) {
         if (selectedTags.includes(tag.tid)) {
           cnt ++;
         };
@@ -338,6 +396,12 @@ export default {
         params: { pid: pid },
       });
     },
+    // change_color() {
+    //   this.cardColor.background = "light gray";
+    // },
+    // origin_color() {
+    //   this.cardColor.background = "#bedcff";
+    // },
   },
   // 버튼
   computed: {
@@ -347,10 +411,62 @@ export default {
 </script>
 
 <style>
-.tagButtons{
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+#manageP {
+  width: 80%;
+  padding: 0;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.box-table2 {
+  border: 1px solid #888888;
+  border-radius: 5px;
+  /* margin-top: 50px; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /* 이건 경험관리 수정할거면 같이 날려줘야함 */
+  margin-left: -15px;
+  margin-right: -15px;
+  /* 여기까지 */
+  padding: 2%;
+  background: #eeeeee;
+  opacity: 0.8;
+}
+#tagMenue {
+  text-align: right;
+}
+.tagButtons {
+  /* justify-content: center;s */
+  /* align-items: center; */
+  text-align: left;
+}
+.card.poCard {
+  background-color: lightgrey;
+  width: 23rem;
+  height: 20rem;
+}
+.poCard:hover {
+  background-color: #bedcff;
+  cursor: pointer;
+}
+#downloadBtn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+#downloadBtn:hover {
+  cursor: pointer;
+}
+#tags {
+  position: absolute;
+  bottom: 15px;
+}
+#poPlusBtn {
+  margin: 30px 10px;
+}
+#poPlusBtn:hover {
+  cursor: pointer;
+  opacity: 0.5;
 }
 .col-button-custom{
   margin-left: auto;
@@ -359,14 +475,5 @@ export default {
 
 .img-custom{
     text-align: right;
-}
-
-.box-table2{
-    border: 1px solid #888888;
-    box-shadow: 0 0 2px rgb(111, 111, 111);
-    margin: 1%;
-    padding: 2%;
-    background: #eeeeee;
-    opacity: 0.8
 }
 </style>
