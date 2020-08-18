@@ -11,6 +11,8 @@ import com.web.blog.dao.experience.ExperienceDao;
 import com.web.blog.dao.portfolio.PortfolioDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.apply.Apply;
+import com.web.blog.model.apply.ApplyAddOrDeleteERequest;
+import com.web.blog.model.apply.ApplyAddOrDeletePRequest;
 import com.web.blog.model.apply.ApplyCreateRequest;
 import com.web.blog.model.apply.ApplyExperience;
 import com.web.blog.model.apply.ApplyPortfolio;
@@ -231,7 +233,7 @@ public class ApplyServiceImpl implements ApplyService {
 
         List<Experience> explist = new ArrayList<>();
         if (list.isEmpty()) {
-            result.status = true;
+            result.status = false;
             result.data = "연결된 경험이 없습니다.";
             result.object = null;
 
@@ -303,10 +305,10 @@ public class ApplyServiceImpl implements ApplyService {
     }
 
     @Override
-    public ResponseEntity<BasicResponse> addPortfolio(int apid, int pid) {
+    public ResponseEntity<BasicResponse> addPortfolio(ApplyAddOrDeletePRequest request) {
         // applyPortfolio model에 apid, pid값 추가
-        Apply apply = applyDao.findApplyByApid(apid);
-        Portfolio portfolio = portfolioDao.findPortfolioByPid(pid);
+        Apply apply = applyDao.findApplyByApid(request.getApid());
+        Portfolio portfolio = portfolioDao.findPortfolioByPid(request.getPid());
         ApplyPortfolio applyPortfolio = ApplyPortfolio.builder().apply(apply).portfolio(portfolio).build();
         if (!applyPortfolioDao.findApplyPortfolioByApplyAndPortfolio(apply, portfolio).isEmpty()) {
             result.status = false;
@@ -323,10 +325,12 @@ public class ApplyServiceImpl implements ApplyService {
     }
 
     @Override
-    public ResponseEntity<BasicResponse> addExp(int apid, int exid) {
+    public ResponseEntity<BasicResponse> addExp(ApplyAddOrDeleteERequest request) {
+        
+        
         // applyPortfolio model에 apid, exid값 추가
-        Apply apply = applyDao.findApplyByApid(apid);
-        Experience experience = experienceDao.findExperienceByExid(exid);
+        Apply apply = applyDao.findApplyByApid(request.getApid());
+        Experience experience = experienceDao.findExperienceByExid(request.getExid());
         ApplyExperience applyExperience = ApplyExperience.builder().apply(apply).experience(experience).build();
         if (!applyExperienceDao.findApplyExperienceByApplyAndExperience(apply, experience).isEmpty()) {
             result.status = false;
@@ -344,9 +348,9 @@ public class ApplyServiceImpl implements ApplyService {
 
     @Override
     @Transactional
-    public ResponseEntity<BasicResponse> deletePortfolio(int apid, int pid) {
-        Apply apply = applyDao.findApplyByApid(apid);
-        Portfolio portfolio = portfolioDao.findPortfolioByPid(pid);
+    public ResponseEntity<BasicResponse> deletePortfolio(ApplyAddOrDeletePRequest request) {
+        Apply apply = applyDao.findApplyByApid(request.getApid());
+        Portfolio portfolio = portfolioDao.findPortfolioByPid(request.getPid());
         List<ApplyPortfolio> applyPortfolio = applyPortfolioDao.findApplyPortfolioByApplyAndPortfolio(apply, portfolio);
 
         try {
@@ -368,9 +372,9 @@ public class ApplyServiceImpl implements ApplyService {
 
     @Override
     @Transactional
-    public ResponseEntity<BasicResponse> deleteExp(int apid, int exid) {
-        Apply apply = applyDao.findApplyByApid(apid);
-        Experience experience = experienceDao.findExperienceByExid(exid);
+    public ResponseEntity<BasicResponse> deleteExp(ApplyAddOrDeleteERequest request) {
+        Apply apply = applyDao.findApplyByApid(request.getApid());
+        Experience experience = experienceDao.findExperienceByExid(request.getExid());
         List<ApplyExperience> applyExperience = applyExperienceDao.findApplyExperienceByApplyAndExperience(apply,
                 experience);
         try {

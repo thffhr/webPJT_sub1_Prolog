@@ -33,8 +33,25 @@ export default {
 
       card.style.display = "block";
       
-      alert("이놈아이디" + e.target.id);
-      
+      //ex) board-d-1
+      //ex) card-s-e-384
+
+      var myregexp2 = new RegExp("-"); 
+      var start = parent_id.split(myregexp2)[1];
+      var end = e.target.id.split(myregexp2)[1];
+      var splited_bun = card_id.split(myregexp2)[2];
+      var splited_idx = card_id.split(myregexp2)[3];  
+
+  /* 
+      alert("시험" + start);
+      alert("시험" + end);
+      alert("시험" + splited_bun);
+      alert("시험" + splited_idx);
+
+      alert("옮겨지는 보드의 아이디(에서)" + parent_id);
+      alert("옮기는 보드 아이디(으로)" + e.target.id);
+      alert("드래그 하는 카드 아이디" + card_id); */
+
       //같은 부모에 드래그앤 드랍하면 아무일도 없음..
       if(e.target.id == parent_id){
       
@@ -53,6 +70,10 @@ export default {
       e.target.appendChild(card);
       
 
+      //s -> d는 추가
+      //d -> s는 삭제
+      EventBus.$emit('BoardToApply', start + "-" + end + "-" + splited_bun + "-" + splited_idx);
+        
     },
   
   /* delete:function(cardId){
