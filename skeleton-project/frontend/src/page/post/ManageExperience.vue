@@ -464,6 +464,7 @@ export default {
 
       var startdate = year + "-" + month + "-" + day;
 
+      alert(startdate);
       //alert(this.uid);
       axios
         .post(this.$SERVER_URL + `/experience`, {
@@ -475,8 +476,6 @@ export default {
           response.data.object.startdate = startdate;
           response.data.object.enddate = startdate;
           response.data.object.imgsrc = "icons8-pencil-24.png";
-
-          var startdate = year + "-" + month + "-" + day;
 
           //경험이 아예없으면
           if (response.data.status == false) {
