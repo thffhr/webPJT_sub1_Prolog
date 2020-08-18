@@ -25,7 +25,7 @@
           <h2 v-else class="title" style="color: grey; margin-left: auto;">
             <input
               ref="titleInput"
-              size="23%"
+              size="18%"
               :value="pjtDetail.title"
               @input="pjtDetail.title = $event.target.value"
               @keyup.enter="sendUpdateInfo(); updateTitle()"
@@ -67,8 +67,8 @@
                   class="mr-2"
                 ></b-img>
               </b-col>
-              <b-col v-else class="mt-4 mb-4">
-                <p style="display: inline-block;">
+              <b-col v-else class="mt-5 mb-3">
+                <span style="display: inline-block;">
                   프로젝트 진행 기간 :
                   <input
                     ref="start_dateInput"
@@ -83,7 +83,7 @@
                     @keyup.enter="sendUpdateInfo(); updateDate()"
                     size="4"
                   />
-                </p>
+                </span>
                 <!-- <b-img :src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px" style="display: inline-block; margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateDate()"></b-img> -->
                 <b-img
                   @click="sendUpdateInfo(); updateDate()"
@@ -128,7 +128,7 @@
                         </div>
                       </span>
                   </div>-->
-                  <div v-for="(ptag, j) in pjtDetail.tag" :key="j" class="tag mr-3 mt-2">
+                  <div v-for="(ptag, j) in pjtDetail.tag" :key="j" class="tag mr-2 mt-1" style="display: inline-block;">
                     {{ ptag.tagName }}
                     <!-- <b-img :src="require(`@/assets/img/icons8-trash-24.png`)" width="15px" style="margin-left: 5%; cursor: pointer;" @click="deleteTag(ptag.tid)"></b-img> -->
                     <b-icon
@@ -204,13 +204,24 @@
                 <b-col class="mt-4 mb-2">
                   {{ id.fileName }}
                   <!-- 파일 다운로드 -->
-                  <b-button size="sm" variant="outline-dark">
-                    <b-icon-download class="mr-1"></b-icon-download>
+                  <b-button @click="fileDownload(id)" size="sm" variant="outline-dark" class="ml-1">
+                    <b-icon-download></b-icon-download>
+                  </b-button>
+                  <b-button @click="fileDelete(id)" size="sm" variant="outline-dark" class="ml-1">
+                    <b-icon-x></b-icon-x>
                   </b-button>
                 </b-col>
               </b-row>
             </div>
             <div v-else>파일을 추가해보세요.</div>
+            <input
+                type="file"
+                ref="fileUpload"
+                style="display: none"
+                multiple="multiple"
+                @change="uploadMultipleFiles($event)"
+            />
+            <b-icon @click="$refs.fileUpload.click();" style="cursor: pointer" icon="plus-square" aria-hidden="true"></b-icon>
             <b-row>
               <!-- <b-icon-plus-square class="mr-1" @click="uploadFile"></b-icon-plus-square> -->
             </b-row>
@@ -242,16 +253,17 @@ export default {
       updateContentsState: false,
       updateTitleState: false,
       newTag: "",
+      uploadFiles: [],
     };
   },
   created() {
-    console.log(this.$route.params.pid);
+    // console.log(this.$route.params.pid);
     axios
       .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
         params: { pid: this.$route.params.pid },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         if (response.data.status) {
           this.pjtDetail = response.data.object;
         }
@@ -325,8 +337,8 @@ export default {
         });
     },
     addNewTag(newTag) {
-      console.log(this.pjtDetail.pid);
-      console.log(newTag);
+      // console.log(this.pjtDetail.pid);
+      // console.log(newTag);
       if (newTag.length == 0 || newTag.length > 10) {
         alert("1자 이상 10자 이하로 입력해주세요");
       } else {
@@ -354,37 +366,123 @@ export default {
           });
       }
     },
-    uploadFile() {
+    uploadFile(event) {
       const formData = new FormData();
-      formData.append();
-    },
+      formData.append("file", event.target.files[0]);
+      formData.append("pid", this.pjtDetail.pid)
 
-    uploadImage(event) {
-      const formData = new FormData();
-      formData.append("profile", event.target.files[0]);
-
-      //const file = event.target.files[0];
       axios
-        .post(
-          this.$SERVER_URL + `/account/profile/${localStorage["uid"]}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        )
+      .post(
+        this.$SERVER_URL + `/uploadFile/${this.pjtDetail.pid}`, formData, {
+          headers: {
+            "content-Type": "multipart/form-data",
+          },
+        }
+      )
+      .then((response) => {
+        // console.log(response + "res");
+        
+      axios
+      .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
+        params: { pid: this.$route.params.pid },
+      })
+      .then((response) => {
+        // console.log(response);
+        if (response.data.status) {
+          this.pjtDetail = response.data.object;
+        }
+      });
+
+      })
+      .catch((error) => {
+        console.log(error + "err");
+      })
+    },
+    uploadMultipleFiles(event) {
+
+      // const formData = new FormData();
+      // formData.append("files", [])
+
+      // for( var i = 0; i < event.target.files.length; i++ ){
+      //   let file = event.target.files[i];
+      //   formData.append('files[' + i + ']', file);
+      // }
+      // formData.append("pid", this.pjtDetail.pid)
+
+      for( var i = 0; i < event.target.files.length; i++ ){
+        let file = event.target.files[i];
+        this.uploadFiles.push(file);
+      }
+
+      axios
+      .post(
+        this.$SERVER_URL + `/uploadMultipleFiles`, {
+          files: this.uploadFiles,
+          pid: this.pjtDetail.pid,
+        }, {
+          headers: {
+            "content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        // console.log(response + "res");
+        
+      axios
+      .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
+        params: { pid: this.$route.params.pid },
+      })
+      .then((response) => {
+        // console.log(response);
+        if (response.data.status) {
+          this.pjtDetail = response.data.object;
+        }
+      });
+
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+    },
+    fileDownload(id) {
+      // console.log(fileName)
+      axios
+      .get(this.$SERVER_URL + `/downloadFile/${id.fileName}`, {
+        responseType: 'blob',
+      })
+      .then((response) => {
+        // console.log(response)
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', id.fileName);
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    },
+    fileDelete(id) {
+      axios
+        .delete(this.$SERVER_URL + `/deleteFile/${id.id}`)
         .then((response) => {
-          console.log(response);
-          if (response.data.status) {
-            alert("프로필 업로드 성공");
-            let itemImage = this.$refs.uploadItemImage; //img dom 접근
-            itemImage.src =
-              this.$SERVER_URL + `/account/profile/${localStorage["uid"]}`;
-          } else {
-            alert("프로필 업로드 실패");
-          }
-        });
+
+          axios
+          .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
+            params: { pid: this.$route.params.pid },
+          })
+          .then((response) => {
+            // console.log(response);
+            if (response.data.status) {
+              this.pjtDetail = response.data.object;
+            }
+          });
+
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     backToList() {
       this.$router.push({ name: constants.URL_TYPE.POST.MANAGEPORTFOLIO });
