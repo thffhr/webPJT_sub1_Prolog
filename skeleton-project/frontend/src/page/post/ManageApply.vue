@@ -6,10 +6,22 @@
       <div>
         <b-tabs class="m-3" align="center">
           <b-tab title="경험" active>
-            <div v-for="(ex, ex_idx) in nav_ex_outlist" :key="ex.exid">{{ex.title}}</div>
+            <Board id="board-s-1">
+            <div v-for="(ex, ex_idx) in nav_ex_outlist" :key="ex.exid">
+              <Card :id="'card-s-e' + ex.exid" draggable="true">
+              {{ex.title}}
+              </Card>
+            </div>
+            </Board>
           </b-tab>
           <b-tab title="포트폴리오">
-            <div v-for="(port, p_idx) in nav_port_outlist" :key="port.pid">{{port.title}}</div>
+            <Board id="board-s-2">
+            <div v-for="(port, p_idx) in nav_port_outlist" :key="port.pid">
+              <Card :id="'card-s-p' + port.pid" draggable="true">
+                {{port.title}}
+              </Card>
+            </div>
+            </Board>
           </b-tab>
           <!-- <b-tab title="Disabled" disabled><p>I'm a disabled tab!</p></b-tab> -->
         </b-tabs>
@@ -232,17 +244,26 @@
           <!-- 여기에서 지원목록에 포함되어 있는 경험/포폴 보여줌 -->
           <div class="applyCardBody">
             <!-- 경험 -->
+            <Board id="board-d-1">
+            <div> 경험 </div>
             <div v-for="(ex, exid) in nav_ex_inlist" :key="ex.exid">
-              <Card :id="'card-e-' + ex.exid" draggable="true">
+              <Card :id="'card-d-e' + ex.exid" draggable="true">
                 <div>{{ex.title}}</div>
               </Card>
             </div>
+            </Board>
+
+           <hr class="featurette-divider" />
+            
             <!-- 포폴 -->
+            <Board id="board-d-2">
+            <div> 프로젝트 </div>
             <div v-for="(port, pid) in nav_port_inlist" :key="port.pid">
-              <Card :id="'card-p-' + port.pid" draggable="true">
+              <Card :id="'card-d-p' + port.pid" draggable="true">
                 <div>{{port.title}}</div>
               </Card>
             </div>
+            </Board>
           </div>
         </b-collapse>
       </div>
@@ -341,7 +362,7 @@ export default {
     //이벤트 버스
     EventBus.$on("test", (payload) => {
       this.msg = payload;
-      alert.log(this.msg);
+      alert(this.msg);
     });
 
     //지원기간 가져오기, 없을경우만
@@ -596,7 +617,7 @@ export default {
         .catch((error) => {});
     },
     test2: function (value) {
-      alert(value);
+      console.log(value);
     },
   },
 };
@@ -927,54 +948,16 @@ export default {
   background-color: #7a63ff;
 }
 
-.flexbox {
-  display: flex;
-  justify-content: space-between;
-
-  width: 100%;
-  max-width: 768px;
-  height: 50vh;
-
-  overflow: hidden;
-
-  margin: 0 auto;
-  padding: 15px;
-}
-
-.flexbox .board {
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  max-width: 300px;
-
-  background-color: #313131;
-
-  padding: 15px;
-}
-
-.flexbox .board .card {
-  padding: 15px 25px;
-  background-color: #f3f3f3;
-
-  cursor: pointer;
-  margin-bottom: 15px;
-}
-
-.flexbox .board .card p {
-  color: #000000;
-}
 
 .board {
   display: flex;
   flex-direction: column;
 
   width: 100%;
-  max-width: 300px;
 
-  background-color: #313131;
+  background-color: #d4d3d3;
 
-  padding: 15px;
+  padding: 25px;
 }
 
 .board .card {
