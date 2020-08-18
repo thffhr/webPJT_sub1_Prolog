@@ -238,7 +238,7 @@ export default {
         },
       })
       .then((response) => {
-        console.log("태그리스트");
+        // console.log("태그리스트");
         this.tags = response.data.object;
 
         // Array.prototype.forEach.call(this.tags, tag =>
@@ -252,7 +252,7 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response.data.object);
+            // console.log(response.data.object);
             this.portfolios = response.data.object;
           })
           .catch((error) => {
@@ -286,7 +286,21 @@ export default {
           response.data.object.end_date = startdate;
           response.data.object.state = false;
           response.data.object.tag = [];
-          this.portfolios.push(response.data.object);
+
+          axios
+          .get(this.$SERVER_URL + `/portfolio/all`, {
+            params: {
+              uid: localStorage["uid"],
+            },
+          })
+          .then((response) => {
+            this.portfolios = response.data.object;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+
         })
         .catch((error) => {
           console.log(error);
@@ -330,7 +344,30 @@ export default {
     },
 
     showNotagProject() {
-      this.isIncludeNoTag = !this.isIncludeNoTag;
+      this.isIncludeNoTag = !this.isIncludeNoTag
+      if (this.isIncludeNoTag == true) {
+        axios
+        .get(this.$SERVER_URL + `/portfolio/all`, {
+          params: {
+            uid: localStorage["uid"],
+          },
+        })
+        .then((response) => {
+          // console.log(response.data.object);
+          this.portfolios = response.data.object;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      } else {
+        let tmp = []
+        Array.prototype.forEach.call(this.portfolios, portfolio => {
+          if (portfolio.tag.length > 0) {
+            tmp.push(portfolio)
+          }
+        })
+        this.portfolios = tmp
+      }
     },
 
     deleteP: function (portfolio) {
@@ -349,10 +386,9 @@ export default {
             })
             .then((response) => {
               this.tags = response.data.object;
-
-              Array.prototype.forEach.call(this.tags, (tag) =>
-                this.selectedTags.push(tag.tid)
-              );
+              // Array.prototype.forEach.call(this.tags, (tag) =>
+              //   this.selectedTags.push(tag.tid)
+              // );
             })
             .catch((error) => {
               console.log(error);
@@ -365,7 +401,7 @@ export default {
               },
             })
             .then((response) => {
-              console.log(response.data.object);
+              // console.log(response.data.object);
               this.portfolios = response.data.object;
             })
             .catch((error) => {
