@@ -119,4 +119,10 @@ public class ApplyController {
         return applyService.deleteExp(request);
     }
 
+    @GetMapping("/apply/term")
+    @ApiOperation("지원기간")
+    public ResponseEntity<BasicResponse> applyTerm() {
+        return applyService.findApplyTerm();
+    }
+
 }
