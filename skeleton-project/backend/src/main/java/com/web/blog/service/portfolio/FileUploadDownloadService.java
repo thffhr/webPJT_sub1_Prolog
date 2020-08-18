@@ -3,7 +3,6 @@ package com.web.blog.service.portfolio;
 import javax.servlet.http.HttpServletRequest;
 
 import com.web.blog.model.BasicResponse;
-import com.web.blog.model.portfolio.UploadFileRequest;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +25,6 @@ public interface FileUploadDownloadService {
     public ResponseEntity<BasicResponse> deleteFile(int id);
 
     // 압축파일 다운로드
-    public ResponseEntity<Resource> downloadPortfolio(String uid, int pid);
+    public ResponseEntity<Resource> downloadPortfolio(HttpServletRequest request, String uid, int pid);
 
-    // public Resource loadFileAsResource(String fileName);
-
-    // public Iterable<UploadFile> getFileList();
-
-    // public Optional<UploadFile> getUploadFile(int id);
 }

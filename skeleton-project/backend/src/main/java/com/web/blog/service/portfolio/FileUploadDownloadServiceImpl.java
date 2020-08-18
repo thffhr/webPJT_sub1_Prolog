@@ -1,6 +1,8 @@
 package com.web.blog.service.portfolio;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -9,7 +11,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,11 +25,11 @@ import com.web.blog.exception.FileUploadException;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.portfolio.Portfolio;
 import com.web.blog.model.portfolio.UploadFile;
-import com.web.blog.model.portfolio.UploadFileRequest;
 import com.web.blog.property.FileUploadProperties;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -45,6 +50,9 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
     @Autowired
     private PortfolioDao portfolioDao;
 
+    @Autowired
+    Environment environment;
+
     ResponseEntity<BasicResponse> response = null;
     BasicResponse result = new BasicResponse();
 
@@ -58,6 +66,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
         }
     }
 
+    @Override
     public ResponseEntity<BasicResponse> storeFile(int pid, MultipartFile file) {
         ResponseEntity<BasicResponse> response = null;
         BasicResponse result = new BasicResponse();
@@ -196,6 +205,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
     }
 
     @Transactional
+    @Override
     public ResponseEntity<BasicResponse> deleteFile(int id) {
         // id를 이용해 저장된 파일의 이름이 뭔지 알려줘야할거같은데
         String fileName = fileDAO.findUploadFileById(id).getFileName();
@@ -229,28 +239,77 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
     }
 
     @Override
-    public ResponseEntity<Resource> downloadPortfolio(String uid, int pid) {
-        // TODO Auto-generated method stub
-        return null;
+    public ResponseEntity<Resource> downloadPortfolio(HttpServletRequest request, String uid, int pid) {
+        Resource resource;
+        String contentType = null;
+        // 압축파일관련 클래스
+        ZipOutputStream zout = null;
+        // 생성할 압축파일 이름
+        Portfolio portfolio = portfolioDao.findPortfolioByPid(pid);
+        String portfolioTitle = portfolio.getTitle();
+        // String zipName = path + {닉네임_} + {프로젝트 이름} + ".zip";
+        String zipName = this.fileLocation + "\\" + uid + "_" + portfolioTitle + ".zip";
+        System.out.println(zipName);
+
+        /* 압축파일 생성 */
+        try {
+            // zipName으로 새 ZipOutputStream 클래스를 생성하고
+            zout = new ZipOutputStream(new FileOutputStream(zipName));
+            // ?
+            byte[] buf = new byte[1024];
+            // 압축할 파일을 경로포함해서 FileInputStream 클래스로 생성한다.
+            List<UploadFile> fileList = fileDAO.findUploadFileBypid(portfolio);
+            for (UploadFile file : fileList) {
+                // 압축대상 파일
+                FileInputStream in = new FileInputStream(this.fileLocation + "\\" + file.getFileName());
+                // 압축파일에 포함시킬 새 파일 생성
+                zout.putNextEntry(new ZipEntry(file.getFileName()));
+                // 대상파일을 새파일로 복사
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    zout.write(buf, 0, len);
+                }
+                zout.closeEntry();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != zout) {
+                try {
+                    zout.close();
+                } catch (Exception e) {
+                }
+                zout = null;
+            }
+        }
+        /* 압축파일 다운로드 URI */
+        Path filePath = this.fileLocation.resolve(zipName).normalize();
+        try {
+            resource = new UrlResource(filePath.toUri());
+        } catch (MalformedURLException e) {
+            throw new FileDownloadException(zipName + " 파일을 찾을 수 없습니다.", e);
+        }
+
+        if (!resource.exists()) {
+            throw new FileDownloadException(zipName + " 파일을 찾을 수 없습니다.");
+        } else {
+
+            // Try to determine file's content type
+            try {
+                contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+            // Fallback to the default content type if type could not be determined
+            if (contentType == null) {
+                contentType = "application/octet-stream; charset=utf-8";
+            }
+
+        }
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + resource.getFilename())
+                .body(resource);
     }
-
-    // public Iterable<UploadFile> getFileList() {
-    // Iterable<UploadFile> iterable = fileDAO.findAll();
-
-    // if (null == iterable) {
-    // throw new FileDownloadException("업로드 된 파일이 존재하지 않습니다.");
-    // }
-
-    // return iterable;
-    // }
-
-    // public Optional<UploadFile> getUploadFile(int id) {
-    // Optional<UploadFile> uploadFile = fileDAO.findById(id);
-
-    // if (null == uploadFile) {
-    // throw new FileDownloadException("해당 아이디[" + id + "]로 업로드 된 파일이 존재하지 않습니다.");
-    // }
-    // return uploadFile;
-    // }
 
 }

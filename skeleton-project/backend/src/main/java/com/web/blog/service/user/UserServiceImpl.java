@@ -1,26 +1,38 @@
 package com.web.blog.service.user;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.zip.Deflater;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
+import com.web.blog.dao.apply.ApplyDao;
+import com.web.blog.dao.experience.ExperienceDao;
+import com.web.blog.dao.portfolio.FileDAO;
+import com.web.blog.dao.portfolio.PortfolioDao;
 import com.web.blog.dao.user.ProfileDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.portfolio.Portfolio;
+import com.web.blog.model.portfolio.UploadFile;
 import com.web.blog.model.user.LoginRequest;
 import com.web.blog.model.user.Profile;
 import com.web.blog.model.user.ProfileUpdateRequest;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.model.user.UserUpdateRequest;
+import com.web.blog.property.FileUploadProperties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service("userService")
@@ -32,8 +44,26 @@ public class UserServiceImpl implements UserService {
     @Autowired
     ProfileDao profileDao;
 
+    @Autowired
+    FileDAO fileDAO;
+
+    @Autowired
+    ExperienceDao experienceDao;
+
+    @Autowired
+    PortfolioDao portfolioDao;
+
+    @Autowired
+    ApplyDao applyDao;
+
     final BasicResponse result = new BasicResponse();
     ResponseEntity<BasicResponse> response = null;
+
+    private Path fileLocation;
+
+    public UserServiceImpl(FileUploadProperties prop) {
+        this.fileLocation = Paths.get(prop.getUploadDir()).toAbsolutePath().normalize();
+    }
 
     @Override
     public ResponseEntity<BasicResponse> login(LoginRequest loginRequest) throws Exception {
@@ -108,6 +138,7 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    @Transactional
     @Override
     public ResponseEntity<BasicResponse> deleteUser(final String uid) throws Exception {
         ResponseEntity<BasicResponse> response = null;
@@ -118,6 +149,38 @@ public class UserServiceImpl implements UserService {
         final BasicResponse result = new BasicResponse();
 
         if (userOpt.isPresent()) {
+            // 1. 파일삭제
+            // uid로 pid를 검색하고
+            List<Portfolio> portfolioList = portfolioDao.findPortfolioByUid(uid);
+            // 그 pid로 fileDao에서 파일 이름들 찾아와서
+            for (Portfolio portfolio : portfolioList) {
+                List<UploadFile> uploadFiles = fileDAO.findUploadFileBypid(portfolio);
+
+                for (UploadFile uploadFile : uploadFiles) {
+                    File file = new File(fileLocation + "\\" + uploadFile.getFileName());
+                    if (file.exists()) {
+                        // 파일스토리지에서 삭제
+                        if (file.delete()) {
+                            // 2. 파일 디비 삭제
+                            // 검색된 리스트 데이터 전체 삭제
+                            fileDAO.deleteById(uploadFile.getId());
+                        }
+                    }
+                }
+                // 3. 프로젝트 삭제
+                // 검색된 pid리스트 데이터 전체 삭제
+                portfolioDao.deleteById(portfolio.getPid());
+            }
+            // 4. 경험삭제
+            // uid를 갖고있는 경험 전체 삭제
+            // List<Experience> experienceList = experienceDao.findExperienceByUid(uid);
+            experienceDao.deleteExperienceByUid(uid);
+
+            // 5. 지원목록 삭제
+            // uid를 갖고있는 지원목록 전체 삭제
+            applyDao.deleteUploadFileByUid(uid);
+            // 6. 유저삭제
+            // 유저삭제
             userDao.deleteById(uid);
             result.status = true;
             result.data = "회원탈퇴 성공";

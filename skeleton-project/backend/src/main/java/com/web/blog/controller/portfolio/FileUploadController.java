@@ -50,8 +50,8 @@ public class FileUploadController {
 
     @GetMapping("/downloadPortfolio")
     @ApiOperation(value = "포트폴리오에 속해있는 파일을 압축파일로 받을 수 있다.")
-    public ResponseEntity<Resource> downloadPortfolio(String uid, int pid) {
-        return service.downloadPortfolio(uid, pid);
+    public ResponseEntity<Resource> downloadPortfolio(HttpServletRequest request, String uid, int pid) {
+        return service.downloadPortfolio(request, uid, pid);
     }
 
     @DeleteMapping("/deleteFile/{id}")
