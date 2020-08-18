@@ -3,7 +3,32 @@
 
 <div>
 
-  <div class="about"> 
+
+
+
+ <div>
+  <!-- <main class="flexbox">
+
+      <Board id ="board-1">
+        <Card id="card-1" draggable="true">
+          <p>card One </p>
+        </Card>
+      </Board>
+
+      <div>
+        <p v-on:test="test2(1)"></p>
+      </div>
+
+      <Board id ="board-2">
+        <Card id="card-2" draggable="true">
+          <p>card Two </p>
+        </Card>
+      </Board>
+  </main> -->
+</div> 
+
+
+  <!-- <div class="about"> 
       <div class="left">
          
 
@@ -15,10 +40,10 @@
           <div id="display" ref="display1">Display</div> 
         </div> 
 
-  </div>
+  </div> -->
 
     <!-- 네비게이션 오른쪽 -->
-   <div class="temp">
+   <div class="temp" >
 
 
     <!-- 내용 -->
@@ -29,23 +54,36 @@
         
         <h4 style="color:black"> 포트폴리오</h4>
         <div class="custom-left col-lg-12">
-           <div ref="left" class="custom-drag-elements"> 
-            <div  v-for="(port, pid) in nav_port_list" :key="port.pid">
-              <div>{{port.title}}</div>
-            </div>
-          </div> 
-        </div>
+             <Board id="board-1">
+                      <div  v-for="(port, pid) in nav_port_list" :key="port.pid">
+                        <Card :id="'card-p-' + port.pid" draggable="true">
+                    
+                          <div>{{port.title}}</div>
+                        </Card>
+                  
+                      </div>
+                      
+              </Board>
+          </div>
        
+
        <hr class="featurette-divider">
+
+
        <h4 style="color:black">경험</h4>
 
-        <div class="custom-left  col-lg-12">
-           <div  class="custom-drag-elements"> 
-            <div  v-for="(ex, exid) in nav_ex_list" :key="ex.exid">
-              <div>{{ex.title}}</div>
-            </div>
+          <div class="custom-left  col-lg-12">
+           <Board id="board-2">
+     
+             <div   v-for="(ex, exid) in nav_ex_list" :key="ex.exid">
+                  <Card  :id="'card-e-' + ex.exid" draggable="true">
+                   <div >{{ex.title}}</div>
+                  </Card>
+              </div>
+              
+            
+            </Board>
           </div>
-        </div>
 
       </div>
     </b-collapse>
@@ -140,14 +178,15 @@
     >
 
 
-      <div v-for="(apply,apid) in apply_lists" :key="apply.apid">
+      <div v-for="(apply,idx) in apply_lists" :key="apply.apid">
              <div class="custom-contents" >
-                 
-            <b-carousel-slide
-                caption="First slide"
-                text="Nulla vitae elit libero, a pharetra augue mollis interdum."
-                img-src="https://picsum.photos/1024/480/?image=52"
-                >
+            
+              <b-carousel-slide
+                  caption="First slide"
+                  text="Nulla vitae elit libero, a pharetra augue mollis interdum."
+                  img-src= "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg" >
+
+               
                       <!-- 제목 -->
                         <div>
                             <h2>{{apply.apCompany}}</h2>
@@ -165,9 +204,9 @@
                       <div>
                           <p class="txt_line"> {{apply.apDesc}} </p>
                       </div>
-                </b-carousel-slide>
-                
-                </div>
+
+              </b-carousel-slide>
+              </div>
                 
       </div>
 
@@ -285,10 +324,40 @@
       <b-navbar class="custom-pageMenue">
         <div class="left-ex">
            경험
+
+              <Board :id="'board-3' + apply.apid">
+     
+             <div   v-for="(ex, exid) in nav_ex_inlist" :key="ex.exid">
+                  <Card  :id="'card-e-' + ex.exid" draggable="true">
+                   <div >{{ex.title}}</div>
+                  </Card>
+              </div>
+              
+            
+            </Board>
+
+
+
+
         </div>
      
          <div class="right-port">
            프로젝트
+
+                <Board :id="'board-4' + apply.apid">
+                      <div  v-for="(port, pid) in nav_port_inlist" :key="port.pid">
+                        <Card :id="'card-p-' + port.pid" draggable="true">
+                    
+                          <div>{{port.title}}</div>
+                        </Card>
+                  
+                      </div>
+                      
+              </Board>
+
+
+
+
         </div>
       </b-navbar>
    </b-collapse>
@@ -339,9 +408,11 @@ import constants from "../../lib/constants.js";
 import axios from "axios";
 import Vue from "vue";
 import DragDrop from 'vue-drag-n-drop'
-import MyComponent  from './MyComponent.vue'
 import dragula from 'dragula';
 
+import Board from './Board'
+import Card from './Card'
+import EventBus from './EventBus';
 
 //const SERVER_URL = "http://localhost:8080";
 
@@ -351,7 +422,8 @@ export default {
   order: 2,
   components: {
      DragDrop,
-    MyComponent 
+     Board,
+     Card
   },
   data: () => {
     return {
@@ -370,12 +442,26 @@ export default {
         isLeftNavClicked:false,
         leftNavImgsrc:"icons8-arrow-right-64.png",
         intervalid1:"",
+        intervalid2:"",
 
         nav_port_list:[],
         nav_ex_list:[],
+        nav_port_inlist:[],
+        nav_ex_inlist:[],
         isEditClicked_list:[],
-        isEditCheck:false
-        
+        isEditCheck:false,
+
+        flowersImg : [ 
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbmO10q%2FbtqGSsg736Q%2F2Vk8PtXWwwroClNtBaR7lk%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcBif9C%2FbtqGNC5EItY%2FwEwvIFxMncmII3L0G4EBKK%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdHQToz%2FbtqGJwdLhDV%2F99NvaPkVv90sofZ4mXG2Vk%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcIngX9%2FbtqGJwx6UEi%2F1PANxFjnZjWGq8NSUIuljK%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FJEurJ%2FbtqGK4ajX2J%2Fj5FxtSbXqtz2qJA8nqZ8Ik%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fcbqw1R%2FbtqGK4g25HF%2FePZlqlieqAV9yWoJRqNp90%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg" ]
+        ,
+        temp : "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg"  
     };
   }
   ,
@@ -386,23 +472,14 @@ export default {
   },
 
   mounted(){ 
-    
-     const { right, display1, left } = this.$refs;
-     dragula([ left, right  ],{ revertOnSpill: true  } ).on('drop', el =>
-      { 
-        alert("길이" + this.nav_port_list.length);
-        if(right.children.length > 0) 
-          { 
-            display1.innerHTML = right.innerHTML
-          }
-        else{ 
-            display1.innerHTML = "Display"
-              }
-            }
-          ) 
-      }
+  }
 ,
   created() {
+    //이벤트 버스
+      EventBus.$on('test', (payload)=>{
+            this.msg = payload;
+            alert.log(this.msg);
+        });
   
      //지원기간 가져오기, 없을경우만
     if(constants.APPLY_PERIOD == null){
@@ -568,14 +645,14 @@ export default {
     detailClickeIndex:function(apid){
       //alert(apid);
 
-      //네비에 없는 경험가져오기
-      this.getExInNav(apid);
+      //네비에 없는 프로젝트가져오기, 그다음 경험가져옴
+      //같이가져오니까 하나만가져오더라고;;
+      this.getPortOutNav(apid);           
 
-      //네비에 없는 프로젝트가져오기
       this.getPortInNav(apid);
     },
 
-    getPortInNav:function (apid) {
+    getPortOutNav:function (apid) {
        axios
         .get(this.$SERVER_URL + `/apply/outportfolio`, {params: {
               uid: localStorage["uid"],
@@ -588,13 +665,14 @@ export default {
          this.nav_port_list = response.data.object;
          console.log(response.data.object);
          
-        
+          this.getExOutNav(apid);
         })
         .catch((error) => {
         });
       
     },
-    getExInNav:function (apid) {
+
+    getExOutNav:function (apid) {
       axios
         .get(this.$SERVER_URL + `/apply/outexp`, {params: {
               uid: localStorage["uid"],
@@ -603,6 +681,40 @@ export default {
         .then((response) => {
           //alert("넵 port")
          this.nav_ex_list = response.data.object;
+        console.log(response.data.object);
+        
+        })
+        .catch((error) => {
+        });
+    },
+    getPortInNav:function (apid) {
+       axios
+        .get(this.$SERVER_URL + `/apply/inportfolio`, {params: {
+              uid: localStorage["uid"],
+              apid: apid
+            }})
+        .then((response) => {
+
+        //alert("넵 ec")
+         //this.nav_port_list.splice(0,this.nav_port_list.length+1);
+         this.nav_port_inlist = response.data.object;
+         console.log(response.data.object);
+         
+          this.getInOutNav(apid);
+        })
+        .catch((error) => {
+        });
+      
+    },
+    getExInNav:function (apid) {
+      axios
+        .get(this.$SERVER_URL + `/apply/inexp`, {params: {
+              uid: localStorage["uid"],
+              apid: apid
+            }})
+        .then((response) => {
+          //alert("넵 port")
+         this.nav_ex_inlist = response.data.object;
         console.log(response.data.object);
         
         })
@@ -649,7 +761,11 @@ export default {
         })
         .catch((error) => {
         });
+    },
+    test2:function(value){
+        alert(value);
     }
+    
   }
 };
 </script>
@@ -859,6 +975,72 @@ export default {
 .custom-drag-elements > div { width:40%; text-align: center;float: left;padding: 1em;margin: 0 1em 1em 0;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);border-radius: 100px;border: 2px solid #ececec;background: #F7F7F7;transition: all .5s ease; } 
 .custom-drag-elements > div:active {-webkit-animation: wiggle 0.3s 0s infinite ease-in;animation: wiggle 0.3s 0s infinite ease-in;opacity: .6;border: 2px solid #000; } 
 .custom-drag-elements > div:hover {border: 2px solid #9c85ff;background-color: #7a63ff; } 
+
+
+.flexbox{
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
+  max-width: 768px;
+  height: 50vh;
+
+  overflow: hidden;
+
+  margin: 0 auto;
+  padding: 15px;
+
+}
+
+.flexbox .board{
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 300px;
+
+  background-color: #313131;
+
+  padding: 15px;
+
+}
+
+.flexbox .board .card{
+  padding: 15px 25px;
+  background-color: #F3F3F3;
+
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.flexbox .board .card p{
+  color:#000000
+}
+
+ .board{
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 300px;
+
+  background-color: #313131;
+
+  padding: 15px;
+
+}
+
+ .board .card{
+  padding: 15px 25px;
+  background-color: #F3F3F3;
+
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+ .board .card div{
+  color:#000000
+} 
 
 
 

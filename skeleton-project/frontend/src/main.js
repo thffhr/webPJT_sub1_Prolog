@@ -17,6 +17,8 @@ Vue.use(Carousel3d);
 //모달
 Vue.use(VModal, { dynamicDefault: { draggable: true, resizable: true } });
 
+
+
 // 서버 주소 전역 변수
 // EC - "/api"
 // Vue.prototype.$SERVER_URL = "/api";
