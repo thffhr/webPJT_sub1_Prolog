@@ -40,12 +40,12 @@
         v-if="isIncludeNoTag"
         @click="showNotagProject"
         style="cursor: pointer; color: black;"
-      >태그없는 프로젝트 숨기기</span>
+      >태그 없는 프로젝트 숨기기</span>
       <span
         v-else
         @click="showNotagProject"
         style="cursor: pointer; text-align: right; color: black;"
-      >태그없는 프로젝트 보여주기</span>
+      >태그 없는 프로젝트 보여주기</span>
       <!-- 아이콘도 경험관리랑 통일 -->
       <!-- 아래 아이콘은 임시 -->
       <b-icon icon="hand-index"></b-icon>
@@ -520,5 +520,9 @@ export default {
 
 .img-custom {
   text-align: right;
+}
+#manageP .active {
+  border-color: black !important;
+  border-bottom-color: black !important;
 }
 </style>

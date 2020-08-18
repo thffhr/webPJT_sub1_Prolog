@@ -32,13 +32,14 @@
 
       <h6 class="noTag mt-3 mb-3" @click="exeptNoTagClickE()">
         태그 없는 게시물 숨기기
+        <b-icon icon="hand-index"></b-icon>
         <!-- <b-icon icon="hand-index-thumb"></b-icon> -->
-        <b-img
+        <!-- <b-img
           style="cursor:pointer"
           :pressed.sync="this.isIncludeNoTag"
           v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)"
           width="20px"
-        ></b-img>
+        ></b-img> -->
       </h6>
     </div>
 
