@@ -39,6 +39,4 @@ public interface ApplyService {
 
     ResponseEntity<BasicResponse> deleteExp(ApplyAddOrDeleteERequest request);
 
-    ResponseEntity<BasicResponse> findApplyTerm();
-
 }

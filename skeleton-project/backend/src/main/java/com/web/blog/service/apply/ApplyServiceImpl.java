@@ -7,7 +7,6 @@ import java.util.Optional;
 import com.web.blog.dao.apply.ApplyDao;
 import com.web.blog.dao.apply.ApplyExperienceDao;
 import com.web.blog.dao.apply.ApplyPortfolioDao;
-import com.web.blog.dao.apply.ApplyTermDao;
 import com.web.blog.dao.experience.ExperienceDao;
 import com.web.blog.dao.portfolio.PortfolioDao;
 import com.web.blog.model.BasicResponse;
@@ -17,7 +16,6 @@ import com.web.blog.model.apply.ApplyAddOrDeletePRequest;
 import com.web.blog.model.apply.ApplyCreateRequest;
 import com.web.blog.model.apply.ApplyExperience;
 import com.web.blog.model.apply.ApplyPortfolio;
-import com.web.blog.model.apply.ApplyTerm;
 import com.web.blog.model.apply.ApplyUpdateRequest;
 import com.web.blog.model.experience.Experience;
 import com.web.blog.model.portfolio.Portfolio;
@@ -45,9 +43,6 @@ public class ApplyServiceImpl implements ApplyService {
 
     @Autowired
     ApplyExperienceDao applyExperienceDao;
-
-    @Autowired
-    ApplyTermDao applyTermDao;
 
     BasicResponse result = new BasicResponse();
     ResponseEntity<BasicResponse> response = null;
@@ -331,7 +326,8 @@ public class ApplyServiceImpl implements ApplyService {
 
     @Override
     public ResponseEntity<BasicResponse> addExp(ApplyAddOrDeleteERequest request) {
-
+        
+        
         // applyPortfolio model에 apid, exid값 추가
         Apply apply = applyDao.findApplyByApid(request.getApid());
         Experience experience = experienceDao.findExperienceByExid(request.getExid());
@@ -397,14 +393,4 @@ public class ApplyServiceImpl implements ApplyService {
         return response;
     }
 
-    @Override
-    public ResponseEntity<BasicResponse> findApplyTerm() {
-        List<ApplyTerm> terms = applyTermDao.findAllByOrderByApTermDesc();
-        System.out.println(terms.get(0));
-        result.status = true;
-        result.data = "";
-        result.object = terms;
-        response = new ResponseEntity<>(result, HttpStatus.OK);
-        return response;
-    }
 }
