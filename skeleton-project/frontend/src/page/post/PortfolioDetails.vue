@@ -400,44 +400,36 @@ export default {
     },
     uploadMultipleFiles(event) {
 
-      // const formData = new FormData();
-      // formData.append("files", [])
-
-      // for( var i = 0; i < event.target.files.length; i++ ){
-      //   let file = event.target.files[i];
-      //   formData.append('files[' + i + ']', file);
-      // }
-      // formData.append("pid", this.pjtDetail.pid)
+      const formData = new FormData();
 
       for( var i = 0; i < event.target.files.length; i++ ){
         let file = event.target.files[i];
-        this.uploadFiles.push(file);
+        // formData.append('file[' + i + ']', file);
+        formData.append("file", file)
       }
+      formData.append("pid", this.pjtDetail.pid)
 
       axios
       .post(
-        this.$SERVER_URL + `/uploadMultipleFiles`, {
-          files: this.uploadFiles,
-          pid: this.pjtDetail.pid,
-        }, {
+        this.$SERVER_URL + `/uploadMultipleFiles`, formData, {
           headers: {
-            "content-Type": "application/json",
+            "content-Type": "multipart/form-data",
           },
         }
       )
       .then((response) => {
         // console.log(response + "res");
         
-      axios
-      .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
-        params: { pid: this.$route.params.pid },
-      })
-      .then((response) => {
-        // console.log(response);
-        if (response.data.status) {
-          this.pjtDetail = response.data.object;
-        }
-      });
+        axios
+        .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
+          params: { pid: this.$route.params.pid },
+        })
+        .then((response) => {
+          // console.log(response);
+          if (response.data.status) {
+            this.pjtDetail = response.data.object;
+          }
+        });
 
       })
       .catch((error) => {
