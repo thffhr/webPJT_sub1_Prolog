@@ -25,4 +25,6 @@ public interface ApplyDao extends JpaRepository<Apply, Integer> {
 
     Apply findApplyByApid(int apid);
 
+    void deleteUploadFileByUid(String uid);
+
 }

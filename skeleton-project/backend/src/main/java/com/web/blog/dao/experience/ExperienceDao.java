@@ -18,4 +18,6 @@ public interface ExperienceDao extends JpaRepository<Experience, Integer> {
 
     Experience findExperienceByExid(int exid);
 
+    void deleteExperienceByUid(String uid);
+
 }

@@ -25,7 +25,6 @@ import com.web.blog.exception.FileUploadException;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.portfolio.Portfolio;
 import com.web.blog.model.portfolio.UploadFile;
-import com.web.blog.model.portfolio.UploadFileRequest;
 import com.web.blog.property.FileUploadProperties;
 
 import org.apache.commons.io.FilenameUtils;
@@ -67,6 +66,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
         }
     }
 
+    @Override
     public ResponseEntity<BasicResponse> storeFile(int pid, MultipartFile file) {
         ResponseEntity<BasicResponse> response = null;
         BasicResponse result = new BasicResponse();
@@ -205,6 +205,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
     }
 
     @Transactional
+    @Override
     public ResponseEntity<BasicResponse> deleteFile(int id) {
         // id를 이용해 저장된 파일의 이름이 뭔지 알려줘야할거같은데
         String fileName = fileDAO.findUploadFileById(id).getFileName();
