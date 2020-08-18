@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.blog.model.experience.Experience;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,4 +37,9 @@ public class ApplyExperience {
     @JoinColumn(name = "exid")
     private Experience experience;
 
+    @Builder
+    public ApplyExperience(Apply apply, Experience experience) {
+        this.apply = apply;
+        this.experience = experience;
+    }
 }

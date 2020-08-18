@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.blog.model.portfolio.Portfolio;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,4 +38,10 @@ public class ApplyPortfolio {
     @ManyToOne
     @JoinColumn(name = "pid")
     private Portfolio portfolio;
+
+    @Builder
+    public ApplyPortfolio(Apply apply, Portfolio portfolio) {
+        this.apply = apply;
+        this.portfolio = portfolio;
+    }
 }

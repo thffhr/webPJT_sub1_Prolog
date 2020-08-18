@@ -26,8 +26,15 @@ public interface ApplyService {
     ResponseEntity<BasicResponse> experienceInApply(String uid, int apid);
 
     ResponseEntity<BasicResponse> experienceOutOfApply(String uid, int apid);
-    
-    ResponseEntity<BasicResponse>  findListBySearch (String uid,String searchTxt, String period);
 
+    ResponseEntity<BasicResponse> findListBySearch(String uid, String searchTxt, String period);
+
+    ResponseEntity<BasicResponse> addPortfolio(int apid, int pid);
+
+    ResponseEntity<BasicResponse> addExp(int apid, int exid);
+
+    ResponseEntity<BasicResponse> deletePortfolio(int apid, int pid);
+
+    ResponseEntity<BasicResponse> deleteExp(int apid, int exid);
 
 }
