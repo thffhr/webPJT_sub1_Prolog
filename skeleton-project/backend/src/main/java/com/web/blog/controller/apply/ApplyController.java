@@ -89,9 +89,32 @@ public class ApplyController {
     @GetMapping("/apply/search")
     @ApiOperation(value = "검색에 대한 지원목록 가져오기")
     public ResponseEntity<BasicResponse> findListBySearch(@RequestParam(required = true) String uid,
-    @RequestParam(required = false) String searchTxt, @RequestParam(required = false) String period) {
-        return applyService.findListBySearch(uid,searchTxt,period);
+            @RequestParam(required = false) String searchTxt, @RequestParam(required = false) String period) {
+        return applyService.findListBySearch(uid, searchTxt, period);
     }
 
+    @PostMapping("/apply/addPortfolio")
+    @ApiOperation(value = "지원목록에 포폴추가")
+    public ResponseEntity<BasicResponse> addPortfolio(@RequestParam int apid, @RequestParam int pid) {
+        return applyService.addPortfolio(apid, pid);
+    }
+
+    @PostMapping("/apply/addExp")
+    @ApiOperation(value = "지원목록에 경험추가")
+    public ResponseEntity<BasicResponse> addExp(@RequestParam int apid, @RequestParam int exid) {
+        return applyService.addExp(apid, exid);
+    }
+
+    @DeleteMapping("/apply/deletePortfolio")
+    @ApiOperation(value = "지원목록에서 포폴제거")
+    public ResponseEntity<BasicResponse> deletePortfolio(@RequestParam int apid, @RequestParam int pid) {
+        return applyService.deletePortfolio(apid, pid);
+    }
+
+    @DeleteMapping("/apply/deleteExp")
+    @ApiOperation(value = "지원목록에서 포폴제거")
+    public ResponseEntity<BasicResponse> deleteExp(@RequestParam int apid, @RequestParam int exid) {
+        return applyService.deleteExp(apid, exid);
+    }
 
 }
