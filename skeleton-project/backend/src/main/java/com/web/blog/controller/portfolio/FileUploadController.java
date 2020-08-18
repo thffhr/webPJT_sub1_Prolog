@@ -3,23 +3,23 @@ package com.web.blog.controller.portfolio;
 import javax.servlet.http.HttpServletRequest;
 
 import com.web.blog.model.BasicResponse;
-import com.web.blog.model.portfolio.UploadFileRequest;
 import com.web.blog.service.portfolio.FileUploadDownloadService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
 
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
 public class FileUploadController {
     // private static final Logger logger =
@@ -37,14 +37,21 @@ public class FileUploadController {
 
     @PostMapping("/uploadMultipleFiles")
     @ApiOperation(value = "파일들의 배열(list)로 여러 파일을 업로드 할 수 있다. - 이게 파일업로드 api입니다아아아아아아아아아아아아아")
-    public ResponseEntity<BasicResponse> uploadMultipleFiles(@RequestBody UploadFileRequest request) {
-        return service.uploadMultipleFiles(request);
+    public ResponseEntity<BasicResponse> uploadMultipleFiles(@RequestParam int pid,
+            @RequestParam("file") MultipartFile[] file) { // service에선 file->files
+        return service.uploadMultipleFiles(pid, file);
     }
 
     @GetMapping("/downloadFile/{fileName}")
     @ApiOperation(value = "파일 개별 다운로드 - 파일 이름으로 파일을 다운로드 할 수 있다.")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         return service.downloadFile(fileName, request);
+    }
+
+    @GetMapping("/downloadPortfolio")
+    @ApiOperation(value = "포트폴리오에 속해있는 파일을 압축파일로 받을 수 있다.")
+    public ResponseEntity<Resource> downloadPortfolio(String uid, int pid) {
+        return service.downloadPortfolio(uid, pid);
     }
 
     @DeleteMapping("/deleteFile/{id}")
