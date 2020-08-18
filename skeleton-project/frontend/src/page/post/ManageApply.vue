@@ -158,7 +158,7 @@
 
                       <!-- 날짜 -->
                         <div class="date-align">
-                          <small>{{apply.ap_term}} ~ {{apply.ap_term}}</small>
+                          <small>{{apply.ap_term}}</small>
                         </div>
 
                       <!-- 내용 -->
@@ -186,6 +186,7 @@
   
           <!-- 지원목록 -->
         <div v-bind="selected_apply" v-if="isEmptyApply()">
+            
             <div class="custom-temp col-md-12">
               <!-- 제목 -->
                 <div>
@@ -197,7 +198,7 @@
 
               <!-- 날짜 -->
                 <div class="date-align">
-                  <small>{{selected_apply.ap_term}} ~ {{selected_apply.ap_term}}</small>
+                  <small>{{selected_apply.ap_term}}</small>
                 </div>
 
               <!-- 내용 -->
@@ -205,6 +206,7 @@
                   <p class="txt_line"> {{selected_apply.apDesc}} </p>
               </div>
             </div>
+
         </div><!-- /지원목록 -->
 
   <!-- 임시 지원목록 리스트 -->
@@ -213,28 +215,69 @@
 
 
 <!-- 목록 리스트 -->
-<div v-for="(apply,apid) in apply_lists" :key="apply.apid">
+<div v-for="(apply,idx) in apply_lists" :key="apply.apid">
     
-    <!-- 목록 요약 -->
-    <div class="custom-temp col-md-12">
-              <!-- 제목 -->
-                <div>
-                    <h2>{{apply.apCompany}}</h2>
-                </div>
-                <div>
-                    <h4>{{apply.apTerm}}</h4>
-                </div>
 
-              <!-- 날짜 -->
-                <div class="date-align">
-                  <small>{{apply.ap_term}} ~ {{apply.ap_term}}</small>
-                </div>
+      <!-- 목록 요약 -->
+      <div class="custom-temp col-md-12 list-top">
+          <div class="custom-contents2">
+                <!-- 제목 -->
+                  <div>
+                      <h2>{{apply.apCompany}}</h2>
+                  </div>
+                  <div>
+                      <h4>{{apply.apTerm}}</h4>
+                  </div>
 
-              <!-- 내용 -->
-              <div>
-                  <p class="txt_line"> {{apply.apDesc}} </p>
+                <!-- 날짜 -->
+                  <div class="date-align">
+                    <small>{{apply.ap_term}} </small>
+                  </div>
+
+                <!-- 내용 -->
+                <div>
+                    <p class="txt_line"> {{apply.apDesc}} </p>
+                </div>
+          </div>
+          
+      <!-- 버튼 -->
+              <div class="col-md-1">
+                  <p class="icon-right" style="margin-bottom: 0;">
+                    <b-img
+                    v-if="isEditClicked_list[idx]"
+                      @click="clickeEdit(apply.apid, idx)"
+                      style="cursor:pointer"
+                      v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
+                      width="15px"
+                    ></b-img>
+
+                    <b-img
+                    v-if="!isEditClicked_list[idx]"
+                      @click="clickeEdit(apply.apid, idx)"
+                      style="cursor:pointer"
+                      v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
+                      width="15px"
+                    ></b-img>
+
+
+                    <b-img
+                      @click="deleteA(apply.apid, idx)"
+                      style="cursor:pointer"
+                      v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
+                      width="15px"
+                    ></b-img>
+
+                    
+                    <!--숨기는 용, 클릭에 반응하게하려고 -->
+                    <div style="display:none"  > #{{isEditCheck}}</div>
+  
+                  </p>
               </div>
+      <!--/버튼-->
+
       </div>
+      <!--/목록 요약-->
+ 
 
     <!-- 목록 디테일 -->
    <div class="apply_detail">
@@ -266,6 +309,20 @@
   <!-- 목록리스트-->
 
 
+
+  <!-- 추가하기 버튼 -->
+    <div class="row">
+      <div class=" col-button-custom">
+        <div>
+          <b-img
+            v-on:click="addApply"
+            :src="require(`@/assets/img/icons8-plus-50.png`)"
+            width="60px"
+          ></b-img>
+        </div>
+      </div>
+    </div>
+  <!-- /추가하기 버튼-->
 
   
   </div>
@@ -316,10 +373,17 @@ export default {
 
         nav_port_list:[],
         nav_ex_list:[],
+        isEditClicked_list:[],
+        isEditCheck:false
         
     };
   }
   ,
+  computed:{
+    
+  },
+  watch:{
+  },
 
   mounted(){ 
     
@@ -373,9 +437,10 @@ export default {
         console.log(response.data.object);
         this.apply_lists = response.data.object;
 
-        //보여주기 안보여주기
+        //수정하기 클릭햇냐
+        this.isEditClicked_list=[];
         for(var i=0; i<this.apply_lists.length; i++){
-          this.isShowDetailStyle.push(false);
+          this.isEditClicked_list.push(false);
         }
 
         console.log(response.data.object[0].portfolioTags);
@@ -390,7 +455,6 @@ export default {
   },
 
   methods:{
-    
       onSlideStart(slide) {
         this.sliding = true
       },
@@ -487,10 +551,11 @@ export default {
             this.apply_lists = response.data.object;
             console.log(response.data.object[0].portfolioTags);
 
-        //보여주기 안보여주기
-        for(var i=0; i<this.apply_lists.length; i++){
-          this.isShowDetailStyle.push(false);
-        }
+            //수정하기 클릭햇냐
+            this.isEditClicked_list=[];
+          for(var i=0; i<this.apply_lists.length; i++){
+            this.isEditClicked_list.push(false);
+          }
 
             
           })
@@ -544,6 +609,47 @@ export default {
         .catch((error) => {
         });
     },
+    addApply:function(){
+
+       axios
+        .post(this.$SERVER_URL + `/apply`, {
+          apCompany: "제목",
+          apDesc:"설명",
+          apTerm:"미정",
+          uid: localStorage["uid"],
+        })
+        .then((response) => {
+
+          //표면상 추가
+          this.apply_lists.push(response.data.object);
+        })
+        .catch((error) => {
+          //alert("실패");
+          console.log(error);
+        });
+
+
+    },
+    clickeEdit:function(apid, idx){
+      //alert(apid + " - " + idx);
+
+      this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
+      this.isEditCheck = !this.isEditCheck;
+    },
+    deleteA:function(apid, idx){
+      axios
+        .delete(this.$SERVER_URL + `/apply`, {params: {
+              uid: localStorage["uid"],
+              apid: apid
+            }})
+        .then((response) => {
+          //alert("넵 port")
+        this.$delete(this.apply_lists, idx);
+        
+        })
+        .catch((error) => {
+        });
+    }
   }
 };
 </script>
@@ -730,6 +836,14 @@ export default {
 
  .custom-left-list{
   height: 100%;  
+ }
+
+ .list-top{
+   display: flex;
+ }
+
+ .custom-contents2{
+   width: 100%;
  }
 
 .left {float: left;position: relative;width: 50%;height: 100%; } 

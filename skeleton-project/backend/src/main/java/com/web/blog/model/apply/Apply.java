@@ -54,4 +54,8 @@ public class Apply {
         this.apTerm = apTerm;
         this.apDesc = apDesc;
     }
+
+    public Apply toResponseEntity() {
+        return new ApplySearchResponse(apid, uid, apCompany, apTerm, apDesc, applyPortfolio, applyExperience, false);
+    }
 }
