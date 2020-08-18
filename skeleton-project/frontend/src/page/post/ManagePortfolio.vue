@@ -1,14 +1,5 @@
 <template>
-  <div>
-    <br>
-    <br>
-
-
-    <!-- <ul>
-      <li v-for="tag in tags" :key="tag.tid" style="display: inline-block;" class="m-1">#{{ tag.tag_Name }}</li>
-    </ul>-->
-
-    <!-- 여기부터 -->
+  <div id="manageP">
     <div id="tagMenue" style="margin-top:50px">
       <span
         v-if="allTagState"
@@ -106,7 +97,7 @@
       style="display: inline-block;"
       class="columns is-multiline"
     >
-      <b-card v-if="showProject(portfolio)" class="poCard m-3" @click="gotoDetail(portfolio.pid)">
+      <b-card v-if="showProject(portfolio)" class="poCard m-3">
         <!-- v-bind:style="cardColor"
         v-on:mouseover="change_color()"
         v-on:mouseout="origin_color()"-->
@@ -123,12 +114,26 @@
                   </b-col>
                 </b-row>
           </b-container>-->
-          <div id="downloadBtn">
-            <b-icon icon="cloud-download" font-scale="1.2"></b-icon>
+          <div id="poMenue">
+            <b-dropdown size="lg" variant="text" toggle-class="text-decoration-none" no-caret>
+              <template v-slot:button-content>
+                <b-icon icon="three-dots"></b-icon>
+              </template>
+              <b-dropdown-item @click="gotoDetail(portfolio.pid)">더보기</b-dropdown-item>
+              <b-dropdown-item>파일 다운로드</b-dropdown-item>
+              <b-dropdown-item
+                class="mr-2"
+                @click="deleteP(portfolio)"
+                style="cursor:pointer;"
+                v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
+                width="15px"
+              >삭제</b-dropdown-item>
+            </b-dropdown>
           </div>
-          <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
-          <h2 v-else>{{ portfolio.title }}</h2>
-
+          <div class="poTitle" @click="gotoDetail(portfolio.pid)">
+            <h2 v-if="portfolio.title.length > 15">{{ portfolio.title.slice(0, 15) }}...</h2>
+            <h2 v-else>{{ portfolio.title }}</h2>
+          </div>
           <small style="display: inline;">{{ portfolio.start_date }} ~ {{ portfolio.end_date }}</small>
           <!-- <div style="float: right; display: inline;"><b-button size="sm" variant="outline-dark">download</b-button></div> -->
           <p
@@ -206,7 +211,6 @@ import lodash from "lodash";
 //const SERVER_URL = "http://localhost:8080";
 
 export default {
-  
   name: "ManagePortfolio",
   data: () => {
     return {
@@ -214,8 +218,8 @@ export default {
       portfolios: [],
       portfolioTags: [],
       selectedTags: [],
-      buttonStyle:{
-        width :"",
+      buttonStyle: {
+        width: "",
         opacity: "",
       },
       isIncludeNoTag: true,
@@ -225,9 +229,8 @@ export default {
   created() {
     if (!constants.IS_LOGED_IN) {
       this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
-    };
+    }
 
-    
     axios
       .get(this.$SERVER_URL + `/portfolio/Tags`, {
         params: {
@@ -235,61 +238,59 @@ export default {
         },
       })
       .then((response) => {
-        console.log('태그리스트');
+        console.log("태그리스트");
         this.tags = response.data.object;
 
-        // Array.prototype.forEach.call(this.tags, tag => 
+        // Array.prototype.forEach.call(this.tags, tag =>
         //   this.selectedTags.push(tag.tid)
         // )
 
         axios
-      .get(this.$SERVER_URL + `/portfolio/all`, {
-        params: {
-          uid: localStorage["uid"],
-        },
-      })
-      .then((response) => {
-        console.log(response.data.object);
-        this.portfolios = response.data.object;
+          .get(this.$SERVER_URL + `/portfolio/all`, {
+            params: {
+              uid: localStorage["uid"],
+            },
+          })
+          .then((response) => {
+            console.log(response.data.object);
+            this.portfolios = response.data.object;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error);
       });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-      
   },
   methods: {
     addProject() {
       var date = new Date();
       var year = date.getFullYear();
-      var month = date.getMonth()+1;
+      var month = date.getMonth() + 1;
       var day = date.getDate();
 
-      if(day<10) day = "0"+day;
-      if(month<10) month = "0"+month;
-       
-      var startdate = year+"-"+month+"-"+day;
+      if (day < 10) day = "0" + day;
+      if (month < 10) month = "0" + month;
+
+      var startdate = year + "-" + month + "-" + day;
 
       axios
-            .post(this.$SERVER_URL + `/portfolio`, {
-              contents: "내용",
-              title:"제목",
-              uid: localStorage["uid"],
-            })
-            .then((response) => {
-              response.data.object.start_date = startdate;
-              response.data.object.end_date = startdate;
-              response.data.object.state = false;
-              response.data.object.tag = [];
-              this.portfolios.push(response.data.object);
-            })
-            .catch((error) => {
-              console.log(error); 
-            });
+        .post(this.$SERVER_URL + `/portfolio`, {
+          contents: "내용",
+          title: "제목",
+          uid: localStorage["uid"],
+        })
+        .then((response) => {
+          response.data.object.start_date = startdate;
+          response.data.object.end_date = startdate;
+          response.data.object.state = false;
+          response.data.object.tag = [];
+          this.portfolios.push(response.data.object);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     // change_button: function () {
     //   this.buttonStyle.opacity = "1";
@@ -305,74 +306,76 @@ export default {
       var cnt = 0;
       tagInPortfolio.tag.forEach(function (tag) {
         if (selectedTags.includes(tag.tid)) {
-          cnt ++;
-        };
+          cnt++;
+        }
         return cnt;
       });
-      if (cnt == selectedTags.length || tagInPortfolio.tag.length == 0 && this.isIncludeNoTag) {
-        return true
+      if (
+        cnt == selectedTags.length ||
+        (tagInPortfolio.tag.length == 0 && this.isIncludeNoTag)
+      ) {
+        return true;
       } else {
-        return false
+        return false;
       }
     },
 
     filtering(tag) {
       tag.state = !tag.state;
       if (this.selectedTags.includes(tag.tid)) {
-        this.selectedTags.splice(this.selectedTags.indexOf(tag.tid), 1)
+        this.selectedTags.splice(this.selectedTags.indexOf(tag.tid), 1);
       } else {
-        this.selectedTags.push(tag.tid)
+        this.selectedTags.push(tag.tid);
       }
     },
 
     showNotagProject() {
-      this.isIncludeNoTag = !this.isIncludeNoTag
+      this.isIncludeNoTag = !this.isIncludeNoTag;
     },
 
-
-    deleteP: function(portfolio){      
-        axios
-      .delete(this.$SERVER_URL + `/portfolio/${portfolio.pid}`)
-      .then((response) => {
-        // this.$delete(this.portfolios, portfolio);
-        this.portfolios.splice(this.portfolios.indexOf(portfolio), 1)
-        // this.getTag();
-        //alert("삭제완료 " + experience.exid);
-        axios
-      .get(this.$SERVER_URL + `/portfolio/Tags`, {
-        params: {
-          uid: localStorage["uid"],
-        },
-      })
-      .then((response) => {
-        this.tags = response.data.object;
-
-        Array.prototype.forEach.call(this.tags, tag => 
-          this.selectedTags.push(tag.tid)
-        )
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+    deleteP: function (portfolio) {
       axios
-      .get(this.$SERVER_URL + `/portfolio/all`, {
-        params: {
-          uid: localStorage["uid"],
-        },
-      })
-      .then((response) => {
-        console.log(response.data.object);
-        this.portfolios = response.data.object;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-      })
-      
-      .catch((error) => {
-        console.log(error); 
-      });
+        .delete(this.$SERVER_URL + `/portfolio/${portfolio.pid}`)
+        .then((response) => {
+          // this.$delete(this.portfolios, portfolio);
+          this.portfolios.splice(this.portfolios.indexOf(portfolio), 1);
+          // this.getTag();
+          //alert("삭제완료 " + experience.exid);
+          axios
+            .get(this.$SERVER_URL + `/portfolio/Tags`, {
+              params: {
+                uid: localStorage["uid"],
+              },
+            })
+            .then((response) => {
+              this.tags = response.data.object;
+
+              Array.prototype.forEach.call(this.tags, (tag) =>
+                this.selectedTags.push(tag.tid)
+              );
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+          axios
+            .get(this.$SERVER_URL + `/portfolio/all`, {
+              params: {
+                uid: localStorage["uid"],
+              },
+            })
+            .then((response) => {
+              console.log(response.data.object);
+              this.portfolios = response.data.object;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+
+        .catch((error) => {
+          console.log(error);
+        });
     },
     tagState(tag) {
       return tag.state;
@@ -380,13 +383,17 @@ export default {
     allTagOnOff() {
       this.allTagState = !this.allTagState;
       if (this.allTagState == true) {
-        Array.prototype.forEach.call(this.tags, tag => 
-          tag.state = this.allTagState,
-          this.selectedTags.push(tag.tid))
+        Array.prototype.forEach.call(
+          this.tags,
+          (tag) => (tag.state = this.allTagState),
+          this.selectedTags.push(tag.tid)
+        );
       } else {
-        this.selectedTags = []
-        Array.prototype.forEach.call(this.tags, tag => 
-          tag.state = this.allTagState)
+        this.selectedTags = [];
+        Array.prototype.forEach.call(
+          this.tags,
+          (tag) => (tag.state = this.allTagState)
+        );
       }
     },
     gotoDetail(pid) {
@@ -404,10 +411,8 @@ export default {
     // },
   },
   // 버튼
-  computed: {
-  },
-}
-
+  computed: {},
+};
 </script>
 
 <style>
@@ -447,16 +452,20 @@ export default {
 }
 .poCard:hover {
   background-color: #bedcff;
+}
+.poTitle {
   cursor: pointer;
 }
-#downloadBtn {
+#poMenue {
   position: absolute;
   right: 20px;
   top: 20px;
+  padding: 0;
 }
-#downloadBtn:hover {
+#poMenue:hover {
   cursor: pointer;
 }
+
 #tags {
   position: absolute;
   bottom: 15px;
@@ -468,12 +477,12 @@ export default {
   cursor: pointer;
   opacity: 0.5;
 }
-.col-button-custom{
+.col-button-custom {
   margin-left: auto;
-  margin-right: auto;  
+  margin-right: auto;
 }
 
-.img-custom{
-    text-align: right;
+.img-custom {
+  text-align: right;
 }
 </style>
