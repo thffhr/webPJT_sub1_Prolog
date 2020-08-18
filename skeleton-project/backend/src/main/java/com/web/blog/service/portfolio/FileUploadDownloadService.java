@@ -26,7 +26,7 @@ public interface FileUploadDownloadService {
     public ResponseEntity<BasicResponse> deleteFile(int id);
 
     // 압축파일 다운로드
-    public ResponseEntity<Resource> downloadPortfolio(String uid, int pid);
+    public ResponseEntity<Resource> downloadPortfolio(HttpServletRequest request, String uid, int pid);
 
     // public Resource loadFileAsResource(String fileName);
 
