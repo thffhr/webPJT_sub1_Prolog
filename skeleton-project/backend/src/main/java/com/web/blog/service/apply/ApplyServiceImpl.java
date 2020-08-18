@@ -14,6 +14,7 @@ import com.web.blog.model.apply.Apply;
 import com.web.blog.model.apply.ApplyCreateRequest;
 import com.web.blog.model.apply.ApplyExperience;
 import com.web.blog.model.apply.ApplyPortfolio;
+import com.web.blog.model.apply.ApplySearchResponse;
 import com.web.blog.model.apply.ApplyTerm;
 import com.web.blog.model.apply.ApplyUpdateRequest;
 import com.web.blog.model.experience.Experience;
@@ -140,9 +141,9 @@ public class ApplyServiceImpl implements ApplyService {
             Optional<Apply> applyOpt = applyDao.findApplyByUidAndApid(uid, apid);
             if (applyOpt.isPresent()) {
                 applyDao.delete(applyOpt.get());
-                result.status = false;
+                result.status = true;
                 result.data = "지원 내역 삭제 성공";
-                result.object = applyOpt;
+                result.object = null;
             } else {
                 result.status = false;
                 result.data = "지원 내역 없음";
@@ -278,6 +279,14 @@ public class ApplyServiceImpl implements ApplyService {
         String tempPeriod = period==null ? "" : period;
 
         List<Apply> applyOpt = applyDao.findListBySearch(uid, tempTxt, tempPeriod);
+       /*  List<ApplySearchResponse> resList = new ArrayList<>();
+        
+        for(Apply a : applyOpt){
+            resList.add(new ApplySearchResponse(a.getApid(), a.getUid(), a.getApCompany(), a.getApTerm(),
+            a.getApDesc(), a.getApplyPortfolio(), a.getApplyExperience(),
+            false));
+        } */
+      
         System.out.println(applyOpt);
         if (applyOpt.size() ==0) {
             result.status = false;
