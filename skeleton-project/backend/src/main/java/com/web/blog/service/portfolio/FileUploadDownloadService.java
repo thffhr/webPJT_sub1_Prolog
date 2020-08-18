@@ -17,13 +17,16 @@ public interface FileUploadDownloadService {
     public ResponseEntity<BasicResponse> storeFile(int pid, MultipartFile file);
 
     // 여러파일 업로드
-    public ResponseEntity<BasicResponse> uploadMultipleFiles(UploadFileRequest request);
+    public ResponseEntity<BasicResponse> uploadMultipleFiles(int pid, MultipartFile[] files);
 
     // 파일 다운로드
     public ResponseEntity<Resource> downloadFile(String fileName, HttpServletRequest request);
 
     // 파일 삭제
     public ResponseEntity<BasicResponse> deleteFile(int id);
+
+    // 압축파일 다운로드
+    public ResponseEntity<Resource> downloadPortfolio(String uid, int pid);
 
     // public Resource loadFileAsResource(String fileName);
 

@@ -107,9 +107,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
     }
 
     @Override
-    public ResponseEntity<BasicResponse> uploadMultipleFiles(UploadFileRequest request) {
-        // request에서 pid를 get하고
-        int pid = request.getPid();
+    public ResponseEntity<BasicResponse> uploadMultipleFiles(int pid, MultipartFile[] files) {
         // 파일 뒤에 붙여줄 년월일시분초에대한 포맷
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         // 현재 날짜, 시간을 포맷에 맞게 맞춘다.
@@ -129,12 +127,12 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
                 response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
                 // 포폴 있으면
             } else {
-                for (MultipartFile file : request.getFiles()) {
+                for (MultipartFile file : files) {
                     extension = FilenameUtils.getExtension(file.getOriginalFilename());
                     fileName = FilenameUtils.getBaseName(file.getOriginalFilename()) + "_" + now + "." + extension;
                     fileExist = fileDAO.findUploadFileByFileName(fileName);
-                    // 파일명 유효성검사
-                    if (fileName.matches("")) {
+                    // 파일명 유효성검사->해야함..
+                    if (!fileName.matches("")) {
                         if (!fileExist.isPresent()) {
                             Path targetLocation = this.fileLocation.resolve(fileName);
 
@@ -188,7 +186,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
 
             // Fallback to the default content type if type could not be determined
             if (contentType == null) {
-                contentType = "application/octet-stream";
+                contentType = "application/octet-stream; charset=utf-8";
             }
 
         }
@@ -228,6 +226,12 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
         // 둘 다 지웠으면 ok, 둘중하나라도 지워지지 않으면......다시 살려?//흐으으으음
 
         return response;
+    }
+
+    @Override
+    public ResponseEntity<Resource> downloadPortfolio(String uid, int pid) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     // public Iterable<UploadFile> getFileList() {
