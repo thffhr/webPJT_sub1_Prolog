@@ -189,7 +189,6 @@
       <div
         no-body
         class="applyCard mb-1"
-        v-b-toggle="'showDetail'+apply.apid"
         @click="clickeDetail(apply.apid, ap_idx)"
       >
         <!-- 안되면 div로 빼주자 -->
@@ -246,7 +245,10 @@
             <b-img v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
           </div>
         </div>
-        <b-collapse v-bind:id="'showDetail'+apply.apid" accordion="my-accordion" role="tabpanel">
+       
+       
+       <transition name="fade">
+        <div v-show="isEditClicked_list[ap_idx]">
           <!-- 여기에서 지원목록에 포함되어 있는 경험/포폴 보여줌 -->
           <b-row></b-row>
           <div class="applyCardBody">
@@ -279,7 +281,11 @@
               </Board>
             </div>
           </div>
-        </b-collapse>
+           <input v-model="isEditCheck" style="display:none">
+        </div>
+       </transition>
+
+       
       </div>
     </div>
     <!-- 추가하기 버튼 -->
@@ -544,6 +550,7 @@ export default {
     clickeEdit: function (apid, idx) {
       //alert(apid + " - " + idx);
 
+
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
       this.isEditCheck = !this.isEditCheck;
       console.log("clickeEdit이에요!");
@@ -555,7 +562,13 @@ export default {
     },
     // 이거추가
     clickeDetail(apid, idx) {
-      this.getPortOutNav(apid);
+
+      //지금 바꾸고있는것이니?
+      if(apid == this.changingApid){
+        this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
+        this.isEditCheck = !this.isEditCheck;
+        this.getPortOutNav(apid);
+      }
     },
     saveEdit(apid, apply, idx) {
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
@@ -649,9 +662,10 @@ export default {
     addApply: function () {
       axios
         .post(this.$SERVER_URL + `/apply`, {
-          apCompany: "제목",
+          apCompany: "회사명",
           apDesc: "설명",
           apTerm: "미정",
+          apTitle:"제목",
           uid: localStorage["uid"],
         })
         .then((response) => {
@@ -1135,4 +1149,24 @@ export default {
   margin: 30px 0;
   justify-content: space-evenly;
 }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: all .3s ease;
+}
+.fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.fade-enter, .fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
 </style>

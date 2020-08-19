@@ -19,7 +19,7 @@ public interface ApplyDao extends JpaRepository<Apply, Integer> {
     // '%%';
     // as temp where temp.uid = :uid and temp.ap_term = :period and temp.ap_company
     // = :searchtxt
-    @Query(value = "select temp from Apply as temp where temp.uid= :uid and temp.apTerm like CONCAT('%',:period,'%') and temp.apCompany like CONCAT('%',:searchTxt,'%')", nativeQuery = false)
+    @Query(value = "select temp from Apply as temp where temp.uid= :uid and temp.apTerm like CONCAT('%',:period,'%') and (temp.apCompany like CONCAT('%',:searchTxt,'%') or temp.apTitle like CONCAT('%',:searchTxt,'%'))", nativeQuery = false)
     List<Apply> findListBySearch(@Param("uid") String uid, @Param("searchTxt") String searchTxt,
             @Param("period") String period);
 
