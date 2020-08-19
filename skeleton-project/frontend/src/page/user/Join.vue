@@ -1,11 +1,12 @@
 <template>
   <div id="join">
+    <!-- <div v-if="isJoin" style="padding:50px 0;">
+      <h4>로그인 해주세요.</h4>
+    </div>-->
     <b-container>
       <b-row class="my-1">
         <b-col role="group" cols="12">
-          <b-form-text class="joinTitle mb-2" id="email-help">
-            회원가입을 위해 이메일 인증이 필요합니다.
-          </b-form-text>
+          <b-form-text class="joinTitle mb-2" id="email-help">회원가입을 위해 이메일 인증이 필요합니다.</b-form-text>
         </b-col>
       </b-row>
       <b-row class="my-1">
@@ -19,9 +20,7 @@
             trim
             type="text"
           ></b-form-input>
-          <b-form-invalid-feedback id="uid-feedback">
-            {{ uidFeedback }}
-          </b-form-invalid-feedback>
+          <b-form-invalid-feedback id="uid-feedback">{{ uidFeedback }}</b-form-invalid-feedback>
         </b-col>
       </b-row>
       <b-row class="my-1">
@@ -35,9 +34,7 @@
             trim
             type="text"
           ></b-form-input>
-          <b-form-invalid-feedback id="nickName-feedback">
-            {{ nicknameFeedback }}
-          </b-form-invalid-feedback>
+          <b-form-invalid-feedback id="nickName-feedback">{{ nicknameFeedback }}</b-form-invalid-feedback>
         </b-col>
       </b-row>
       <b-row class="my-1">
@@ -52,18 +49,11 @@
               trim
               type="text"
             ></b-form-input>
-            <b-form-invalid-feedback id="email-feedback">
-              {{ emailFeedback }}
-            </b-form-invalid-feedback>
+            <b-form-invalid-feedback id="email-feedback">{{ emailFeedback }}</b-form-invalid-feedback>
           </div>
         </b-col>
         <b-col class="align-self-center">
-          <b-overlay
-            spinner-variant="secondary"
-            spinner-small
-            :show="show"
-            rounded="sm"
-          >
+          <b-overlay spinner-variant="secondary" spinner-small :show="show" rounded="sm">
             <div :aria-hidden="show ? 'true' : null">
               <b-button
                 size="sm"
@@ -71,9 +61,7 @@
                 id="emailAuthentication"
                 @click="emailAuthentication"
                 :disabled="show"
-              >
-                메일 인증
-              </b-button>
+              >메일 인증</b-button>
             </div>
           </b-overlay>
         </b-col>
@@ -92,9 +80,7 @@
           <span :class="{ active: passwordType === 'text' }">
             <i class="fas fa-eye"></i>
           </span>
-          <b-form-invalid-feedback id="password-feedback">
-            {{ passwordFeedback }}
-          </b-form-invalid-feedback>
+          <b-form-invalid-feedback id="password-feedback">{{ passwordFeedback }}</b-form-invalid-feedback>
         </b-col>
       </b-row>
       <b-row class="my-1">
@@ -110,16 +96,12 @@
           <span :class="{ active: passwordConfirmType === 'text' }">
             <i class="fas fa-eye"></i>
           </span>
-          <b-form-invalid-feedback id="password-feedback"
-            >비밀번호를 정확히 입력해주세요.
-          </b-form-invalid-feedback>
+          <b-form-invalid-feedback id="password-feedback">비밀번호를 정확히 입력해주세요.</b-form-invalid-feedback>
         </b-col>
       </b-row>
       <b-row class="my-1">
         <b-col role="group" cols="12">
-          <b-button @click="join" class="mt-3 ml-auto mr-auto"
-            >회원가입</b-button
-          >
+          <b-button @click="join" class="mt-3 ml-auto mr-auto">회원가입</b-button>
         </b-col>
       </b-row>
     </b-container>
@@ -132,13 +114,14 @@
                 </label>
                 <span class="go-term">약관 보기</span>
               </b-col>
-      </b-row>-->
+    </b-row>-->
   </div>
 </template>
 
 <script>
 import constants from "../../lib/constants";
 import axios from "axios";
+import EventBus from "../post/EventBus";
 
 export default {
   components: {},
@@ -148,8 +131,8 @@ export default {
     return {
       constants,
       // 확인확인
+      isJoin: false,
       show: false,
-      // 확인확인
       email: "",
       uid: "",
       nickName: "",
@@ -288,6 +271,8 @@ export default {
         })
         .catch((error) => {
           console.log(error.response);
+          this.show = !this.show;
+          alert("이메일 발송에 실패하였습니다.");
         });
     },
     join() {
@@ -311,13 +296,20 @@ export default {
                 })
                 .then((response) => {
                   if (response.data.status == true) {
-                    document.getElementByClass("close").click();
-                    this.$emit("close");
+                    // 왜 이거 안돼냐!!!!!!!!!!
+                    // document.getElementById("close").click();
+                    console.log("회원가입 여기까지 오니?");
+                    // EventBus.$emit("closeModal");
+                    this.$router.go({
+                      name: constants.URL_TYPE.MAIN.NOLOGINHOME,
+                    });
                     alert("회원가입이 완료되었습니다.");
+                  } else {
+                    alert("회원가입 실패하였습니다. 다시 시도 해 주세요.");
                   }
                 })
                 .catch((error) => {
-                  alert("회원가입 실패하였습니다. 다시 시도 해 주세요.");
+                  console.log(error);
                 });
             }
           })

@@ -191,7 +191,7 @@
           </div>
         </div>
         <div class="row">
-          <h3 class="mr-auto ml-auto mt-3">활동 경험을 기록해보세요.</h3>
+          <h3 class="mr-auto ml-auto mt-3">프로젝트를 기록해보세요.</h3>
         </div>
       </div>
       <div class="row" v-else>
@@ -288,19 +288,17 @@ export default {
           response.data.object.tag = [];
 
           axios
-          .get(this.$SERVER_URL + `/portfolio/all`, {
-            params: {
-              uid: localStorage["uid"],
-            },
-          })
-          .then((response) => {
-            this.portfolios = response.data.object;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-
-
+            .get(this.$SERVER_URL + `/portfolio/all`, {
+              params: {
+                uid: localStorage["uid"],
+              },
+            })
+            .then((response) => {
+              this.portfolios = response.data.object;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         })
         .catch((error) => {
           console.log(error);
@@ -344,29 +342,29 @@ export default {
     },
 
     showNotagProject() {
-      this.isIncludeNoTag = !this.isIncludeNoTag
+      this.isIncludeNoTag = !this.isIncludeNoTag;
       if (this.isIncludeNoTag == true) {
         axios
-        .get(this.$SERVER_URL + `/portfolio/all`, {
-          params: {
-            uid: localStorage["uid"],
-          },
-        })
-        .then((response) => {
-          // console.log(response.data.object);
-          this.portfolios = response.data.object;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+          .get(this.$SERVER_URL + `/portfolio/all`, {
+            params: {
+              uid: localStorage["uid"],
+            },
+          })
+          .then((response) => {
+            // console.log(response.data.object);
+            this.portfolios = response.data.object;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
-        let tmp = []
-        Array.prototype.forEach.call(this.portfolios, portfolio => {
+        let tmp = [];
+        Array.prototype.forEach.call(this.portfolios, (portfolio) => {
           if (portfolio.tag.length > 0) {
-            tmp.push(portfolio)
+            tmp.push(portfolio);
           }
-        })
-        this.portfolios = tmp
+        });
+        this.portfolios = tmp;
       }
     },
 

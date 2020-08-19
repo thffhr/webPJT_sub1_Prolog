@@ -92,6 +92,13 @@ export default {
       });
   },
   methods: {
+    gogo() {
+      let code = "DCJO0DK7";
+      let email = "tedy55@naver.com";
+      this.$router.push({
+        path: `/EmailCompare/${code}/${email}`,
+      });
+    },
     gotoDetail(pid) {
       this.$router.push({ path: `/PortfolioDetails/${pid}` });
     },
