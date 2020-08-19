@@ -327,39 +327,38 @@ export default {
         Array.prototype.forEach.call(this.tags, (t) =>
           Object.assign(t, { imgsrc: "icons8-plus-64.png" })
         );
+        // 태그 먼저 불러오도록 하게 만들기 위해 태그 불러오기 안에 경험 불러오기 넣었음
+        // 정확한 이유를 모르겠음. 이렇게 해야 오류 없이 태그리스트가 잘 나옴
+        axios
+          .get(this.$SERVER_URL + `/experience/all`, {
+            params: {
+              uid: localStorage["uid"],
+            },
+          })
+          .then((response) => {
+            console.log(response);
+            console.log(response.data.object);
+            this.experiences = response.data.object;
+            console.log(response.data.object[0].portfolioTags);
+
+            Array.prototype.forEach.call(this.experiences, (t) =>
+              Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         /* 
         Array.prototype.forEach.call(this.tags, tag => 
           this.selectedTags.push(tag.tid)
         ) */
-
         console.log(this.tags);
       })
       .catch((error) => {
         console.log(error);
-        this.tags = [];
-        console.log("태그리스트 가져오기 실패");
       });
 
-    axios
-      .get(this.$SERVER_URL + `/experience/all`, {
-        params: {
-          uid: localStorage["uid"],
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        console.log(response.data.object);
-        this.experiences = response.data.object;
-        console.log(response.data.object[0].portfolioTags);
-
-        Array.prototype.forEach.call(this.experiences, (t) =>
-          Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-        this.experiences = [];
-      });
+    
   },
   methods: {
     editTodo: function (todo) {

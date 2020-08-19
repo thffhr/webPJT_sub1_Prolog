@@ -129,7 +129,7 @@
                       </span>
                   </div>-->
                   <div v-for="(ptag, j) in pjtDetail.tag" :key="j" class="tag mr-2 mt-1" style="display: inline-block;">
-                    {{ ptag.tagName }}
+                    # {{ ptag.tagName }}
                     <!-- <b-img :src="require(`@/assets/img/icons8-trash-24.png`)" width="15px" style="margin-left: 5%; cursor: pointer;" @click="deleteTag(ptag.tid)"></b-img> -->
                     <b-icon
                       icon="x"
@@ -138,14 +138,18 @@
                       @click="deleteTag(ptag.tid)"
                     ></b-icon>
                   </div>
-
-                  <b-form-input
-                    class="inp_tag"
-                    v-model="newTag"
-                    @keyup.enter="addNewTag(newTag)"
-                    placeholder="새 태그 입력"
-                    style="box-sizing: content-box; width: 100px; height:24px"
-                  ></b-form-input>
+                  <div id="mtbauto" style="display: inline-block;">
+                    <div style="display: inline-block; margin-top: auto; margin-bottom: auto; padding: 12px 0;">
+                      #
+                    </div>
+                    <b-form-input
+                      class="inp_tag"
+                      v-model="newTag"
+                      @keyup.enter="addNewTag(newTag)"
+                      placeholder="새 태그 입력"
+                      style="box-sizing: content-box; width: 100px; height:24px; display: inline-block; margin-top: 5px;"
+                    ></b-form-input>
+                  </div>
                   <!-- <b-icon
                     icon="plus"
                     aria-hidden="true"
