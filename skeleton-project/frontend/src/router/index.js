@@ -8,6 +8,9 @@ import constants from "../lib/constants";
 import Join from "../page/user/Join.vue";
 import Update from "../page/user/Update.vue";
 
+// EmailCompare
+import EmailCompare from "../page/user/EmailCompare.vue";
+
 // 포스트
 
 // PageNotFound
@@ -27,7 +30,6 @@ import ManageExperience from "../page/post/ManageExperience.vue";
 import PortfolioDetails from "../page/post/PortfolioDetails.vue";
 // Apply
 import ManageApply from "../page/post/ManageApply.vue";
-
 
 Vue.use(Router);
 
@@ -104,6 +106,11 @@ export default new Router({
       name: constants.URL_TYPE.POST.MANAGEAPPLY,
       component: ManageApply,
     },
-    
+    //이메일 인증코드 확인페이지
+    {
+      path: "/EmailCompare",
+      name: constants.URL_TYPE.USER.EMAILCOMPARE,
+      component: EmailCompare,
+    },
   ],
 });

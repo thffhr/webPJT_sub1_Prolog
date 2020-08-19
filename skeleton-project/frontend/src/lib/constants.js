@@ -21,13 +21,14 @@ export default {
       JOIN: "join",
       UPDATE: "update",
       FINDUSERBYEMAIL: "finduserbyemail",
+      EMAILCOMPARE: "emailcompare",
     },
     POST: {
       MANAGEPORTFOLIO: "manageportfolio",
       MANAGEEXPERIENCE: "manageexperience",
       PORTFOLIODETAILS: "portfoliodetails",
       MANAGEAPPLY: "manageapply",
-      MYCOMPONENT: "mycomponent"
+      MYCOMPONENT: "mycomponent",
     },
   },
 };
