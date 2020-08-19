@@ -3,9 +3,8 @@ package com.web.blog.service.portfolio;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,7 +30,6 @@ import com.web.blog.property.FileUploadProperties;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -184,6 +182,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
         }
 
         String contentType = null;
+        String fn = "";
         if (!resource.exists()) {
             throw new FileDownloadException(fileName + " 파일을 찾을 수 없습니다.");
         } else {
@@ -191,7 +190,8 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
             // Try to determine file's content type
             try {
                 contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-            } catch (IOException e1) {
+                fn = getDisposition(resource.getFilename(), getBrowser(request));
+            } catch (Exception e1) {
                 e1.printStackTrace();
             }
 
@@ -202,8 +202,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
 
         }
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + resource.getFilename())
-                .body(resource);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fn).body(resource);
     }
 
     @Transactional
@@ -280,11 +279,11 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
             if (mimeType == null) {
                 mimeType = "octet-stream";
             }
-            // InputStreamResource(Files.newInputStream(Paths.get(target.getAbsolutePath())));
-            resource = new UrlResource(target.toURI());
 
+            resource = new UrlResource(target.toURI());
+            String fn = getDisposition(resource.getFilename(), getBrowser(request));
             header.setCacheControl("no-cache");
-            header.set("Content-Disposition", "attachment;filename=\"" + resource.getFilename() + "\";");
+            header.set("Content-Disposition", "attachment;filename=\"" + fn + "\";");
             header.set("Content-Transfer-Encoding", "binary");
             header.setContentType(MediaType.parseMediaType(mimeType));
 
@@ -302,4 +301,43 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
         return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
     }
 
+    private String getDisposition(String filename, String browser) throws Exception {
+        String encodedFilename = null;
+        if (browser.equals("MSIE")) {
+            encodedFilename = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
+        } else if (browser.equals("Firefox")) {
+            encodedFilename = "\"" + new String(filename.getBytes("UTF-8"), "8859_1") + "\"";
+        } else if (browser.equals("Opera")) {
+            encodedFilename = "\"" + new String(filename.getBytes("UTF-8"), "8859_1") + "\"";
+        } else if (browser.equals("Chrome")) {
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < filename.length(); i++) {
+                char c = filename.charAt(i);
+                if (c > '~') {
+                    sb.append(URLEncoder.encode("" + c, "UTF-8"));
+                } else {
+                    sb.append(c);
+                }
+            }
+            encodedFilename = sb.toString();
+        } else {
+            throw new RuntimeException("Not supported browser");
+        }
+        return encodedFilename;
+    }
+
+    private String getBrowser(HttpServletRequest request) {
+        String header = request.getHeader("User-Agent");
+        if (header.indexOf("MSIE") > -1) {
+            return "MSIE";
+        } else if (header.indexOf("Chrome") > -1) {
+            return "Chrome";
+        } else if (header.indexOf("Opera") > -1) {
+            return "Opera";
+        } else if (header.indexOf("Trident/7.0") > -1) { // IE 11 이상 //IE 버전 별 체크 >> Trident/6.0(IE 10) ,
+                                                         // Trident/5.0(IE9) , Trident/4.0(IE 8)
+            return "MSIE";
+        }
+        return "Firefox";
+    }
 }

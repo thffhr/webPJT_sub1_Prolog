@@ -46,6 +46,9 @@
             <b-button size="sm" variant="outline-dark">
               <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체 파일 다운로드
             </b-button>
+            <b-button @click="downloadAllZip()" size="sm" variant="outline-dark">
+              <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체 파일 다운로드
+            </b-button>
           </div>
         </b-col>
       </b-row>
@@ -128,7 +131,12 @@
                         </div>
                       </span>
                   </div>-->
-                  <div v-for="(ptag, j) in pjtDetail.tag" :key="j" class="tag mr-2 mt-1" style="display: inline-block;">
+                  <div
+                    v-for="(ptag, j) in pjtDetail.tag"
+                    :key="j"
+                    class="tag mr-2 mt-1"
+                    style="display: inline-block;"
+                  >
                     # {{ ptag.tagName }}
                     <!-- <b-img :src="require(`@/assets/img/icons8-trash-24.png`)" width="15px" style="margin-left: 5%; cursor: pointer;" @click="deleteTag(ptag.tid)"></b-img> -->
                     <b-icon
@@ -139,9 +147,9 @@
                     ></b-icon>
                   </div>
                   <div id="mtbauto" style="display: inline-block;">
-                    <div style="display: inline-block; margin-top: auto; margin-bottom: auto; padding: 12px 0;">
-                      #
-                    </div>
+                    <div
+                      style="display: inline-block; margin-top: auto; margin-bottom: auto; padding: 12px 0;"
+                    >#</div>
                     <b-form-input
                       class="inp_tag"
                       v-model="newTag"
@@ -219,13 +227,18 @@
             </div>
             <div v-else>파일을 추가해보세요.</div>
             <input
-                type="file"
-                ref="fileUpload"
-                style="display: none"
-                multiple="multiple"
-                @change="uploadMultipleFiles($event)"
+              type="file"
+              ref="fileUpload"
+              style="display: none"
+              multiple="multiple"
+              @change="uploadMultipleFiles($event)"
             />
-            <b-icon @click="$refs.fileUpload.click();" style="cursor: pointer" icon="plus-square" aria-hidden="true"></b-icon>
+            <b-icon
+              @click="$refs.fileUpload.click();"
+              style="cursor: pointer"
+              icon="plus-square"
+              aria-hidden="true"
+            ></b-icon>
             <b-row>
               <!-- <b-icon-plus-square class="mr-1" @click="uploadFile"></b-icon-plus-square> -->
             </b-row>
@@ -373,112 +386,135 @@ export default {
     uploadFile(event) {
       const formData = new FormData();
       formData.append("file", event.target.files[0]);
-      formData.append("pid", this.pjtDetail.pid)
+      formData.append("pid", this.pjtDetail.pid);
 
       axios
-      .post(
-        this.$SERVER_URL + `/uploadFile/${this.pjtDetail.pid}`, formData, {
-          headers: {
-            "content-Type": "multipart/form-data",
-          },
-        }
-      )
-      .then((response) => {
-        // console.log(response + "res");
-        
-      axios
-      .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
-        params: { pid: this.$route.params.pid },
-      })
-      .then((response) => {
-        // console.log(response);
-        if (response.data.status) {
-          this.pjtDetail = response.data.object;
-        }
-      });
+        .post(
+          this.$SERVER_URL + `/uploadFile/${this.pjtDetail.pid}`,
+          formData,
+          {
+            headers: {
+              "content-Type": "multipart/form-data",
+            },
+          }
+        )
+        .then((response) => {
+          // console.log(response + "res");
 
-      })
-      .catch((error) => {
-        console.log(error + "err");
-      })
+          axios
+            .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
+              params: { pid: this.$route.params.pid },
+            })
+            .then((response) => {
+              // console.log(response);
+              if (response.data.status) {
+                this.pjtDetail = response.data.object;
+              }
+            });
+        })
+        .catch((error) => {
+          console.log(error + "err");
+        });
     },
     uploadMultipleFiles(event) {
-
       const formData = new FormData();
 
-      for( var i = 0; i < event.target.files.length; i++ ){
+      for (var i = 0; i < event.target.files.length; i++) {
         let file = event.target.files[i];
         // formData.append('file[' + i + ']', file);
-        formData.append("file", file)
+        formData.append("file", file);
       }
-      formData.append("pid", this.pjtDetail.pid)
+      formData.append("pid", this.pjtDetail.pid);
 
       axios
-      .post(
-        this.$SERVER_URL + `/uploadMultipleFiles`, formData, {
+        .post(this.$SERVER_URL + `/uploadMultipleFiles`, formData, {
           headers: {
             "content-Type": "multipart/form-data",
           },
-        }
-      )
-      .then((response) => {
-        // console.log(response + "res");
-        
-        axios
-        .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
-          params: { pid: this.$route.params.pid },
         })
         .then((response) => {
-          // console.log(response);
-          if (response.data.status) {
-            this.pjtDetail = response.data.object;
-          }
-        });
+          // console.log(response + "res");
 
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+          axios
+            .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
+              params: { pid: this.$route.params.pid },
+            })
+            .then((response) => {
+              // console.log(response);
+              if (response.data.status) {
+                this.pjtDetail = response.data.object;
+              }
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     fileDownload(id) {
       // console.log(fileName)
       axios
-      .get(this.$SERVER_URL + `/downloadFile/${id.fileName}`, {
-        responseType: 'blob',
-      })
-      .then((response) => {
-        // console.log(response)
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', id.fileName);
-        document.body.appendChild(link);
-        link.click();
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+        .get(this.$SERVER_URL + `/downloadFile/${id.fileName}`, {
+          responseType: "blob",
+        })
+        .then((response) => {
+          // console.log(response)
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          console.log(response);
+          console.log(url);
+          console.log(link);
+          link.setAttribute("download", id.fileName);
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    downloadAllZip() {
+      axios
+        .get(
+          this.$SERVER_URL + `/downloadPortfolio`,
+          {
+            params: {
+              pid: this.pjtDetail.pid,
+              uid: localStorage["uid"],
+            },
+          },
+          {
+            responseType: "blob",
+          }
+        )
+        .then((response) => {
+          const link = document.createElement("a");
+          const url = response.request.responseURL;
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     fileDelete(id) {
       axios
         .delete(this.$SERVER_URL + `/deleteFile/${id.id}`)
         .then((response) => {
-
           axios
-          .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
-            params: { pid: this.$route.params.pid },
-          })
-          .then((response) => {
-            // console.log(response);
-            if (response.data.status) {
-              this.pjtDetail = response.data.object;
-            }
-          });
-
+            .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
+              params: { pid: this.$route.params.pid },
+            })
+            .then((response) => {
+              // console.log(response);
+              if (response.data.status) {
+                this.pjtDetail = response.data.object;
+              }
+            });
         })
         .catch((error) => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     },
     backToList() {
       this.$router.push({ name: constants.URL_TYPE.POST.MANAGEPORTFOLIO });
