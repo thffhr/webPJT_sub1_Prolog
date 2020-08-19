@@ -43,12 +43,11 @@
         </b-col>
         <b-col md="6">
           <div style="text-align: right;">
-            <b-button size="sm" variant="outline-dark">
-              <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체 파일 다운로드
-            </b-button>
-            <b-button @click="downloadAllZip()" size="sm" variant="outline-dark">
-              <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체 파일 다운로드
-            </b-button>
+
+              <b-button @click="downloadAllZip()" size="sm" variant="outline-dark">
+                <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체 파일 다운로드
+              </b-button>
+
           </div>
         </b-col>
       </b-row>
@@ -449,6 +448,40 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    downloadAllZip() {
+      axios
+      .get(this.$SERVER_URL + `/downloadPortfolio`, {
+        params: {
+          pid: this.pjtDetail.pid,
+          uid: localStorage["uid"]
+        }
+      }, {
+        responseType: "blob",
+      })
+      .then((response) => {
+        console.log(response)
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        console.log(url)
+        const link = document.createElement('a');
+        console.log(link)
+        link.href = url;
+        link.setAttribute('download', this.pjtDetail.title + ".zip");
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    },
+    downloadAllZip2() {
+      const url = this.$SERVER_URL + `/downloadPortfolio?pid=${this.pjtDetail.pid}&uid=${localStorage["uid"]}`
+      this.$router.push({ url })
+        // .catch(error => {
+        //   if (error.name != "NavigationDuplicated") {
+        //     throw error;
+        //   }
+        // })
     },
     fileDownload(id) {
       // console.log(fileName)

@@ -2,25 +2,23 @@
   <div id="manageA">
     <!-- 수정 시 사이드바 등장 -->
     <!-- 사이드바 -->
-    <b-sidebar id="sidebar-right" right shadow>
+    <b-sidebar id="sidebar-right" right shadow no-header>
       <div>
         <b-tabs class="m-3" align="center">
           <b-tab title="경험" active>
-            <Board id="board-s-1">
-            <div v-for="(ex, ex_idx) in nav_ex_outlist" :key="ex.exid">
-              <Card :id="'card-s-e-' + ex.exid" draggable="true">
-              {{ex.title}}
-              </Card>
-            </div>
+            <Board id="board-s-e">
+              <div v-for="(ex, ex_idx) in nav_ex_outlist" :key="ex.exid">
+                <Card :id="'card-s-e-' + ex.exid" draggable="true">{{ex.title}}</Card>
+              </div>
+              <Board id="board-s-e" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
             </Board>
           </b-tab>
           <b-tab title="포트폴리오">
-            <Board id="board-s-2">
-            <div v-for="(port, p_idx) in nav_port_outlist" :key="port.pid">
-              <Card :id="'card-s-p-' + port.pid" draggable="true">
-                {{port.title}}
-              </Card>
-            </div>
+            <Board id="board-s-p">
+              <div v-for="(port, p_idx) in nav_port_outlist" :key="port.pid">
+                <Card :id="'card-s-p-' + port.pid" draggable="true">{{port.title}}</Card>
+              </div>
+              <Board id="board-s-p" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
             </Board>
           </b-tab>
           <!-- <b-tab title="Disabled" disabled><p>I'm a disabled tab!</p></b-tab> -->
@@ -111,7 +109,7 @@
     </div>
 
     <!-- 케러셀 -->
-    <div>
+    <!-- <div>
       <b-carousel
         id="carousel-1"
         v-model="slide"
@@ -131,29 +129,29 @@
               caption="First slide"
               text="Nulla vitae elit libero, a pharetra augue mollis interdum."
               img-src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg"
-            >
-              <!-- 제목 -->
-              <div>
+    >-->
+    <!-- 제목 -->
+    <!-- <div>
                 <h2>{{apply.apCompany}}</h2>
               </div>
               <div>
                 <h4>{{apply.apTerm}}</h4>
-              </div>
+    </div>-->
 
-              <!-- 날짜 -->
-              <div class="date-align">
+    <!-- 날짜 -->
+    <!-- <div class="date-align">
                 <small>{{apply.ap_term}}</small>
-              </div>
+    </div>-->
 
-              <!-- 내용 -->
-              <div>
+    <!-- 내용 -->
+    <!-- <div>
                 <p class="txt_line">{{apply.apDesc}}</p>
               </div>
             </b-carousel-slide>
           </div>
         </div>
       </b-carousel>
-    </div>
+    </div>-->
     <!-- /케러셀 -->
 
     <!-- 목록 디테일 -->
@@ -188,85 +186,106 @@
 
     <!-- 목록 리스트 -->
     <div v-for="(apply, ap_idx) in apply_lists" :key="apply.apid">
-      <div no-body class="applyCard mb-1" v-b-toggle="'showDetail'+apply.apid">
+      <div
+        no-body
+        class="applyCard mb-1"
+        @click="clickeDetail(apply.apid, ap_idx)"
+      >
         <!-- 안되면 div로 빼주자 -->
         <b-container header-tag="header" class="applyCardHeader p-1" role="tab">
           <b-row>
             <b-col cols="4">
               <b-row>
-                <h2>여기에 제목을 넣어볼게요.</h2>
+                <div v-if="!isEditClicked_list[ap_idx]">
+                  <h2 class="ml-4 mt-3">{{apply.apCompany}}</h2>
+                </div>
+                <div v-if="isEditClicked_list[ap_idx]" class="ml-4 mt-3">
+                  <b-form-input v-model="apply.apCompany" placeholder="제목을 입력해주세요."></b-form-input>
+                </div>
               </b-row>
             </b-col>
             <b-col cols="6">
               <b-row>
-                <p>지원 기간 : {{apply.apTerm}}</p>
+                <div v-if="!isEditClicked_list[ap_idx]">
+                  <p class="mt-3" style="width:100%">{{apply.apTerm}}</p>
+                </div>
+                <div v-if="isEditClicked_list[ap_idx]" style="display:inline">
+                  <p class="mt-3">
+                    <b-form-input v-model="apply.apTerm" placeholder="2020_하반기"></b-form-input>
+                  </p>
+                </div>
               </b-row>
-              <b-row>
-                <p>회사명 : {{apply.apCompany}}</p>
-              </b-row>
-              <b-row>
+              <b-row v-if="!isEditClicked_list[ap_idx]">
                 <p>{{apply.apDesc}}</p>
+              </b-row>
+              <b-row v-if="isEditClicked_list[ap_idx]">
+                <b-form-textarea v-model="apply.apDesc" placeholder="내용을 입력하세요." rows="3"></b-form-textarea>
               </b-row>
             </b-col>
           </b-row>
         </b-container>
-        <!-- 버튼 다같이 바뀌는거 수정해야함-->
         <div id="applyCardBtn">
-          <!-- 저장버튼은 사이드바(안들어간 경험,포폴 나오는 곳)에 넣어줄까 고민즁 -->
-          <!-- 아마 이게 저장버튼? -->
-          <b-img
-            v-if="isEditClicked_list[idx]"
-            @click="clickeEdit(apply.apid, idx)"
-            v-b-toggle.sidebar-right
-            style="cursor:pointer"
-            v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
-            width="15px"
-          ></b-img>
-          <!-- / 아마 이게 저장버튼? -->
-
-          <b-img
-            v-if="!isEditClicked_list[idx]"
-            @click="clickeEdit(apply.apid, idx)"
-            v-b-toggle.sidebar-right
-            style="cursor:pointer"
-            v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
-            width="15px"
-          ></b-img>
-
-          <b-img
-            @click="deleteA(apply.apid, idx)"
-            style="cursor:pointer"
-            v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
-            width="15px"
-          ></b-img>
-        </div>
-        <b-collapse v-bind:id="'showDetail'+apply.apid" accordion="my-accordion" role="tabpanel">
-          <!-- 여기에서 지원목록에 포함되어 있는 경험/포폴 보여줌 -->
-          <div class="applyCardBody">
-            <!-- 경험 -->
-            <div> 경험 </div>
-            <Board id="board-d-1">
-            <div v-for="(ex, exid) in nav_ex_inlist" :key="ex.exid">
-              <Card :id="'card-d-e-' + ex.exid" draggable="true">
-                <div>{{ex.title}}</div>
-              </Card>
+          <div v-b-toggle.sidebar-right style="outline:none;">
+            <div
+              class="aBtn"
+              v-if="isEditClicked_list[ap_idx]"
+              @click="saveEdit(apply.apid, apply, ap_idx)"
+            >
+              <b-img v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px"></b-img>
             </div>
-            </Board>
-
-           <hr class="featurette-divider" />
-            
-            <!-- 포폴 -->
-            
-            <div> 프로젝트 </div>
-            <Board id="board-d-2">
-            <div v-for="(port, pid) in nav_port_inlist" :key="port.pid">
-              <Card :id="'card-d-p-' + port.pid" draggable="true">
-                <div>{{port.title}}</div>
-              </Card>
+            <div
+              class="aBtn"
+              v-if="!isEditClicked_list[ap_idx]&&!isEditCheck"
+              @click="clickeEdit(apply.apid, ap_idx)"
+            >
+              <b-img v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)" width="15px"></b-img>
             </div>
-            </Board>
           </div>
-        </b-collapse>
+          <div class="aBtn" @click="deleteA(apply.apid, ap_idx)">
+            <b-img v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
+          </div>
+        </div>
+       
+       
+       <transition name="fade">
+        <div v-show="isEditClicked_list[ap_idx]">
+          <!-- 여기에서 지원목록에 포함되어 있는 경험/포폴 보여줌 -->
+          <b-row></b-row>
+          <div class="applyCardBody">
+            <div
+              v-if="nav_ex_inlist==0&&nav_port_inlist==0&&!isEditClicked_list[ap_idx]"
+              style="text-align:center; margin:30px 0;"
+            >
+              <h4>수정버튼을 눌러 관련 자료들을 추가해보세요.</h4>
+            </div>
+            <div v-else>
+              <!-- 경험 -->
+              <div>경험</div>
+              <Board id="board-d-e">
+                <div v-for="(ex, exid) in nav_ex_inlist" :key="ex.exid">
+                  <Card :id="'card-b-e-' + ex.exid" draggable="true">
+                    <div>{{ex.title}}</div>
+                  </Card>
+                </div>
+                <Board id="board-d-e" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
+              </Board>
+              <!-- 포폴 -->
+              <div>프로젝트</div>
+              <Board id="board-d-p">
+                <div v-for="(port, pid) in nav_port_inlist" :key="port.pid">
+                  <Card :id="'card-b-p-' + port.pid" draggable="true">
+                    <div>{{port.title}}</div>
+                  </Card>
+                </div>
+                <Board id="board-d-p" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
+              </Board>
+            </div>
+          </div>
+           <input v-model="isEditCheck" style="display:none">
+        </div>
+       </transition>
+
+       
       </div>
     </div>
     <!-- 추가하기 버튼 -->
@@ -343,6 +362,18 @@ export default {
 
       changingApid: 0,
 
+      flowersImg: [
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbmO10q%2FbtqGSsg736Q%2F2Vk8PtXWwwroClNtBaR7lk%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcBif9C%2FbtqGNC5EItY%2FwEwvIFxMncmII3L0G4EBKK%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdHQToz%2FbtqGJwdLhDV%2F99NvaPkVv90sofZ4mXG2Vk%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcIngX9%2FbtqGJwx6UEi%2F1PANxFjnZjWGq8NSUIuljK%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FJEurJ%2FbtqGK4ajX2J%2Fj5FxtSbXqtz2qJA8nqZ8Ik%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fcbqw1R%2FbtqGK4g25HF%2FePZlqlieqAV9yWoJRqNp90%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg",
+      ],
+      temp:
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg",
     };
   },
   computed: {},
@@ -350,8 +381,6 @@ export default {
 
   mounted() {},
   created() {
-
-
     //이벤트 버스
 
     //s -> d는 추가
@@ -360,34 +389,33 @@ export default {
     //시작 | 끝 | 경험or포트 | 경험or포트 아이디
     EventBus.$on("BoardToApply", (payload) => {
       this.msg = payload;
-      //alert(this.msg);
+      alert(this.msg);
 
-      var myregexp2 = new RegExp("-"); 
+      var myregexp2 = new RegExp("-");
       var op = payload.split(myregexp2);
-      
+
       //경험
-      if(op[2] == "e"){
+      if (op[2] == "e") {
         //추가
-        if(op[0] == "s"){
+        if (op[0] == "s") {
           this.addE(op[3]);
         }
         //삭제
-        else if(op[0] == "d"){
+        else if (op[0] == "d") {
           this.deleteE(op[3]);
         }
       }
       //포트
-      else if(op[2] == "p"){
+      else if (op[2] == "p") {
         //추가
-        if(op[0] == "s"){
+        if (op[0] == "s") {
           this.addP(op[3]);
         }
         //삭제
-        else if(op[0] == "d"){
+        else if (op[0] == "d") {
           this.deleteP(op[3]);
         }
       }
-
     });
 
     //지원기간 가져오기, 없을경우만
@@ -522,29 +550,49 @@ export default {
     clickeEdit: function (apid, idx) {
       //alert(apid + " - " + idx);
 
+
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
       this.isEditCheck = !this.isEditCheck;
-
+      console.log("clickeEdit이에요!");
       this.getPortOutNav(apid);
 
-      //지금 어떤걸 수정하는지 알고있어야 경험, 포트 추가삭제가능..
       this.changingApid = apid;
-      //alert(this.changingApid);
 
       // this.getExOutNav(apid);
     },
-    // detailClickeIndex: function (apid) {
-    //   //alert(apid);
+    // 이거추가
+    clickeDetail(apid, idx) {
 
-    //   //네비에 없는 프로젝트가져오기, 그다음 경험가져옴
-    //   //같이가져오니까 하나만가져오더라고;;
-    //   this.getPortOutNav(apid);
-
-    //   this.getPortInNav(apid);
-    // },
-
+      //지금 바꾸고있는것이니?
+      if(apid == this.changingApid){
+        this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
+        this.isEditCheck = !this.isEditCheck;
+        this.getPortOutNav(apid);
+      }
+    },
+    saveEdit(apid, apply, idx) {
+      this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
+      this.isEditCheck = !this.isEditCheck;
+      console.log("saveEdit이에요!");
+      console.log(apply.apCompany);
+      axios
+        .put(this.$SERVER_URL + `/apply`, {
+          uid: localStorage["uid"],
+          apid: apid,
+          apCompany: apply.apCompany,
+          apTerm: apply.apTerm,
+          apDesc: apply.apDesc,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    // 여기까지 추가
     getPortOutNav: function (apid) {
-      console.log("getPortOutNav왔어요");
+      // console.log("1)getPortOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outportfolio`, {
           params: {
@@ -553,10 +601,7 @@ export default {
           },
         })
         .then((response) => {
-          //alert("넵 ec")
-          //this.nav_port_list.splice(0,this.nav_port_list.length+1);
           this.nav_port_outlist = response.data.object;
-          console.log(this.nav_port_outlist);
 
           this.getExOutNav(apid);
         })
@@ -564,7 +609,7 @@ export default {
     },
 
     getExOutNav: function (apid) {
-      console.log("getExOutNav왔어요");
+      // console.log("2)getExOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outexp`, {
           params: {
@@ -573,15 +618,15 @@ export default {
           },
         })
         .then((response) => {
-          //alert("넵 port")
           this.nav_ex_outlist = response.data.object;
-          console.log(this.nav_ex_outlist);
 
           this.getPortInNav(apid);
         })
         .catch((error) => {});
     },
+    // 여기 수정해야돼!!!!!!!!!!!!!
     getPortInNav: function (apid) {
+      // console.log("3)getPortInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inportfolio`, {
           params: {
@@ -590,16 +635,15 @@ export default {
           },
         })
         .then((response) => {
-          //alert("넵 ec")
-          //this.nav_port_list.splice(0,this.nav_port_list.length+1);
-          this.nav_port_inlist = response.data.object;
-          console.log(response.data.object);
-
+          if (response.data.data != "연결된 포트폴리오가 없습니다.") {
+            this.nav_port_inlist = response.data.object;
+          }
           this.getExInNav(apid);
         })
         .catch((error) => {});
     },
     getExInNav: function (apid) {
+      // console.log(apid + " - 4)getExInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inexp`, {
           params: {
@@ -608,18 +652,20 @@ export default {
           },
         })
         .then((response) => {
-          //alert("넵 port")
-          this.nav_ex_inlist = response.data.object;
-          console.log(response.data.object);
+          if (response.data.data != "연결된 경험이 없습니다.") {
+            this.nav_ex_inlist = response.data.object;
+          }
         })
         .catch((error) => {});
     },
+    // 여기까지 수정해야돼!!!!!!!!!!!!
     addApply: function () {
       axios
         .post(this.$SERVER_URL + `/apply`, {
-          apCompany: "제목",
+          apCompany: "회사명",
           apDesc: "설명",
           apTerm: "미정",
+          apTitle:"제목",
           uid: localStorage["uid"],
         })
         .then((response) => {
@@ -645,48 +691,48 @@ export default {
         })
         .catch((error) => {});
     },
-    addE(exid){
-      console.log("경험 추가" + this.changingApid + "-" + exid);
-       axios
-        .post(this.$SERVER_URL + `/apply/addExp`, {
-            apid: this.changingApid,
-            exid: exid
-        })
-        .then((response) => {
-          })
-        .catch((error) => {});
-    },
-    addP(pid){
-      console.log("포트 추가" + this.changingApid + "-" + pid);
-        axios
-        .post(this.$SERVER_URL + `/apply/addPortfolio`, {
-            apid: this.changingApid,
-            pid: pid
-        })
-        .then((response) => {
-          })
-        .catch((error) => {});
-    },
-    deleteE(exid){
-      console.log("경험 삭제" + this.changingApid + "-" + exid);
-       axios
-        .delete(this.$SERVER_URL + `/apply/deleteExp`, {data : {
-            apid: this.changingApid,
-            exid: exid
-        }})
-        .then((response) => {
-          })
-        .catch((error) => {});
-    },
-    deleteP(pid){
-      console.log("포트 삭제" + this.changingApid + "-" + pid);
+    addE(exid) {
+      // console.log("경험 추가" + this.changingApid + "-" + exid);
       axios
-        .delete(this.$SERVER_URL + `/apply/deletePortfolio`, {data : {
+        .post(this.$SERVER_URL + `/apply/addExp`, {
+          apid: this.changingApid,
+          exid: exid,
+        })
+        .then((response) => {})
+        .catch((error) => {});
+    },
+    addP(pid) {
+      // console.log("포트 추가" + this.changingApid + "-" + pid);
+      axios
+        .post(this.$SERVER_URL + `/apply/addPortfolio`, {
+          apid: this.changingApid,
+          pid: pid,
+        })
+        .then((response) => {})
+        .catch((error) => {});
+    },
+    deleteE(exid) {
+      // console.log("경험 삭제" + this.changingApid + "-" + exid);
+      axios
+        .delete(this.$SERVER_URL + `/apply/deleteExp`, {
+          data: {
             apid: this.changingApid,
-            pid: pid
-        }})
-        .then((response) => {
-          })
+            exid: exid,
+          },
+        })
+        .then((response) => {})
+        .catch((error) => {});
+    },
+    deleteP(pid) {
+      // console.log("포트 삭제" + this.changingApid + "-" + pid);
+      axios
+        .delete(this.$SERVER_URL + `/apply/deletePortfolio`, {
+          data: {
+            apid: this.changingApid,
+            pid: pid,
+          },
+        })
+        .then((response) => {})
         .catch((error) => {});
     },
   },
@@ -792,23 +838,31 @@ export default {
 #sidebar-right {
   width: 15%;
 }
+#applyList {
+  /* width: 60%; */
+}
 .applyCard {
   position: relative;
   padding: 5px;
-  /* width: 70%; */
+  width: 100%;
   background-color: lightgray;
   border-radius: 5px;
+  outline: none;
 }
 .applyCardHeader {
+  outline: none;
 }
 #applyCardBtn {
   position: absolute;
+  display: flex;
   top: 20px;
   right: 20px;
 }
-.applyCardBody {
+.aBtn {
+  cursor: pointer;
+  outline: none !important;
+  padding: 5px;
 }
-
 /* .left-ex {
   text-align: center;
   margin: auto;
@@ -1018,6 +1072,43 @@ export default {
   background-color: #7a63ff;
 }
 
+.flexbox {
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
+  max-width: 768px;
+  height: 50vh;
+
+  overflow: hidden;
+
+  margin: 0 auto;
+  padding: 15px;
+}
+
+.flexbox .board {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 300px;
+
+  background-color: #313131;
+
+  padding: 15px;
+}
+
+.flexbox .board .card {
+  padding: 15px 25px;
+  background-color: #f3f3f3;
+
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.flexbox .board .card p {
+  color: #000000;
+}
 
 .board {
   display: flex;
@@ -1026,11 +1117,11 @@ export default {
   width: 100%;
 
   background-color: #d4d3d3;
-  border: 1.5px solid #d4e4e4;
+
+  /* border: 1.5px solid #d4e4e4; */
   border-radius: 5px;
-  border-style:dotted;
+  /* border-style: dotted; */
   padding: 25px;
-  padding-bottom: 120px;
 }
 
 .board .card {
@@ -1044,4 +1135,38 @@ export default {
 .board .card div {
   color: #000000;
 }
+
+.dragSpace {
+  font-size: x-large;
+  min-height: 50%;
+  border: 5px solid #bbbbbb;
+  border-radius: 5px;
+  border-style: dotted;
+}
+
+.dragText {
+  text-align: center;
+  margin: 30px 0;
+  justify-content: space-evenly;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: all .3s ease;
+}
+.fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.fade-enter, .fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
 </style>

@@ -4,25 +4,16 @@
       <b-navbar id="pageMenue">
         <b-navbar-nav class="ml-auto mr-auto">
           <b-nav-item class="mr-5" href="#">
-            <router-link
-              id="rlink"
-              :to="{ name: constants.URL_TYPE.POST.MANAGEEXPERIENCE }"
-              >📝경험 관리</router-link
-            >
+            <router-link id="rlink" :to="{ name: constants.URL_TYPE.POST.MANAGEEXPERIENCE }">📝경험 관리</router-link>
           </b-nav-item>
           <b-nav-item class="mr-5">
             <router-link
               id="rlink"
               :to="{ name: constants.URL_TYPE.POST.MANAGEPORTFOLIO }"
-              >📇포트폴리오 관리</router-link
-            >
+            >📇포트폴리오 관리</router-link>
           </b-nav-item>
           <b-nav-item class="mr-5" href="#">
-            <router-link
-              id="rlink"
-              :to="{ name: constants.URL_TYPE.POST.MANAGEAPPLY }"
-              >💼지원 목록</router-link
-            >
+            <router-link id="rlink" :to="{ name: constants.URL_TYPE.POST.MANAGEAPPLY }">💼지원 목록</router-link>
           </b-nav-item>
           <!-- <b-nav-item class="mr-5" href="#">👥커뮤니티</b-nav-item> -->
         </b-navbar-nav>
@@ -40,7 +31,7 @@
 <script>
 import constants from "../../lib/constants";
 export default {
-  data: function() {
+  data: function () {
     return {
       constants,
     };
@@ -86,8 +77,8 @@ export default {
   margin: 0 auto;
   width: 100%;
   height: 10px;
-  border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
+  /* border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px; */
   background-color: #7a63ff;
   color: white;
 }
