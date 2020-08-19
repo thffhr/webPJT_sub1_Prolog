@@ -32,16 +32,16 @@
               </small>
               <p class="mt-2 mb-2 ml-2">
                 <!-- 내용 -->
-                {{ pjtAll[i].contents.slice(0, 130) }}
+                {{ pjtAll[i].contents.slice(0, 80) }}
               </p>
               <div>
-                <h6 id="tags">
+                <h6 class="mb-0" id="tags">
                   <!-- 태그 -->
                   <div v-if="pjtAll[i].tag.length > 0">
-                    <div v-for="(ptag, j) in pjtAll[i].tag.slice(0, 3)" :key="j" class="tag mr-3">
+                    <div style="display: inline-block; margin-bottom: 5px;" v-for="(ptag, j) in pjtAll[i].tag.slice(0, 3)" :key="j" class="tag mr-3">
                       <!-- id말고 tag_name으로 바꾸기 -->
                       # {{ ptag.tagName }}
-                    </div>...
+                    </div>
                   </div>
                   <div v-else class="ml-2">
                     <small>태그를 추가해보세요.</small>

@@ -241,7 +241,7 @@
     <!-- 경험목록 끝 -->
 
     <!-- (+) 버튼 -->
-    <div id="exPlusBtn" v-on:click="addExp" style="width:350px; margin: 30px auto">
+    <div v-on:click="addExp" id="exPlusBtn" style="width:350px; margin: 30px auto">
       <div v-if="experiences.length == 0">
         <div class="row">
           <div class="col-button-custom">
@@ -524,7 +524,6 @@ export default {
 
       var startdate = year + "-" + month + "-" + day;
 
-      alert(startdate);
       //alert(this.uid);
       axios
         .post(this.$SERVER_URL + `/experience`, {
@@ -537,13 +536,41 @@ export default {
           response.data.object.enddate = startdate;
           response.data.object.imgsrc = "icons8-pencil-24.png";
 
-          //경험이 아예없으면
-          if (response.data.status == false) {
-            experiences = response.data.object;
-          } else {
-            response.data.object.tags = [];
-            this.experiences.push(response.data.object);
-          }
+          axios
+          .get(this.$SERVER_URL + `/experience/Tags`, {
+            params: {
+              uid: localStorage["uid"],
+            },
+          })
+          .then((response) => {
+            console.log(response.data.object);
+            this.tags = response.data.object;
+            Array.prototype.forEach.call(this.tags, (t) =>
+              Object.assign(t, { imgsrc: "icons8-plus-64.png" })
+            );
+            // 태그 먼저 불러오도록 하게 만들기 위해 태그 불러오기 안에 경험 불러오기 넣었음
+            // 정확한 이유를 모르겠음. 이렇게 해야 오류 없이 태그리스트가 잘 나옴
+            axios
+              .get(this.$SERVER_URL + `/experience/all`, {
+                params: {
+                  uid: localStorage["uid"],
+                },
+              })
+              .then((response) => {
+                this.experiences = response.data.object;
+                Array.prototype.forEach.call(this.experiences, (t) =>
+                  Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
+                );
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            console.log(this.tags);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
         })
         .catch((error) => {
           //alert("실패");
