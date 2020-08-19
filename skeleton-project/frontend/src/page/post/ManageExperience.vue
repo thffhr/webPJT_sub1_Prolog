@@ -2,7 +2,7 @@
   <div class="manageEx" id="manageEx">
     <!-- Three columns of text below the carousel -->
     <!-- 모든 태그들 -->
-    <div id="tagMenue">
+    <div id="tagManue">
 
       <span
         v-if="allTagState"
@@ -732,8 +732,11 @@ export default {
   background: #eeeeee;
   opacity: 0.8;
 }
-#tagMenue {
+#tagManue {
   text-align: right;
+}
+#tagManue .box-table {
+  text-align: left;
 }
 .noTag {
   display: inline;
@@ -771,7 +774,7 @@ export default {
   height: 65%;
   text-align: center;
   position: relative;
-    transform: translate(25%, 30%);
+  transform: translate(25%, 30%);
   font-size: 15px;
   color: white;
   margin-top: auto;
