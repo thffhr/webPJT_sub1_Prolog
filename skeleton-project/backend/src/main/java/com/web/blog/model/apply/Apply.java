@@ -30,8 +30,10 @@ public class Apply {
     @Column(name = "uid")
     private String uid;
 
+    @Column(name = "ap_title")
+    private String apTitle;
+
     @Column(name = "ap_company")
-    @NonNull
     private String apCompany;
 
     @Column(name = "ap_term")
@@ -47,15 +49,17 @@ public class Apply {
     private List<ApplyExperience> applyExperience;
 
     @Builder
-    public Apply(int apid, String uid, String apCompany, String apTerm, String apDesc) {
+    public Apply(int apid, String uid, String apTitle, String apCompany, String apTerm, String apDesc) {
         this.apid = apid;
         this.uid = uid;
+        this.apTitle = apTitle;
         this.apCompany = apCompany;
         this.apTerm = apTerm;
         this.apDesc = apDesc;
     }
 
     public Apply toResponseEntity() {
-        return new ApplySearchResponse(apid, uid, apCompany, apTerm, apDesc, applyPortfolio, applyExperience, false);
+        return new ApplySearchResponse(apid, uid, apTitle, apCompany, apTerm, apDesc, applyPortfolio, applyExperience,
+                false);
     }
 }
