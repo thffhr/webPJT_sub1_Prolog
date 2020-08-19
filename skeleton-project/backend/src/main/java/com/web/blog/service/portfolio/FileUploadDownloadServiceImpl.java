@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +31,7 @@ import com.web.blog.property.FileUploadProperties;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -240,8 +242,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
 
     @Override
     public ResponseEntity<Resource> downloadPortfolio(HttpServletRequest request, String uid, int pid) {
-        Resource resource;
-        String contentType = null;
+        Resource resource = null;
         // 압축파일관련 클래스
         ZipOutputStream zout = null;
         // 생성할 압축파일 이름
@@ -250,6 +251,8 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
         // String zipName = path + {닉네임_} + {프로젝트 이름} + ".zip";
         String zipName = this.fileLocation + "\\" + uid + "_" + portfolioTitle + ".zip";
         System.out.println(zipName);
+        File target = new File(zipName);
+        HttpHeaders header = new HttpHeaders();
 
         /* 압축파일 생성 */
         try {
@@ -271,6 +274,20 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
                 }
                 zout.closeEntry();
             }
+            /* 압축파일 다운로드 URI */
+
+            String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));
+            if (mimeType == null) {
+                mimeType = "octet-stream";
+            }
+            // InputStreamResource(Files.newInputStream(Paths.get(target.getAbsolutePath())));
+            resource = new UrlResource(target.toURI());
+
+            header.setCacheControl("no-cache");
+            header.set("Content-Disposition", "attachment;filename=\"" + resource.getFilename() + "\";");
+            header.set("Content-Transfer-Encoding", "binary");
+            header.setContentType(MediaType.parseMediaType(mimeType));
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -282,34 +299,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
                 zout = null;
             }
         }
-        /* 압축파일 다운로드 URI */
-        Path filePath = this.fileLocation.resolve(zipName).normalize();
-        try {
-            resource = new UrlResource(filePath.toUri());
-        } catch (MalformedURLException e) {
-            throw new FileDownloadException(zipName + " 파일을 찾을 수 없습니다.", e);
-        }
-
-        if (!resource.exists()) {
-            throw new FileDownloadException(zipName + " 파일을 찾을 수 없습니다.");
-        } else {
-
-            // Try to determine file's content type
-            try {
-                contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
-            // Fallback to the default content type if type could not be determined
-            if (contentType == null) {
-                contentType = "application/octet-stream; charset=utf-8";
-            }
-
-        }
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + resource.getFilename())
-                .body(resource);
+        return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
     }
 
 }
