@@ -7,32 +7,24 @@
         <b-tabs class="m-3" align="center">
           <b-tab title="경험" active>
             <Board id="board-s-e">
-            <div v-for="(ex, ex_idx) in nav_ex_outlist" :key="ex.exid">
-              <Card :id="'card-s-e-' + ex.exid" draggable="true">
-              {{ex.title}}
-              </Card>
-            </div>
-                 <Board id="board-s-e" class="dragSpace dragText">
-                      여기에 끌어다 쓰세요.
-                </Board>
+              <div v-for="(ex, ex_idx) in nav_ex_outlist" :key="ex.exid">
+                <Card :id="'card-s-e-' + ex.exid" draggable="true">{{ex.title}}</Card>
+              </div>
+              <Board id="board-s-e" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
             </Board>
           </b-tab>
           <b-tab title="포트폴리오">
             <Board id="board-s-p">
-            <div v-for="(port, p_idx) in nav_port_outlist" :key="port.pid">
-              <Card :id="'card-s-p-' + port.pid" draggable="true">
-                {{port.title}}
-              </Card>
-            </div>
-                <Board id="board-s-p" class="dragSpace dragText">
-                       여기에 끌어다 쓰세요.
-                </Board>
+              <div v-for="(port, p_idx) in nav_port_outlist" :key="port.pid">
+                <Card :id="'card-s-p-' + port.pid" draggable="true">{{port.title}}</Card>
+              </div>
+              <Board id="board-s-p" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
             </Board>
           </b-tab>
           <!-- <b-tab title="Disabled" disabled><p>I'm a disabled tab!</p></b-tab> -->
         </b-tabs>
       </div>
-   </b-sidebar>
+    </b-sidebar>
     <!--/ 사이드바 -->
 
     <!-- 기간 선택 모달 -->
@@ -222,13 +214,13 @@
           </b-row>
         </b-container>
         <!-- 버튼 다같이 바뀌는거 수정해야함-->
-        <div id="applyCardBtn">
+        <div id="applyCardBtn" style="outline: none;">
           <div v-b-toggle.sidebar-right>
             <b-img
               class="mr-2"
               v-if="isEditClicked_list[ap_idx]"
               @click="clickeEdit(apply.apid, ap_idx)"
-              style="cursor:pointer"
+              style="cursor:pointer; outline: none;"
               v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
               width="15px"
             ></b-img>
@@ -236,7 +228,7 @@
               class="mr-2"
               v-if="!isEditClicked_list[ap_idx]&&!isEditCheck"
               @click="clickeEdit(apply.apid, ap_idx)"
-              style="cursor:pointer"
+              style="cursor:pointer; outline: none;"
               v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
               width="15px"
             ></b-img>
@@ -244,7 +236,7 @@
           <div>
             <b-img
               @click="deleteA(apply.apid, ap_idx)"
-              style="cursor:pointer"
+              style="cursor:pointer; outline: none;"
               v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
               width="15px"
             ></b-img>
@@ -269,9 +261,7 @@
                     <div>{{ex.title}}</div>
                   </Card>
                 </div>
-                 <Board id="board-d-e" class="dragSpace dragText">
-                      여기에 끌어다 쓰세요.
-                </Board>
+                <Board id="board-d-e" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
               </Board>
               <!-- 포폴 -->
               <div>프로젝트</div>
@@ -281,9 +271,7 @@
                     <div>{{port.title}}</div>
                   </Card>
                 </div>
-                <Board id="board-d-p" class="dragSpace dragText">
-                      여기에 끌어다 쓰세요.
-                </Board>
+                <Board id="board-d-p" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
               </Board>
             </div>
           </div>
@@ -362,7 +350,7 @@ export default {
       isEditClicked_list: [],
       isEditCheck: false,
 
-      changingApid:0,
+      changingApid: 0,
 
       flowersImg: [
         "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg",
@@ -383,7 +371,6 @@ export default {
 
   mounted() {},
   created() {
-    
     //이벤트 버스
 
     //s -> d는 추가
@@ -394,35 +381,32 @@ export default {
       this.msg = payload;
       alert(this.msg);
 
-      var myregexp2 = new RegExp("-"); 
+      var myregexp2 = new RegExp("-");
       var op = payload.split(myregexp2);
-      
+
       //경험
-      if(op[2] == "e"){
+      if (op[2] == "e") {
         //추가
-        if(op[0] == "s"){
+        if (op[0] == "s") {
           this.addE(op[3]);
         }
         //삭제
-        else if(op[0] == "d"){
+        else if (op[0] == "d") {
           this.deleteE(op[3]);
         }
       }
       //포트
-      else if(op[2] == "p"){
+      else if (op[2] == "p") {
         //추가
-        if(op[0] == "s"){
+        if (op[0] == "s") {
           this.addP(op[3]);
         }
         //삭제
-        else if(op[0] == "d"){
+        else if (op[0] == "d") {
           this.deleteP(op[3]);
         }
       }
-
     });
-
-
 
     //지원기간 가져오기, 없을경우만
     if (constants.APPLY_PERIOD == null) {
@@ -635,7 +619,7 @@ export default {
         .catch((error) => {});
     },
     getExInNav: function (apid) {
-        console.log(apid  + " - 4)getExInNav왔어요");
+      console.log(apid + " - 4)getExInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inexp`, {
           params: {
@@ -666,7 +650,6 @@ export default {
         .catch((error) => {
           //alert("실패");
           console.log(error);
-
         });
     },
     deleteA: function (apid, idx) {
@@ -839,8 +822,10 @@ export default {
   width: 100%;
   background-color: lightgray;
   border-radius: 5px;
+  outline: none;
 }
 .applyCardHeader {
+  outline: none;
 }
 #applyCardBtn {
   position: absolute;
@@ -1121,18 +1106,17 @@ export default {
   color: #000000;
 }
 
-.dragSpace{
-  
-  font-size:x-large;
+.dragSpace {
+  font-size: x-large;
   min-height: 50%;
   border: 5px solid #bbbbbb;
   border-radius: 5px;
   border-style: dotted;
 }
 
-.dragText{
-  text-align:center; 
-  margin:30px 0;
+.dragText {
+  text-align: center;
+  margin: 30px 0;
   justify-content: space-evenly;
 }
 </style>
