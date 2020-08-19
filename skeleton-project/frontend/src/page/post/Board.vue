@@ -33,15 +33,18 @@ export default {
 
       card.style.display = "block";
       
-      //ex) board-d-1
+      //ex) board-d-e | board-s-e
       //ex) card-s-e-384
 
       var myregexp2 = new RegExp("-"); 
       var start = parent_id.split(myregexp2)[1];
+      var board_s_compare = parent_id.split(myregexp2)[2];
+      var board_d_compare = e.target.id.split(myregexp2)[2];
       var end = e.target.id.split(myregexp2)[1];
       var splited_bun = card_id.split(myregexp2)[2];
-      var splited_idx = card_id.split(myregexp2)[3];  
+      var splited_idx = card_id.split(myregexp2)[3];
 
+      alert(board_s_compare +"-" +board_d_compare);
   /* 
       alert("시험" + start);
       alert("시험" + end);
@@ -52,28 +55,26 @@ export default {
       alert("옮기는 보드 아이디(으로)" + e.target.id);
       alert("드래그 하는 카드 아이디" + card_id); */
 
-      //같은 부모에 드래그앤 드랍하면 아무일도 없음..
-      if(e.target.id == parent_id){
-      
-      }
       //만약에 같은 요소를 선택했으면
-      else if(e.target.id == ""){
+      if(e.target.id == ""){
         
       }
-      //나머지는 정상..?
-      else{
-        
-         EventBus.$emit('test', "이벤트 실행 ㄱㄱ");
+      //같은 부모 아님 && 같은 종류의 드래그앤 드랍 && 시작과 끝이 달라야함
+      else if((e.target.id != parent_id) && (board_s_compare == board_d_compare) && (start != end)){
+        e.target.appendChild(card);
+        document.getElementById(e.target.id).insertBefore(card, document.getElementById(e.target.id).firstElementChild);
+
+        alert("이벤트 실행 ㄱㄱ");
+        //s -> d는 추가
+        //d -> s는 삭제
+        EventBus.$emit('BoardToApply', start + "-" + end + "-" + splited_bun + "-" + splited_idx);
+      
       }
 
       //e.target.createElement("div");
-      e.target.appendChild(card);
       
 
-      //s -> d는 추가
-      //d -> s는 삭제
-      EventBus.$emit('BoardToApply', start + "-" + end + "-" + splited_bun + "-" + splited_idx);
-        
+       
     },
   
   /* delete:function(cardId){

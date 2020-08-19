@@ -6,23 +6,33 @@
       <div>
         <b-tabs class="m-3" align="center">
           <b-tab title="경험" active>
-            <Board id="board-s-1">
-              <div v-for="(ex, ex_idx) in nav_ex_outlist" :key="ex.exid">
-                <Card :id="'card-s-e-' + ex.exid" draggable="true">{{ex.title}}</Card>
-              </div>
+            <Board id="board-s-e">
+            <div v-for="(ex, ex_idx) in nav_ex_outlist" :key="ex.exid">
+              <Card :id="'card-s-e-' + ex.exid" draggable="true">
+              {{ex.title}}
+              </Card>
+            </div>
+                 <Board id="board-s-e" class="dragSpace dragText">
+                      여기에 끌어다 쓰세요.
+                </Board>
             </Board>
           </b-tab>
           <b-tab title="포트폴리오">
-            <Board id="board-s-2">
-              <div v-for="(port, p_idx) in nav_port_outlist" :key="port.pid">
-                <Card :id="'card-s-p-' + port.pid" draggable="true">{{port.title}}</Card>
-              </div>
+            <Board id="board-s-p">
+            <div v-for="(port, p_idx) in nav_port_outlist" :key="port.pid">
+              <Card :id="'card-s-p-' + port.pid" draggable="true">
+                {{port.title}}
+              </Card>
+            </div>
+                <Board id="board-s-p" class="dragSpace dragText">
+                       여기에 끌어다 쓰세요.
+                </Board>
             </Board>
           </b-tab>
           <!-- <b-tab title="Disabled" disabled><p>I'm a disabled tab!</p></b-tab> -->
         </b-tabs>
       </div>
-    </b-sidebar>
+   </b-sidebar>
     <!--/ 사이드바 -->
 
     <!-- 기간 선택 모달 -->
@@ -245,7 +255,7 @@
           <b-row></b-row>
           <div class="applyCardBody">
             <div
-              v-if="nav_ex_inlist==0&&nav_port_inlist==0"
+              v-if="nav_ex_inlist==0&&nav_port_inlist==0&&!isEditClicked_list[ap_idx]"
               style="text-align:center; margin:30px 0;"
             >
               <h4>수정버튼을 눌러 관련 자료들을 추가해보세요.</h4>
@@ -253,21 +263,27 @@
             <div v-else>
               <!-- 경험 -->
               <div>경험</div>
-              <Board id="board-d-1">
+              <Board id="board-d-e">
                 <div v-for="(ex, exid) in nav_ex_inlist" :key="ex.exid">
-                  <Card :id="'card-e-' + ex.exid" draggable="true">
+                  <Card :id="'card-b-e-' + ex.exid" draggable="true">
                     <div>{{ex.title}}</div>
                   </Card>
                 </div>
+                 <Board id="board-d-e" class="dragSpace dragText">
+                      여기에 끌어다 쓰세요.
+                </Board>
               </Board>
               <!-- 포폴 -->
               <div>프로젝트</div>
-              <Board id="board-d-2">
+              <Board id="board-d-p">
                 <div v-for="(port, pid) in nav_port_inlist" :key="port.pid">
-                  <Card :id="'card-p-' + port.pid" draggable="true">
+                  <Card :id="'card-b-p-' + port.pid" draggable="true">
                     <div>{{port.title}}</div>
                   </Card>
                 </div>
+                <Board id="board-d-p" class="dragSpace dragText">
+                      여기에 끌어다 쓰세요.
+                </Board>
               </Board>
             </div>
           </div>
@@ -346,6 +362,8 @@ export default {
       isEditClicked_list: [],
       isEditCheck: false,
 
+      changingApid:0,
+
       flowersImg: [
         "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg",
         "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbmO10q%2FbtqGSsg736Q%2F2Vk8PtXWwwroClNtBaR7lk%2Fimg.jpg",
@@ -365,6 +383,7 @@ export default {
 
   mounted() {},
   created() {
+    
     //이벤트 버스
 
     //s -> d는 추가
@@ -373,34 +392,37 @@ export default {
     //시작 | 끝 | 경험or포트 | 경험or포트 아이디
     EventBus.$on("BoardToApply", (payload) => {
       this.msg = payload;
-      //alert(this.msg);
+      alert(this.msg);
 
-      var myregexp2 = new RegExp("-");
+      var myregexp2 = new RegExp("-"); 
       var op = payload.split(myregexp2);
-
+      
       //경험
-      if (op[2] == "e") {
+      if(op[2] == "e"){
         //추가
-        if (op[0] == "s") {
+        if(op[0] == "s"){
           this.addE(op[3]);
         }
         //삭제
-        else if (op[0] == "d") {
+        else if(op[0] == "d"){
           this.deleteE(op[3]);
         }
       }
       //포트
-      else if (op[2] == "p") {
+      else if(op[2] == "p"){
         //추가
-        if (op[0] == "s") {
+        if(op[0] == "s"){
           this.addP(op[3]);
         }
         //삭제
-        else if (op[0] == "d") {
+        else if(op[0] == "d"){
           this.deleteP(op[3]);
         }
       }
+
     });
+
+
 
     //지원기간 가져오기, 없을경우만
     if (constants.APPLY_PERIOD == null) {
@@ -541,15 +563,13 @@ export default {
       console.log(this.isEditClicked_list[idx]);
       this.getPortOutNav(apid);
 
-      //지금 어떤걸 수정하는지 알고있어야 경험, 포트 추가삭제가능..
       this.changingApid = apid;
-      //alert(this.changingApid);
 
       // this.getExOutNav(apid);
     },
     // 이거추가
     clickeDetail(apid, idx) {
-      this.getPortInNav(apid);
+      this.getPortOutNav(apid);
     },
     saveEdit(apid, idx) {
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
@@ -561,6 +581,7 @@ export default {
     },
     // 여기까지 추가
     getPortOutNav: function (apid) {
+      console.log("1)getPortOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outportfolio`, {
           params: {
@@ -579,7 +600,7 @@ export default {
     },
 
     getExOutNav: function (apid) {
-      console.log("getExOutNav왔어요");
+      console.log("2)getExOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outexp`, {
           params: {
@@ -597,6 +618,7 @@ export default {
     },
     // 여기 수정해야돼!!!!!!!!!!!!!
     getPortInNav: function (apid) {
+      console.log("3)getPortInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inportfolio`, {
           params: {
@@ -613,6 +635,7 @@ export default {
         .catch((error) => {});
     },
     getExInNav: function (apid) {
+        console.log(apid  + " - 4)getExInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inexp`, {
           params: {
@@ -643,6 +666,7 @@ export default {
         .catch((error) => {
           //alert("실패");
           console.log(error);
+
         });
     },
     deleteA: function (apid, idx) {
@@ -1078,11 +1102,11 @@ export default {
   width: 100%;
 
   background-color: #d4d3d3;
+
   border: 1.5px solid #d4e4e4;
   border-radius: 5px;
   border-style: dotted;
   padding: 25px;
-  padding-bottom: 120px;
 }
 
 .board .card {
@@ -1095,5 +1119,20 @@ export default {
 
 .board .card div {
   color: #000000;
+}
+
+.dragSpace{
+  
+  font-size:x-large;
+  min-height: 50%;
+  border: 5px solid #bbbbbb;
+  border-radius: 5px;
+  border-style: dotted;
+}
+
+.dragText{
+  text-align:center; 
+  margin:30px 0;
+  justify-content: space-evenly;
 }
 </style>
