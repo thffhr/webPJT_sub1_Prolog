@@ -2,7 +2,7 @@
   <div id="manageA">
     <!-- 수정 시 사이드바 등장 -->
     <!-- 사이드바 -->
-    <b-sidebar id="sidebar-right" right shadow>
+    <b-sidebar id="sidebar-right" right shadow no-header>
       <div>
         <b-tabs class="m-3" align="center">
           <b-tab title="경험" active>
@@ -188,18 +188,23 @@
 
     <!-- 목록 리스트 -->
     <div v-for="(apply, ap_idx) in apply_lists" :key="apply.apid">
-      <div no-body class="applyCard mb-1" v-b-toggle="'showDetail'+apply.apid">
+      <div
+        no-body
+        class="applyCard mb-1"
+        v-b-toggle="'showDetail'+apply.apid"
+        @click="clickeDetail(apply.apid, ap_idx)"
+      >
         <!-- 안되면 div로 빼주자 -->
         <b-container header-tag="header" class="applyCardHeader p-1" role="tab">
           <b-row>
             <b-col cols="4">
               <b-row>
-                <h2>여기에 제목을 넣어볼게요.</h2>
+                <h2 class="ml-4 mt-3">제목 넣을거임</h2>
               </b-row>
             </b-col>
             <b-col cols="6">
               <b-row>
-                <p>지원 기간 : {{apply.apTerm}}</p>
+                <p class="mt-3">지원 기간 : {{apply.apTerm}}</p>
               </b-row>
               <b-row>
                 <p>회사명 : {{apply.apCompany}}</p>
@@ -212,60 +217,63 @@
         </b-container>
         <!-- 버튼 다같이 바뀌는거 수정해야함-->
         <div id="applyCardBtn">
-          <!-- 저장버튼은 사이드바(안들어간 경험,포폴 나오는 곳)에 넣어줄까 고민즁 -->
-          <!-- 아마 이게 저장버튼? -->
-          <b-img
-            v-if="isEditClicked_list[idx]"
-            @click="clickeEdit(apply.apid, idx)"
-            v-b-toggle.sidebar-right
-            style="cursor:pointer"
-            v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
-            width="15px"
-          ></b-img>
-          <!-- / 아마 이게 저장버튼? -->
-
-          <b-img
-            v-if="!isEditClicked_list[idx]"
-            @click="clickeEdit(apply.apid, idx)"
-            v-b-toggle.sidebar-right
-            style="cursor:pointer"
-            v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
-            width="15px"
-          ></b-img>
-
-          <b-img
-            @click="deleteA(apply.apid, idx)"
-            style="cursor:pointer"
-            v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
-            width="15px"
-          ></b-img>
+          <div v-b-toggle.sidebar-right>
+            <b-img
+              class="mr-2"
+              v-if="isEditClicked_list[ap_idx]"
+              @click="clickeEdit(apply.apid, ap_idx)"
+              style="cursor:pointer"
+              v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
+              width="15px"
+            ></b-img>
+            <b-img
+              class="mr-2"
+              v-if="!isEditClicked_list[ap_idx]&&!isEditCheck"
+              @click="clickeEdit(apply.apid, ap_idx)"
+              style="cursor:pointer"
+              v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
+              width="15px"
+            ></b-img>
+          </div>
+          <div>
+            <b-img
+              @click="deleteA(apply.apid, ap_idx)"
+              style="cursor:pointer"
+              v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
+              width="15px"
+            ></b-img>
+          </div>
         </div>
         <b-collapse v-bind:id="'showDetail'+apply.apid" accordion="my-accordion" role="tabpanel">
           <!-- 여기에서 지원목록에 포함되어 있는 경험/포폴 보여줌 -->
+          <b-row></b-row>
           <div class="applyCardBody">
-
-            <!-- 경험 -->
-            <Board id="board-d-e">
-            <div> 경험 </div>
-            <div v-for="(ex, exid) in nav_ex_inlist" :key="ex.exid">
-              <Card :id="'card-d-e' + ex.exid" draggable="true">
-                <div>{{ex.title}}</div>
-              </Card>
+            <div
+              v-if="nav_ex_inlist==0&&nav_port_inlist==0"
+              style="text-align:center; margin:30px 0;"
+            >
+              <h4>수정버튼을 눌러 관련 자료들을 추가해보세요.</h4>
             </div>
-            </Board>
-
-           <hr class="featurette-divider" />
-            
-            <!-- 포폴 -->
-            <Board id="board-d-p">
-            <div> 프로젝트 </div>
-            <div v-for="(port, pid) in nav_port_inlist" :key="port.pid">
-              <Card :id="'card-d-p' + port.pid" draggable="true">
-                <div>{{port.title}}</div>
-              </Card>
+            <div v-else>
+              <!-- 경험 -->
+              <div>경험</div>
+              <Board id="board-d-e">
+                <div v-for="(ex, exid) in nav_ex_inlist" :key="ex.exid">
+                  <Card :id="'card-e-' + ex.exid" draggable="true">
+                    <div>{{ex.title}}</div>
+                  </Card>
+                </div>
+              </Board>
+              <!-- 포폴 -->
+              <div>프로젝트</div>
+              <Board id="board-d-p">
+                <div v-for="(port, pid) in nav_port_inlist" :key="port.pid">
+                  <Card :id="'card-p-' + port.pid" draggable="true">
+                    <div>{{port.title}}</div>
+                  </Card>
+                </div>
+              </Board>
             </div>
-            </Board>
-
           </div>
         </b-collapse>
       </div>
@@ -364,7 +372,33 @@ export default {
     //이벤트 버스
     EventBus.$on("test", (payload) => {
       this.msg = payload;
-      alert(this.msg);
+      //alert(this.msg);
+
+      var myregexp2 = new RegExp("-");
+      var op = payload.split(myregexp2);
+
+      //경험
+      if (op[2] == "e") {
+        //추가
+        if (op[0] == "s") {
+          this.addE(op[3]);
+        }
+        //삭제
+        else if (op[0] == "d") {
+          this.deleteE(op[3]);
+        }
+      }
+      //포트
+      else if (op[2] == "p") {
+        //추가
+        if (op[0] == "s") {
+          this.addP(op[3]);
+        }
+        //삭제
+        else if (op[0] == "d") {
+          this.deleteP(op[3]);
+        }
+      }
     });
 
     //지원기간 가져오기, 없을경우만
@@ -501,23 +535,27 @@ export default {
 
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
       this.isEditCheck = !this.isEditCheck;
-
+      console.log("clickeEdit이에요!");
+      console.log(this.isEditCheck);
+      console.log(this.isEditClicked_list[idx]);
       this.getPortOutNav(apid);
 
       // this.getExOutNav(apid);
     },
-    // detailClickeIndex: function (apid) {
-    //   //alert(apid);
-
-    //   //네비에 없는 프로젝트가져오기, 그다음 경험가져옴
-    //   //같이가져오니까 하나만가져오더라고;;
-    //   this.getPortOutNav(apid);
-
-    //   this.getPortInNav(apid);
-    // },
-
+    // 이거추가
+    clickeDetail(apid, idx) {
+      this.getPortInNav(apid);
+    },
+    saveEdit(apid, idx) {
+      this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
+      this.isEditCheck = !this.isEditCheck;
+      console.log("saveEdit이에요!");
+      console.log(this.isEditCheck);
+      console.log(this.isEditClicked_list[idx]);
+      this.getPortOutNav(apid);
+    },
+    // 여기까지 추가
     getPortOutNav: function (apid) {
-      console.log("getPortOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outportfolio`, {
           params: {
@@ -529,7 +567,6 @@ export default {
           //alert("넵 ec")
           //this.nav_port_list.splice(0,this.nav_port_list.length+1);
           this.nav_port_outlist = response.data.object;
-          console.log(this.nav_port_outlist);
 
           this.getExOutNav(apid);
         })
@@ -548,12 +585,12 @@ export default {
         .then((response) => {
           //alert("넵 port")
           this.nav_ex_outlist = response.data.object;
-          console.log(this.nav_ex_outlist);
 
           this.getPortInNav(apid);
         })
         .catch((error) => {});
     },
+    // 여기 수정해야돼!!!!!!!!!!!!!
     getPortInNav: function (apid) {
       axios
         .get(this.$SERVER_URL + `/apply/inportfolio`, {
@@ -563,11 +600,9 @@ export default {
           },
         })
         .then((response) => {
-          //alert("넵 ec")
-          //this.nav_port_list.splice(0,this.nav_port_list.length+1);
-          this.nav_port_inlist = response.data.object;
-          console.log(response.data.object);
-
+          if (response.data.data != "연결된 포트폴리오가 없습니다.") {
+            this.nav_port_inlist = response.data.object;
+          }
           this.getExInNav(apid);
         })
         .catch((error) => {});
@@ -581,12 +616,13 @@ export default {
           },
         })
         .then((response) => {
-          //alert("넵 port")
-          this.nav_ex_inlist = response.data.object;
-          console.log(response.data.object);
+          if (response.data.data != "연결된 경험이 없습니다.") {
+            this.nav_ex_inlist = response.data.object;
+          }
         })
         .catch((error) => {});
     },
+    // 여기까지 수정해야돼!!!!!!!!!!!!
     addApply: function () {
       axios
         .post(this.$SERVER_URL + `/apply`, {
@@ -618,8 +654,49 @@ export default {
         })
         .catch((error) => {});
     },
-    test2: function (value) {
-      console.log(value);
+    addE(exid) {
+      console.log("경험 추가" + this.changingApid + "-" + exid);
+      axios
+        .post(this.$SERVER_URL + `/apply/addExp`, {
+          apid: this.changingApid,
+          exid: exid,
+        })
+        .then((response) => {})
+        .catch((error) => {});
+    },
+    addP(pid) {
+      console.log("포트 추가" + this.changingApid + "-" + pid);
+      axios
+        .post(this.$SERVER_URL + `/apply/addPortfolio`, {
+          apid: this.changingApid,
+          pid: pid,
+        })
+        .then((response) => {})
+        .catch((error) => {});
+    },
+    deleteE(exid) {
+      console.log("경험 삭제" + this.changingApid + "-" + exid);
+      axios
+        .delete(this.$SERVER_URL + `/apply/deleteExp`, {
+          data: {
+            apid: this.changingApid,
+            exid: exid,
+          },
+        })
+        .then((response) => {})
+        .catch((error) => {});
+    },
+    deleteP(pid) {
+      console.log("포트 삭제" + this.changingApid + "-" + pid);
+      axios
+        .delete(this.$SERVER_URL + `/apply/deletePortfolio`, {
+          data: {
+            apid: this.changingApid,
+            pid: pid,
+          },
+        })
+        .then((response) => {})
+        .catch((error) => {});
     },
   },
 };
@@ -724,10 +801,13 @@ export default {
 #sidebar-right {
   width: 15%;
 }
+#applyList {
+  /* width: 60%; */
+}
 .applyCard {
   position: relative;
   padding: 5px;
-  /* width: 70%; */
+  width: 100%;
   background-color: lightgray;
   border-radius: 5px;
 }
@@ -735,12 +815,10 @@ export default {
 }
 #applyCardBtn {
   position: absolute;
+  display: flex;
   top: 20px;
   right: 20px;
 }
-.applyCardBody {
-}
-
 /* .left-ex {
   text-align: center;
   margin: auto;
@@ -950,6 +1028,43 @@ export default {
   background-color: #7a63ff;
 }
 
+.flexbox {
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
+  max-width: 768px;
+  height: 50vh;
+
+  overflow: hidden;
+
+  margin: 0 auto;
+  padding: 15px;
+}
+
+.flexbox .board {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 300px;
+
+  background-color: #313131;
+
+  padding: 15px;
+}
+
+.flexbox .board .card {
+  padding: 15px 25px;
+  background-color: #f3f3f3;
+
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.flexbox .board .card p {
+  color: #000000;
+}
 
 .board {
   display: flex;
@@ -959,6 +1074,9 @@ export default {
 
   background-color: #d4d3d3;
 
+  border: 1.5px solid #d4e4e4;
+  border-radius: 5px;
+  border-style: dotted;
   padding: 25px;
 }
 
