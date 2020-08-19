@@ -280,25 +280,37 @@ export default {
           contents: "내용",
           title: "제목",
           uid: localStorage["uid"],
+          startDate: startdate,
+          endDate: startdate,
         })
         .then((response) => {
-          response.data.object.start_date = startdate;
-          response.data.object.end_date = startdate;
-          response.data.object.state = false;
           response.data.object.tag = [];
-
+          
+          
           axios
-          .get(this.$SERVER_URL + `/portfolio/all`, {
+          .get(this.$SERVER_URL + `/portfolio/Tags`, {
             params: {
               uid: localStorage["uid"],
             },
           })
           .then((response) => {
-            this.portfolios = response.data.object;
+            this.tags = response.data.object;
+            axios
+              .get(this.$SERVER_URL + `/portfolio/all`, {
+                params: {
+                  uid: localStorage["uid"],
+                },
+              })
+              .then((response) => {
+                this.portfolios = response.data.object;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           })
           .catch((error) => {
             console.log(error);
-          });
+          });    
 
 
         })
