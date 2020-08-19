@@ -108,7 +108,7 @@ export default new Router({
     },
     //이메일 인증코드 확인페이지
     {
-      path: "/EmailCompare",
+      path: "/EmailCompare/:code/:email",
       name: constants.URL_TYPE.USER.EMAILCOMPARE,
       component: EmailCompare,
     },

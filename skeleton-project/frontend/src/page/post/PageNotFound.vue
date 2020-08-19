@@ -44,7 +44,7 @@ export default {
   color: white;
   padding: 10px;
 }
-#btn:hover {
+#Bstn:hover {
   cursor: pointer;
 }
 </style>

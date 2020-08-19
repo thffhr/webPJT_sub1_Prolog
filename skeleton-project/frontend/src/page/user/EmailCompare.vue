@@ -9,17 +9,40 @@
 
 <script>
 import constants from "../../lib/constants";
+import axios from "axios";
 
 export default {
   name: "PageNotFound",
   data: () => {
     return {
       constants,
+      code: "",
+      email: "",
     };
   },
+  created() {},
   methods: {
     compare() {
-      //   요기다가 비교요청아어ㅏ어아ㅣㅇㄴ
+      let code = this.$route.params.code;
+      let email = this.$route.params.email;
+      console.log(code);
+      console.log(email);
+      axios
+        .get(this.$SERVER_URL + "/email/compare-code", {
+          params: {
+            code: code,
+            email: email,
+          },
+        })
+        .then((response) => {
+          if (response.data.status) {
+            alert("이메일 인증이 성공하였습니다!");
+            // this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
+          } else {
+            alert("이메일 인증이 실패하였습니다.");
+          }
+          console.log(response);
+        });
     },
   },
 };
@@ -41,7 +64,7 @@ export default {
   color: white;
   padding: 10px;
 }
-#btn:hover {
+#Btn:hover {
   cursor: pointer;
 }
 </style>

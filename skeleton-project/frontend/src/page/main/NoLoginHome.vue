@@ -48,7 +48,7 @@
           @click="$bvModal.show('JoinModal')"
           style="text-align: center; cursor: pointer;"
         >회원가입</b-button>
-        <b-modal id="JoinModal" hide-footer>
+        <b-modal id="JoinModal" hide-footer v-on:close="closeModal()" ref="Modal">
           <template v-slot:modal-title>
             <p class="mt-2 mb-2">회원가입</p>
             <small class="mb-2">회원 정보를 입력해주세요.</small>
@@ -175,6 +175,7 @@
 <script>
 import constants from "../../lib/constants.js";
 import axios from "axios";
+import EventBus from "../post/EventBus";
 
 import Join from "../../page/user/Join.vue";
 import FindUserByEmail from "../../page/user/FindUserByEmail.vue";
@@ -191,6 +192,7 @@ export default {
     if (constants.IS_LOGED_IN) {
       this.$router.push({ name: constants.URL_TYPE.MAIN.LOGINHOME });
     }
+    // EventBus.$on("closeModal", this.$refs.Modal.hide("LoginModal"));
   },
   data: () => {
     return {
@@ -203,6 +205,7 @@ export default {
       // },
     };
   },
+  mounted() {},
   methods: {
     login() {
       axios
@@ -232,6 +235,10 @@ export default {
     scroll(id) {
       document.getElementById(id).scrollIntoView();
     },
+    // closeModal() {
+    //   console.log("클로즈모달 여기까지 오니?");
+    //   $bvModal.hide("LoginModal");
+    // },
   },
 };
 </script>
