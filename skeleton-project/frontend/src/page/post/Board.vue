@@ -59,19 +59,22 @@ export default {
       if(e.target.id == ""){
         
       }
-      //같은 부모 아님 && 같은 종류의 드래그앤 드랍
-      else if((e.target.id != parent_id) && (board_s_compare == board_d_compare)){
+      //같은 부모 아님 && 같은 종류의 드래그앤 드랍 && 시작과 끝이 달라야함
+      else if((e.target.id != parent_id) && (board_s_compare == board_d_compare) && (start != end)){
         e.target.appendChild(card);
-        EventBus.$emit('test', "이벤트 실행 ㄱㄱ");
+        document.getElementById(e.target.id).insertBefore(card, document.getElementById(e.target.id).firstElementChild);
+
+        alert("이벤트 실행 ㄱㄱ");
+        //s -> d는 추가
+        //d -> s는 삭제
+        EventBus.$emit('BoardToApply', start + "-" + end + "-" + splited_bun + "-" + splited_idx);
+      
       }
 
       //e.target.createElement("div");
       
 
-      //s -> d는 추가
-      //d -> s는 삭제
-      EventBus.$emit('BoardToApply', start + "-" + end + "-" + splited_bun + "-" + splited_idx);
-        
+       
     },
   
   /* delete:function(cardId){
