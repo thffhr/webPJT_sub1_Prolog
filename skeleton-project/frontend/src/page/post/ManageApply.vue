@@ -6,18 +6,18 @@
       <div>
         <b-tabs class="m-3" align="center">
           <b-tab title="경험" active>
-            <Board id="board-s-1">
+            <Board id="board-s-e">
             <div v-for="(ex, ex_idx) in nav_ex_outlist" :key="ex.exid">
-              <Card :id="'card-s-e-' + ex.exid" draggable="true">
+              <Card :id="'card-s-e' + ex.exid" draggable="true">
               {{ex.title}}
               </Card>
             </div>
             </Board>
           </b-tab>
           <b-tab title="포트폴리오">
-            <Board id="board-s-2">
+            <Board id="board-s-p">
             <div v-for="(port, p_idx) in nav_port_outlist" :key="port.pid">
-              <Card :id="'card-s-p-' + port.pid" draggable="true">
+              <Card :id="'card-s-p' + port.pid" draggable="true">
                 {{port.title}}
               </Card>
             </div>
@@ -243,11 +243,12 @@
         <b-collapse v-bind:id="'showDetail'+apply.apid" accordion="my-accordion" role="tabpanel">
           <!-- 여기에서 지원목록에 포함되어 있는 경험/포폴 보여줌 -->
           <div class="applyCardBody">
+
             <!-- 경험 -->
+            <Board id="board-d-e">
             <div> 경험 </div>
-            <Board id="board-d-1">
             <div v-for="(ex, exid) in nav_ex_inlist" :key="ex.exid">
-              <Card :id="'card-d-e-' + ex.exid" draggable="true">
+              <Card :id="'card-d-e' + ex.exid" draggable="true">
                 <div>{{ex.title}}</div>
               </Card>
             </div>
@@ -256,15 +257,15 @@
            <hr class="featurette-divider" />
             
             <!-- 포폴 -->
-            
+            <Board id="board-d-p">
             <div> 프로젝트 </div>
-            <Board id="board-d-2">
             <div v-for="(port, pid) in nav_port_inlist" :key="port.pid">
-              <Card :id="'card-d-p-' + port.pid" draggable="true">
+              <Card :id="'card-d-p' + port.pid" draggable="true">
                 <div>{{port.title}}</div>
               </Card>
             </div>
             </Board>
+
           </div>
         </b-collapse>
       </div>
@@ -341,8 +342,18 @@ export default {
       isEditClicked_list: [],
       isEditCheck: false,
 
-      changingApid: 0,
-
+      flowersImg: [
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbmO10q%2FbtqGSsg736Q%2F2Vk8PtXWwwroClNtBaR7lk%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcBif9C%2FbtqGNC5EItY%2FwEwvIFxMncmII3L0G4EBKK%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdHQToz%2FbtqGJwdLhDV%2F99NvaPkVv90sofZ4mXG2Vk%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcIngX9%2FbtqGJwx6UEi%2F1PANxFjnZjWGq8NSUIuljK%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FJEurJ%2FbtqGK4ajX2J%2Fj5FxtSbXqtz2qJA8nqZ8Ik%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fcbqw1R%2FbtqGK4g25HF%2FePZlqlieqAV9yWoJRqNp90%2Fimg.jpg",
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg",
+      ],
+      temp:
+        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg",
     };
   },
   computed: {},
@@ -350,44 +361,10 @@ export default {
 
   mounted() {},
   created() {
-
-
     //이벤트 버스
-
-    //s -> d는 추가
-    //d -> s는 삭제
-    //e는 경험, p는 포트폴리오
-    //시작 | 끝 | 경험or포트 | 경험or포트 아이디
-    EventBus.$on("BoardToApply", (payload) => {
+    EventBus.$on("test", (payload) => {
       this.msg = payload;
-      //alert(this.msg);
-
-      var myregexp2 = new RegExp("-"); 
-      var op = payload.split(myregexp2);
-      
-      //경험
-      if(op[2] == "e"){
-        //추가
-        if(op[0] == "s"){
-          this.addE(op[3]);
-        }
-        //삭제
-        else if(op[0] == "d"){
-          this.deleteE(op[3]);
-        }
-      }
-      //포트
-      else if(op[2] == "p"){
-        //추가
-        if(op[0] == "s"){
-          this.addP(op[3]);
-        }
-        //삭제
-        else if(op[0] == "d"){
-          this.deleteP(op[3]);
-        }
-      }
-
+      alert(this.msg);
     });
 
     //지원기간 가져오기, 없을경우만
@@ -527,10 +504,6 @@ export default {
 
       this.getPortOutNav(apid);
 
-      //지금 어떤걸 수정하는지 알고있어야 경험, 포트 추가삭제가능..
-      this.changingApid = apid;
-      //alert(this.changingApid);
-
       // this.getExOutNav(apid);
     },
     // detailClickeIndex: function (apid) {
@@ -645,49 +618,8 @@ export default {
         })
         .catch((error) => {});
     },
-    addE(exid){
-      console.log("경험 추가" + this.changingApid + "-" + exid);
-       axios
-        .post(this.$SERVER_URL + `/apply/addExp`, {
-            apid: this.changingApid,
-            exid: exid
-        })
-        .then((response) => {
-          })
-        .catch((error) => {});
-    },
-    addP(pid){
-      console.log("포트 추가" + this.changingApid + "-" + pid);
-        axios
-        .post(this.$SERVER_URL + `/apply/addPortfolio`, {
-            apid: this.changingApid,
-            pid: pid
-        })
-        .then((response) => {
-          })
-        .catch((error) => {});
-    },
-    deleteE(exid){
-      console.log("경험 삭제" + this.changingApid + "-" + exid);
-       axios
-        .delete(this.$SERVER_URL + `/apply/deleteExp`, {data : {
-            apid: this.changingApid,
-            exid: exid
-        }})
-        .then((response) => {
-          })
-        .catch((error) => {});
-    },
-    deleteP(pid){
-      console.log("포트 삭제" + this.changingApid + "-" + pid);
-      axios
-        .delete(this.$SERVER_URL + `/apply/deletePortfolio`, {data : {
-            apid: this.changingApid,
-            pid: pid
-        }})
-        .then((response) => {
-          })
-        .catch((error) => {});
+    test2: function (value) {
+      console.log(value);
     },
   },
 };
@@ -1026,11 +958,8 @@ export default {
   width: 100%;
 
   background-color: #d4d3d3;
-  border: 1.5px solid #d4e4e4;
-  border-radius: 5px;
-  border-style:dotted;
+
   padding: 25px;
-  padding-bottom: 120px;
 }
 
 .board .card {
