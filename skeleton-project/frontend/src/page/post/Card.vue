@@ -41,18 +41,7 @@ export default {
         },
 
           drop: e=>{
-        const card_id = e.dataTransfer.getData('card_id');
-
-        const card = document.getElementById(card_id);
         
-        const parent = card.parentNode;
-        
-        //e.target.style.display = "none";
-        //card.parentNode.append(card);
-        //e.target.appendChild(card);
-        //alert("안녕1"+card_id);
-
-        EventBus.$emit('cardToBoard_cardId', card_id);
         
         }
     },
