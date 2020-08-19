@@ -109,7 +109,7 @@
     </div>
 
     <!-- 케러셀 -->
-    <div>
+    <!-- <div>
       <b-carousel
         id="carousel-1"
         v-model="slide"
@@ -130,7 +130,7 @@
               text="Nulla vitae elit libero, a pharetra augue mollis interdum."
               img-src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg"
             >
-              <!-- 제목 -->
+
               <div>
                 <h2>{{apply.apCompany}}</h2>
               </div>
@@ -138,12 +138,11 @@
                 <h4>{{apply.apTerm}}</h4>
               </div>
 
-              <!-- 날짜 -->
+
               <div class="date-align">
                 <small>{{apply.ap_term}}</small>
               </div>
 
-              <!-- 내용 -->
               <div>
                 <p class="txt_line">{{apply.apDesc}}</p>
               </div>
@@ -151,7 +150,7 @@
           </div>
         </div>
       </b-carousel>
-    </div>
+    </div> -->
     <!-- /케러셀 -->
 
     <!-- 목록 디테일 -->
@@ -189,7 +188,6 @@
       <div
         no-body
         class="applyCard mb-1"
-        v-b-toggle="'showDetail'+apply.apid"
         @click="clickeDetail(apply.apid, ap_idx)"
       >
         <!-- 안되면 div로 빼주자 -->
@@ -197,7 +195,7 @@
           <b-row>
             <b-col cols="4">
               <b-row>
-                <h2 class="ml-4 mt-3">제목 넣을거임</h2>
+                <h2 class="ml-4 mt-3">{{apply.apTitle}}</h2>
               </b-row>
             </b-col>
             <b-col cols="6">
@@ -242,7 +240,10 @@
             ></b-img>
           </div>
         </div>
-        <b-collapse v-bind:id="'showDetail'+apply.apid" accordion="my-accordion" role="tabpanel">
+       
+       
+       <transition name="fade">
+        <div v-show="isEditClicked_list[ap_idx]">
           <!-- 여기에서 지원목록에 포함되어 있는 경험/포폴 보여줌 -->
           <b-row></b-row>
           <div class="applyCardBody">
@@ -275,7 +276,11 @@
               </Board>
             </div>
           </div>
-        </b-collapse>
+           <input v-model="isEditCheck" style="display:none">
+        </div>
+       </transition>
+
+       
       </div>
     </div>
     <!-- 추가하기 버튼 -->
@@ -540,6 +545,7 @@ export default {
     clickeEdit: function (apid, idx) {
       //alert(apid + " - " + idx);
 
+
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
       this.isEditCheck = !this.isEditCheck;
       console.log("clickeEdit이에요!");
@@ -553,7 +559,13 @@ export default {
     },
     // 이거추가
     clickeDetail(apid, idx) {
-      this.getPortOutNav(apid);
+
+      //지금 바꾸고있는것이니?
+      if(apid == this.changingApid){
+        this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
+        this.isEditCheck = !this.isEditCheck;
+        this.getPortOutNav(apid);
+      }
     },
     saveEdit(apid, idx) {
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
@@ -638,9 +650,10 @@ export default {
     addApply: function () {
       axios
         .post(this.$SERVER_URL + `/apply`, {
-          apCompany: "제목",
+          apCompany: "회사명",
           apDesc: "설명",
           apTerm: "미정",
+          apTitle:"제목",
           uid: localStorage["uid"],
         })
         .then((response) => {
@@ -1119,4 +1132,24 @@ export default {
   margin: 30px 0;
   justify-content: space-evenly;
 }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: all .3s ease;
+}
+.fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.fade-enter, .fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
 </style>
