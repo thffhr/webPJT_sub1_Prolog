@@ -119,4 +119,10 @@ public class ApplyController {
         return applyService.deleteExp(request);
     }
 
+    // @GetMapping("/apply/{keyword}")
+    // @ApiOperation("회사, 기간을 keyword로 검색")
+    // public ResponseEntity<BasicResponse> searchApply(@PathVariable String
+    // keyword) {
+    // return applyService.searchApply(keyword);
+    // }
 }
