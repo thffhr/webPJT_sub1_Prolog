@@ -86,7 +86,6 @@ public class UserServiceImpl implements UserService {
             if (userOpt2.isPresent())
                 result.object = userOpt2;
 
-            System.out.println(result.data + "-----------serviceimpl-----------");
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
             result.status = false;
@@ -119,7 +118,6 @@ public class UserServiceImpl implements UserService {
             result.data = "아이디 중복";
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
-            System.out.println("회원가입 전");
 
             // profile default img
             // ProfileUpdateRequest updaterequest = new ProfileUpdateRequest(uid,
@@ -131,7 +129,6 @@ public class UserServiceImpl implements UserService {
             userDao.save(request.toEntity());
             result.status = true;
             result.data = "회원가입 성공";
-            System.out.println("회원가입 완료");
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }
 
@@ -305,7 +302,6 @@ public class UserServiceImpl implements UserService {
 
         }
 
-        System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
         return outputStream.toByteArray();
     }
 
