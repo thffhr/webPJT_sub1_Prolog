@@ -109,7 +109,7 @@
     </div>
 
     <!-- 케러셀 -->
-    <div>
+    <!-- <div>
       <b-carousel
         id="carousel-1"
         v-model="slide"
@@ -129,29 +129,29 @@
               caption="First slide"
               text="Nulla vitae elit libero, a pharetra augue mollis interdum."
               img-src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg"
-            >
-              <!-- 제목 -->
-              <div>
+    >-->
+    <!-- 제목 -->
+    <!-- <div>
                 <h2>{{apply.apCompany}}</h2>
               </div>
               <div>
                 <h4>{{apply.apTerm}}</h4>
-              </div>
+    </div>-->
 
-              <!-- 날짜 -->
-              <div class="date-align">
+    <!-- 날짜 -->
+    <!-- <div class="date-align">
                 <small>{{apply.ap_term}}</small>
-              </div>
+    </div>-->
 
-              <!-- 내용 -->
-              <div>
+    <!-- 내용 -->
+    <!-- <div>
                 <p class="txt_line">{{apply.apDesc}}</p>
               </div>
             </b-carousel-slide>
           </div>
         </div>
       </b-carousel>
-    </div>
+    </div>-->
     <!-- /케러셀 -->
 
     <!-- 목록 디테일 -->
@@ -197,49 +197,53 @@
           <b-row>
             <b-col cols="4">
               <b-row>
-                <h2 class="ml-4 mt-3">제목 넣을거임</h2>
+                <div v-if="!isEditClicked_list[ap_idx]">
+                  <h2 class="ml-4 mt-3">{{apply.apCompany}}</h2>
+                </div>
+                <div v-if="isEditClicked_list[ap_idx]" class="ml-4 mt-3">
+                  <b-form-input v-model="apply.apCompany" placeholder="제목을 입력해주세요."></b-form-input>
+                </div>
               </b-row>
             </b-col>
             <b-col cols="6">
               <b-row>
-                <p class="mt-3">지원 기간 : {{apply.apTerm}}</p>
+                <div v-if="!isEditClicked_list[ap_idx]">
+                  <p class="mt-3" style="width:100%">{{apply.apTerm}}</p>
+                </div>
+                <div v-if="isEditClicked_list[ap_idx]" style="display:inline">
+                  <p class="mt-3">
+                    <b-form-input v-model="apply.apTerm" placeholder="2020_하반기"></b-form-input>
+                  </p>
+                </div>
               </b-row>
-              <b-row>
-                <p>회사명 : {{apply.apCompany}}</p>
-              </b-row>
-              <b-row>
+              <b-row v-if="!isEditClicked_list[ap_idx]">
                 <p>{{apply.apDesc}}</p>
+              </b-row>
+              <b-row v-if="isEditClicked_list[ap_idx]">
+                <b-form-textarea v-model="apply.apDesc" placeholder="내용을 입력하세요." rows="3"></b-form-textarea>
               </b-row>
             </b-col>
           </b-row>
         </b-container>
-        <!-- 버튼 다같이 바뀌는거 수정해야함-->
-        <div id="applyCardBtn" style="outline: none;">
-          <div v-b-toggle.sidebar-right>
-            <b-img
-              class="mr-2"
+        <div id="applyCardBtn">
+          <div v-b-toggle.sidebar-right style="outline:none;">
+            <div
+              class="aBtn"
               v-if="isEditClicked_list[ap_idx]"
-              @click="clickeEdit(apply.apid, ap_idx)"
-              style="cursor:pointer; outline: none;"
-              v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
-              width="15px"
-            ></b-img>
-            <b-img
-              class="mr-2"
+              @click="saveEdit(apply.apid, apply, ap_idx)"
+            >
+              <b-img v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px"></b-img>
+            </div>
+            <div
+              class="aBtn"
               v-if="!isEditClicked_list[ap_idx]&&!isEditCheck"
               @click="clickeEdit(apply.apid, ap_idx)"
-              style="cursor:pointer; outline: none;"
-              v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
-              width="15px"
-            ></b-img>
+            >
+              <b-img v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)" width="15px"></b-img>
+            </div>
           </div>
-          <div>
-            <b-img
-              @click="deleteA(apply.apid, ap_idx)"
-              style="cursor:pointer; outline: none;"
-              v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
-              width="15px"
-            ></b-img>
+          <div class="aBtn" @click="deleteA(apply.apid, ap_idx)">
+            <b-img v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
           </div>
         </div>
         <b-collapse v-bind:id="'showDetail'+apply.apid" accordion="my-accordion" role="tabpanel">
@@ -543,8 +547,6 @@ export default {
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
       this.isEditCheck = !this.isEditCheck;
       console.log("clickeEdit이에요!");
-      console.log(this.isEditCheck);
-      console.log(this.isEditClicked_list[idx]);
       this.getPortOutNav(apid);
 
       this.changingApid = apid;
@@ -555,17 +557,29 @@ export default {
     clickeDetail(apid, idx) {
       this.getPortOutNav(apid);
     },
-    saveEdit(apid, idx) {
+    saveEdit(apid, apply, idx) {
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
       this.isEditCheck = !this.isEditCheck;
       console.log("saveEdit이에요!");
-      console.log(this.isEditCheck);
-      console.log(this.isEditClicked_list[idx]);
-      this.getPortOutNav(apid);
+      console.log(apply.apCompany);
+      axios
+        .put(this.$SERVER_URL + `/apply`, {
+          uid: localStorage["uid"],
+          apid: apid,
+          apCompany: apply.apCompany,
+          apTerm: apply.apTerm,
+          apDesc: apply.apDesc,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     // 여기까지 추가
     getPortOutNav: function (apid) {
-      console.log("1)getPortOutNav왔어요");
+      // console.log("1)getPortOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outportfolio`, {
           params: {
@@ -574,8 +588,6 @@ export default {
           },
         })
         .then((response) => {
-          //alert("넵 ec")
-          //this.nav_port_list.splice(0,this.nav_port_list.length+1);
           this.nav_port_outlist = response.data.object;
 
           this.getExOutNav(apid);
@@ -584,7 +596,7 @@ export default {
     },
 
     getExOutNav: function (apid) {
-      console.log("2)getExOutNav왔어요");
+      // console.log("2)getExOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outexp`, {
           params: {
@@ -593,7 +605,6 @@ export default {
           },
         })
         .then((response) => {
-          //alert("넵 port")
           this.nav_ex_outlist = response.data.object;
 
           this.getPortInNav(apid);
@@ -602,7 +613,7 @@ export default {
     },
     // 여기 수정해야돼!!!!!!!!!!!!!
     getPortInNav: function (apid) {
-      console.log("3)getPortInNav왔어요");
+      // console.log("3)getPortInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inportfolio`, {
           params: {
@@ -619,7 +630,7 @@ export default {
         .catch((error) => {});
     },
     getExInNav: function (apid) {
-      console.log(apid + " - 4)getExInNav왔어요");
+      // console.log(apid + " - 4)getExInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inexp`, {
           params: {
@@ -667,7 +678,7 @@ export default {
         .catch((error) => {});
     },
     addE(exid) {
-      console.log("경험 추가" + this.changingApid + "-" + exid);
+      // console.log("경험 추가" + this.changingApid + "-" + exid);
       axios
         .post(this.$SERVER_URL + `/apply/addExp`, {
           apid: this.changingApid,
@@ -677,7 +688,7 @@ export default {
         .catch((error) => {});
     },
     addP(pid) {
-      console.log("포트 추가" + this.changingApid + "-" + pid);
+      // console.log("포트 추가" + this.changingApid + "-" + pid);
       axios
         .post(this.$SERVER_URL + `/apply/addPortfolio`, {
           apid: this.changingApid,
@@ -687,7 +698,7 @@ export default {
         .catch((error) => {});
     },
     deleteE(exid) {
-      console.log("경험 삭제" + this.changingApid + "-" + exid);
+      // console.log("경험 삭제" + this.changingApid + "-" + exid);
       axios
         .delete(this.$SERVER_URL + `/apply/deleteExp`, {
           data: {
@@ -699,7 +710,7 @@ export default {
         .catch((error) => {});
     },
     deleteP(pid) {
-      console.log("포트 삭제" + this.changingApid + "-" + pid);
+      // console.log("포트 삭제" + this.changingApid + "-" + pid);
       axios
         .delete(this.$SERVER_URL + `/apply/deletePortfolio`, {
           data: {
@@ -832,6 +843,11 @@ export default {
   display: flex;
   top: 20px;
   right: 20px;
+}
+.aBtn {
+  cursor: pointer;
+  outline: none !important;
+  padding: 5px;
 }
 /* .left-ex {
   text-align: center;
@@ -1088,9 +1104,9 @@ export default {
 
   background-color: #d4d3d3;
 
-  border: 1.5px solid #d4e4e4;
+  /* border: 1.5px solid #d4e4e4; */
   border-radius: 5px;
-  border-style: dotted;
+  /* border-style: dotted; */
   padding: 25px;
 }
 
