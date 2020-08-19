@@ -1,28 +1,29 @@
 <template>
-  <div class="manageEx">
+  <div class="manageEx" id="manageEx">
     <!-- Three columns of text below the carousel -->
     <!-- 모든 태그들 -->
-    <div id="tagMenue">
+    <div id="tagManue">
+
+      <span
+        v-if="allTagState"
+        @click="allTagOnOff"
+        style="cursor: pointer; color: black;"
+      >태그 전체 선택 해제</span>
+      <span v-else @click="allTagOnOff" style="cursor: pointer; color: black;">태그 전체 선택</span>
+
       <div class="row box-table">
         <div v-if="tags.length > 0">
-          <div
-            class="adge tag-margin-custom mr-3 badge-secondary badge-pill"
-            v-for="tag in tags"
-            :key="tag.tid"
-          >
-            <!-- 아이콘 말고 색깔 바뀌는걸로 해주세요...! -->
-            <div v-if="showTag(tag)">
-              #{{ tag.tagName }}
-              <b-img
-                @click="filtering(tag)"
-                :pressed.sync="tag.state"
-                variant="primary"
-                style="cursor:pointer"
-                v-bind:src="require(`@/assets/img/${tag.imgsrc}`)"
-                width="20px"
-              ></b-img>
-            </div>
-          </div>
+          <b-button
+            pill
+            v-for="(tag, idx) in tags"
+            :key="idx"
+            :pressed="tagState(tag)"
+            @click="filtering(tag)"
+            variant="secondary"
+            style="display: inline-block; color: black;"
+            class="m-1"
+          ># {{ tag.tagName }}
+          </b-button>
         </div>
         <div v-else>태그가 없습니다.</div>
       </div>
@@ -30,7 +31,7 @@
       <br />
       <hr />
 
-      <h6 class="noTag mt-3 mb-3" @click="exeptNoTagClickE()">
+      <h6 v-if="isIncludeNoTag" class="noTag mt-3 mb-3" @click="exceptNoTagClickE()">
         태그 없는 게시물 숨기기
         <b-icon icon="hand-index"></b-icon>
         <!-- <b-icon icon="hand-index-thumb"></b-icon> -->
@@ -40,6 +41,10 @@
           v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)"
           width="20px"
         ></b-img> -->
+      </h6>
+      <h6 v-else class="noTag mt-3 mb-3" @click="exceptNoTagClickE()">
+        태그 없는 게시물 보여주기
+        <b-icon icon="hand-index"></b-icon>
       </h6>
     </div>
 
@@ -122,10 +127,12 @@
                   <!-- 태그 수정 -->
                   <div class="editor_tag" v-if="experience.clicked">
                     <!-- exid도잇어야함 -->
-                    <div v-for="(experienceTag, tid) in experience.tags" :key="experienceTag.tid">
-                      <span class="txt_tag">
-                        <div class="tag">#{{ experienceTag.tagName }}</div>
-                        <b-img
+                    <div class="mt-3 mr-1;" style="display: inline-block;" v-for="(experienceTag, tid) in experience.tags" :key="experienceTag.tid">
+                      <span class="txt_tag" style="display: inline-block;">
+                        <div class="tag"># {{ experienceTag.tagName }}
+
+                        <b-icon
+                          icon="x"
                           @click="
                           deleteTag(
                             experience.tags,
@@ -134,32 +141,33 @@
                             experience
                           )
                         "
-                          style="width:18px; height:18px; cursor:pointer"
+                          style="width:18px; height:18px; cursor:pointer margin-left: 5px; padding-bottom: 0;"
                           v-bind:src="
                           require(`@/assets/img/icons8-close-window-50.png`)
                         "
                         >
-                          <span>삭제</span>
-                        </b-img>
+                          <!-- <span>삭제</span> -->
+                        </b-icon>
+                        </div>
                       </span>
                     </div>
 
-                    <div class="inp_tag mt-1">
-                      <div class="mt-auto mb-auto mr-1">
+
+                    <div id="mtbauto" style="display: inline-block;">
+                      <div style="display: inline-block; margin-top: auto; margin-bottom: auto; padding: 12px 0;">
                         #
-                        <!-- <div style="inline-block" value="태그" placeholder="Tag입력"> -->
-                        <input
-                          id="tagText"
-                          v-model="tagText"
-                          v-on:keyup.enter="
-                          addTag(experience.tags, experience.exid, tagText)
-                        "
-                          type="text"
-                          class="tf_g"
-                          placeholder="태그입력"
-                          style="box-sizing: content-box; width: 100px; height:24px"
-                        />
                       </div>
+                      <b-form-input
+                        class="inp_tag"
+                        v-model="tagText"
+                        @keyup.enter="addTag(experience.tags, experience.exid, tagText)"
+                        placeholder="새 태그 입력"
+                        style="box-sizing: content-box; width: 85px; height:24px; display: inline-block; margin-top: 10px;"
+                      ></b-form-input>
+                    </div>
+
+
+                          
                       <!-- <input
                         id="tagText"
                         v-model="tagText"
@@ -172,16 +180,17 @@
                         style="box-sizing: content-box; width: 100px; height:24px"
                       />-->
                       <!-- </div> -->
-                    </div>
+                      <!-- </b-form-group> -->
                   </div>
                   <!-- 태그 출력 -->
                   <div v-else>
                     <div v-if="experience.tags.length>0">
                       <div
+                        style="display: inline-block;"
                         class="tag"
                         v-for="experienceTag in experience.tags"
                         :key="experienceTag.tid"
-                      >#{{ experienceTag.tagName }}</div>
+                      ># {{ experienceTag.tagName }}</div>
                     </div>
                     <div v-else>태그를 추가해주세요.</div>
                   </div>
@@ -232,7 +241,7 @@
     <!-- 경험목록 끝 -->
 
     <!-- (+) 버튼 -->
-    <div id="exPlusBtn" v-on:click="addExp" style="width:350px; margin: 30px auto">
+    <div v-on:click="addExp" id="exPlusBtn" style="width:350px; margin: 30px auto">
       <div v-if="experiences.length == 0">
         <div class="row">
           <div class="col-button-custom">
@@ -291,6 +300,7 @@ export default {
       experienceTags: {
         "": [],
       },
+      allTagState: true,
       // mystyle: {
       //   width: "",
       //   height: "",
@@ -379,9 +389,58 @@ export default {
     //   this.buttonStyle.width = "60px";
     // },
 
-    exeptNoTagClickE: function () {
+    tagState(tag) {
+      return tag.state
+    },
+
+    allTagOnOff() {
+      this.allTagState = !this.allTagState;
+      if (this.allTagState == true) {
+       let tmp = []
+       this.tags.forEach(function(tag)
+         { 
+          tag.state = true;
+          tmp.push(tag.tid);
+         });
+         this.selectedTags = tmp
+      } else {
+        this.selectedTags = [];
+        Array.prototype.forEach.call(
+          this.tags,
+          (tag) => (tag.state = this.allTagState)
+        );
+      }
+    },
+
+    exceptNoTagClickE: function () {
       //lert("바뀔 값" + this.isIncludeNoTag);
       this.isIncludeNoTag = !this.isIncludeNoTag;
+      if (this.isIncludeNoTag == true) {
+
+        axios
+          .get(this.$SERVER_URL + `/experience/all`, {
+            params: {
+              uid: localStorage["uid"],
+            },
+          })
+          .then((response) => {
+            this.experiences = response.data.object;
+            Array.prototype.forEach.call(this.experiences, (t) =>
+              Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        let tmp = []
+        Array.prototype.forEach.call(this.experiences, experience => {
+          if (experience.tags.length > 0) {
+            tmp.push(experience)
+          }
+        })
+        this.experiences = tmp
+      }
     },
 
     showTag(tag) {
@@ -400,6 +459,7 @@ export default {
         if (selectedTags.includes(tag.tid)) {
           cnt++;
         }
+        return cnt;
       });
 
       if (
@@ -464,7 +524,6 @@ export default {
 
       var startdate = year + "-" + month + "-" + day;
 
-      alert(startdate);
       //alert(this.uid);
       axios
         .post(this.$SERVER_URL + `/experience`, {
@@ -477,13 +536,41 @@ export default {
           response.data.object.enddate = startdate;
           response.data.object.imgsrc = "icons8-pencil-24.png";
 
-          //경험이 아예없으면
-          if (response.data.status == false) {
-            experiences = response.data.object;
-          } else {
-            response.data.object.tags = [];
-            this.experiences.push(response.data.object);
-          }
+          axios
+          .get(this.$SERVER_URL + `/experience/Tags`, {
+            params: {
+              uid: localStorage["uid"],
+            },
+          })
+          .then((response) => {
+            console.log(response.data.object);
+            this.tags = response.data.object;
+            Array.prototype.forEach.call(this.tags, (t) =>
+              Object.assign(t, { imgsrc: "icons8-plus-64.png" })
+            );
+            // 태그 먼저 불러오도록 하게 만들기 위해 태그 불러오기 안에 경험 불러오기 넣었음
+            // 정확한 이유를 모르겠음. 이렇게 해야 오류 없이 태그리스트가 잘 나옴
+            axios
+              .get(this.$SERVER_URL + `/experience/all`, {
+                params: {
+                  uid: localStorage["uid"],
+                },
+              })
+              .then((response) => {
+                this.experiences = response.data.object;
+                Array.prototype.forEach.call(this.experiences, (t) =>
+                  Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
+                );
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            console.log(this.tags);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
         })
         .catch((error) => {
           //alert("실패");
@@ -672,8 +759,11 @@ export default {
   background: #eeeeee;
   opacity: 0.8;
 }
-#tagMenue {
+#tagManue {
   text-align: right;
+}
+#tagManue .box-table {
+  text-align: left;
 }
 .noTag {
   display: inline;
@@ -711,7 +801,7 @@ export default {
   height: 65%;
   text-align: center;
   position: relative;
-    transform: translate(25%, 30%);
+  transform: translate(25%, 30%);
   font-size: 15px;
   color: white;
   margin-top: auto;
@@ -782,7 +872,7 @@ export default {
   white-space: nowrap;
 }
 
-.editor_tag {
+/* .editor_tag {
   display: flex;
   width: 100%;
   min-height: 50px;
@@ -790,18 +880,22 @@ export default {
   padding: 0 0 5px;
   box-sizing: border-box;
   font-size: 0;
-}
+} */
 
-.inp_tag {
-  display: flex;
+/* .inp_tag {
+  display: inline !important;
   margin: 16px 26px 0 0;
   font-size: 13px;
   color: #909090;
   vertical-align: top;
-}
+} */
 
-.inp_tag .tf_g {
+/* .inp_tag .tf_g {
+  display:inline;
   display: inline-block;
+  box-sizing: content-box;
+  width: 100px;
+  height:24px;
   margin: 0;
   border: 0;
   font-size: 13px;
@@ -809,7 +903,7 @@ export default {
   vertical-align: top;
   outline: none;
   background: #eeeeee;
-}
+} */
 
 input::placeholder {
   color: black;
@@ -852,5 +946,14 @@ input::placeholder {
 .temp1 {
   display: none;
   margin: 0;
+}
+
+#manageEx .active {
+  border-color: black !important;
+  border-bottom-color: black !important;
+}
+#manageEx .b-icon.bi {
+  vertical-align: 0;
+  transform: translate(20%, 25%);
 }
 </style>

@@ -37,7 +37,6 @@ public class AccountController {
     @PostMapping("/account/login")
     @ApiOperation(value = "유저 로그인(uid 혹은 email로 로그인 가능)")
     public Object login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
-        System.out.println(loginRequest.toEntity().getPassword());
         return userService.login(loginRequest);
     }
 
@@ -98,8 +97,6 @@ public class AccountController {
     @PostMapping("/account/profile/{uid}")
     public ResponseEntity<BasicResponse> uploadImage(@PathVariable("uid") String uid,
             @RequestParam("profile") MultipartFile profile) throws Exception {
-        System.out.println("Original Image Byte Size - " + profile.getBytes().length);
-
         return userService.updateProfile(uid, profile);
     }
 

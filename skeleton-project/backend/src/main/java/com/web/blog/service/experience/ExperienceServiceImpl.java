@@ -88,17 +88,13 @@ public class ExperienceServiceImpl implements ExperienceService {
     @Override
     public ResponseEntity<BasicResponse> readAll(String uid) {
 
-        System.out.println(uid);
         ArrayList<Experience> list = experienceDao.findExperienceByUid(uid);
         ArrayList<ExperienceFindTagResponse> resList = new ArrayList<>();
-        ;
-        System.out.println(list);
 
         for (Experience e : list) {
             ArrayList<Tag> tags = new ArrayList<>();
             for (ExperienceTag et : e.getExperienceTags()) {
                 tags.add(et.getTag());
-                // System.out.println(et.getTag());
             }
             resList.add(ExperienceFindTagResponse.builder().uid(e.getUid()).exid(e.getExid()).title(e.getTitle())
                     .startdate(e.getStartdate()).enddate(e.getEnddate()).contents(e.getContents()).tags(tags)
@@ -123,7 +119,6 @@ public class ExperienceServiceImpl implements ExperienceService {
     @Override
     public ResponseEntity<BasicResponse> getTagAll(String uid) {
 
-        System.out.println(uid);
         List<Experience> list = experienceDao.findExperienceByUid(uid);
         HashSet<TagExperienceTagResponse> hs = new HashSet<>();
 
@@ -134,9 +129,7 @@ public class ExperienceServiceImpl implements ExperienceService {
                 hs.add(TagExperienceTagResponse.builder().tid(j.getTag().getTid()).tagName(j.getTag().getTagName())
                         .state(false).build());
 
-                System.out.println(j.getTag());
             }
-            System.out.println();
         }
 
         if (!list.isEmpty()) {
@@ -180,7 +173,6 @@ public class ExperienceServiceImpl implements ExperienceService {
     @Override
     public ResponseEntity<BasicResponse> deleteTagFromEx(int tid, int exid) {
         try {
-            System.out.println(tid + " - " + exid);
             // etagDao.deleteByExidAndTid(request.getExid(), request.getTid());
             Optional<ETag> opt = etagDao.findByExidAndTid(exid, tid);
             etagDao.deleteById(opt.get().getExtid());

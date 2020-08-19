@@ -120,7 +120,7 @@
                 <b-icon icon="three-dots"></b-icon>
               </template>
               <b-dropdown-item @click="gotoDetail(portfolio.pid)">더보기</b-dropdown-item>
-              <b-dropdown-item>파일 다운로드</b-dropdown-item>
+              <b-dropdown-item @click="downloadAllZip(portfolio.pid)">파일 다운로드</b-dropdown-item>
               <b-dropdown-item
                 class="mr-2"
                 @click="deleteP(portfolio)"
@@ -173,7 +173,7 @@
                     text-variant="black"
                   >#{{ portfolioTag.tagName }}</b-badge>
                 </h4>
-              </div>...
+              </div>
             </div>
             <div v-else class="tags">태그를 추가해보세요</div>
           </div>
@@ -280,25 +280,39 @@ export default {
           contents: "내용",
           title: "제목",
           uid: localStorage["uid"],
+          startDate: startdate,
+          endDate: startdate,
         })
         .then((response) => {
-          response.data.object.start_date = startdate;
-          response.data.object.end_date = startdate;
-          response.data.object.state = false;
           response.data.object.tag = [];
-
+          
+          
           axios
-            .get(this.$SERVER_URL + `/portfolio/all`, {
-              params: {
-                uid: localStorage["uid"],
-              },
-            })
-            .then((response) => {
-              this.portfolios = response.data.object;
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          .get(this.$SERVER_URL + `/portfolio/Tags`, {
+            params: {
+              uid: localStorage["uid"],
+            },
+          })
+          .then((response) => {
+            this.tags = response.data.object;
+            axios
+              .get(this.$SERVER_URL + `/portfolio/all`, {
+                params: {
+                  uid: localStorage["uid"],
+                },
+              })
+              .then((response) => {
+                this.portfolios = response.data.object;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+          });    
+
+
         })
         .catch((error) => {
           console.log(error);
@@ -437,6 +451,35 @@ export default {
         params: { pid: pid },
       });
     },
+    downloadAllZip(pid) {
+      axios
+        .get(
+          this.$SERVER_URL + `/downloadPortfolio`,
+          {
+            params: {
+              pid: pid,
+              uid: localStorage["uid"],
+            },
+          },
+          {
+            responseType: "blob",
+          }
+        )
+        .then((response) => {
+          const link = document.createElement("a");
+          const url = response.request.responseURL;
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+
+
+
     // change_color() {
     //   this.cardColor.background = "light gray";
     // },

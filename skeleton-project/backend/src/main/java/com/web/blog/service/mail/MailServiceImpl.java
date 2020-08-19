@@ -128,12 +128,10 @@ public class MailServiceImpl implements MailService {
             result.status = true;
             result.data = "이메일 인증코드 테이블 삭제 성공";
             response = new ResponseEntity<>(result, HttpStatus.OK);
-            System.out.println("이메일 인증코드 테이블 삭제 성공");
         } else {
             result.status = false;
             result.data = "이메일 인증코드 테이블 삭제 실패";
             response = new ResponseEntity<>(result, HttpStatus.OK);
-            System.out.println("이메일 인증코드 테이블 삭제 실패");
             return response;
         }
 
