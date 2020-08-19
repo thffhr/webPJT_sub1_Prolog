@@ -22,7 +22,7 @@
 
                 <!-- <b-button  size="sm" variant="outline-dark">상세보기</b-button> -->
               </h2>
-              <div id="downloadBtn">
+              <div id="downloadBtn" @click="downloadAllZip(pjtAll[i].pid)">
                 <b-icon icon="cloud-download" font-scale="1.2"></b-icon>
               </div>
 
@@ -97,6 +97,31 @@ export default {
     },
     gotoPortfolio() {
       this.$router.push({ path: "/ManagePortfolio" });
+    },
+    downloadAllZip(pid) {
+      axios
+        .get(
+          this.$SERVER_URL + `/downloadPortfolio`,
+          {
+            params: {
+              pid: pid,
+              uid: localStorage["uid"],
+            },
+          },
+          {
+            responseType: "blob",
+          }
+        )
+        .then((response) => {
+          const link = document.createElement("a");
+          const url = response.request.responseURL;
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };
