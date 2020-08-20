@@ -184,20 +184,6 @@
       <!-- </b-row>
       </b-container>-->
     </div>
-
-    <!-- <div style="text-align: center;">
-            <span
-              class="findUser text-secondary"
-              @click="$bvModal.show('findUserModal')"
-              style="text-align: center; cursor: pointer;"
-            >아이디 또는 비밀번호를 잊으셨나요?</span>
-          </div>
-          <b-modal id="findUserModal" hide-footer>
-            <template v-slot:modal-title>아이디 찾기</template>
-            <div class="d-block text-center">
-              <FindUserByEmail />
-            </div>
-    </b-modal>-->
   </div>
 </template>
 
