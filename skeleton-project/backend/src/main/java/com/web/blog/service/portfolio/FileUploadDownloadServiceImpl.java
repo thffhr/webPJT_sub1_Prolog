@@ -271,7 +271,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
                 // 압축할 파일을 경로포함해서 FileInputStream 클래스로 생성한다.
                 for (UploadFile file : fileList) {
                     // 압축대상 파일
-                    FileInputStream in = new FileInputStream(this.fileLocation + "\\" + file.getFileName());
+                    FileInputStream in = new FileInputStream(this.fileLocation + "/" + file.getFileName());
                     System.out.println(file.getFileName());
                     // 압축파일에 포함시킬 새 파일 생성
                     zout.putNextEntry(new ZipEntry(file.getFileName()));
