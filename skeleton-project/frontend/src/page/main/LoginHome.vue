@@ -38,7 +38,12 @@
                 <h6 class="mb-0" id="tags">
                   <!-- 태그 -->
                   <div v-if="pjtAll[i].tag.length > 0">
-                    <div style="display: inline-block; margin-bottom: 5px;" v-for="(ptag, j) in pjtAll[i].tag.slice(0, 3)" :key="j" class="tag mr-3">
+                    <div
+                      style="display: inline-block; margin-bottom: 5px;"
+                      v-for="(ptag, j) in pjtAll[i].tag.slice(0, 3)"
+                      :key="j"
+                      class="tag mr-3"
+                    >
                       <!-- id말고 tag_name으로 바꾸기 -->
                       # {{ ptag.tagName }}
                     </div>
@@ -120,11 +125,16 @@ export default {
           }
         )
         .then((response) => {
-          const link = document.createElement("a");
-          const url = response.request.responseURL;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
+          if (response.data.status) {
+            alert("저장된 파일이 없습니다. 파일을 추가하세요.");
+          } else {
+            console.log(response);
+            const link = document.createElement("a");
+            const url = response.request.responseURL;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+          }
         })
         .catch((error) => {
           console.log(error);
