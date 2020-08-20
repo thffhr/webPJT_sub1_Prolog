@@ -138,7 +138,7 @@ export default {
             const url = response.request.responseURL;
             link.href = url;
             document.body.appendChild(link);
-            link.click();
+            // link.click();
           }
         })
         .catch((error) => {
