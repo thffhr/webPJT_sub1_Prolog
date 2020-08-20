@@ -7,24 +7,33 @@
         <b-tabs class="m-3" align="center">
           <b-tab title="경험" active>
             <Board id="board-s-e">
-              <div v-for="(ex, ex_idx) in nav_ex_outlist[this.changinIdx]" :key="ex.exid">
+              <div
+                v-for="(ex, ex_idx) in nav_ex_outlist[this.changinIdx]"
+                :key="ex.exid"
+              >
                 <Card :id="'card-s-e-' + ex.exid" draggable="true">
-                  <div>{{ex.title}}</div>
+                  <div>{{ ex.title }}</div>
                 </Card>
               </div>
-              
             </Board>
-            <Board id="board-s-e" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
+            <Board id="board-s-e" class="dragSpace dragText"
+              >여기에 끌어다 쓰세요.</Board
+            >
           </b-tab>
           <b-tab title="포트폴리오">
             <Board id="board-s-p">
-              <div v-for="(port, p_idx) in nav_port_outlist[this.changinIdx]" :key="port.pid">
+              <div
+                v-for="(port, p_idx) in nav_port_outlist[this.changinIdx]"
+                :key="port.pid"
+              >
                 <Card :id="'card-s-p-' + port.pid" draggable="true">
-                  <div>{{port.title}}</div>
+                  <div>{{ port.title }}</div>
                 </Card>
               </div>
             </Board>
-            <Board id="board-s-p" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
+            <Board id="board-s-p" class="dragSpace dragText"
+              >여기에 끌어다 쓰세요.</Board
+            >
           </b-tab>
           <!-- <b-tab title="Disabled" disabled><p>I'm a disabled tab!</p></b-tab> -->
         </b-tabs>
@@ -34,7 +43,12 @@
 
     <!-- 기간 선택 모달 -->
     <div v-if="is_show">
-      <modal name="example" @before-open="beforeOpen" @before-close="beforeClose" draggable>
+      <modal
+        name="example"
+        @before-open="beforeOpen"
+        @before-close="beforeClose"
+        draggable
+      >
         <div class="custom-modal-header">
           지원회사 기간 선택
           <div class="modal-button">
@@ -52,14 +66,16 @@
           </select>
 
           <div>
-            <p>선택하신 기간은 {{search_input_period}}입니다.</p>
+            <p>선택하신 기간은 {{ search_input_period }}입니다.</p>
             <p>맞으시면 확인 버튼을 눌러주세요.</p>
           </div>
           <button
             @click="searchByPeriod(search_input_period)"
             type="button"
             class="btn btn-primary"
-          >확인</button>
+          >
+            확인
+          </button>
         </div>
       </modal>
     </div>
@@ -68,7 +84,12 @@
     <!-- 검색 창 -->
     <div class="container marketing">
       <div class="custom_search_container">
-        <form class="fleft" name="topSearchForm" id="topSearchForm" action="/goods/search">
+        <form
+          class="fleft"
+          name="topSearchForm"
+          id="topSearchForm"
+          action="/goods/search"
+        >
           <input type="hidden" name="keyword_log_flag" value="Y" />
           <div class="search-input">
             <b-img
@@ -164,28 +185,27 @@
 
     <!-- 임시 지원목록 상세 -->
 
-  
-    <input v-model="synCheck" style="display:flex">
+    <input v-model="synCheck" style="display:flex" />
 
     <!-- 지원목록 -->
     <div v-bind="selected_apply" v-if="isEmptyApply()">
       <div class="custom-temp col-md-12">
         <!-- 제목 -->
         <div>
-          <h2>{{selected_apply.apCompany}}</h2>
+          <h2>{{ selected_apply.apCompany }}</h2>
         </div>
         <div>
-          <h4>{{selected_apply.apTerm}}</h4>
+          <h4>{{ selected_apply.apTerm }}</h4>
         </div>
 
         <!-- 날짜 -->
         <div class="date-align">
-          <small>{{selected_apply.ap_term}}</small>
+          <small>{{ selected_apply.ap_term }}</small>
         </div>
 
         <!-- 내용 -->
         <div>
-          <p class="txt_line">{{selected_apply.apDesc}}</p>
+          <p class="txt_line">{{ selected_apply.apDesc }}</p>
         </div>
       </div>
     </div>
@@ -195,39 +215,46 @@
 
     <!-- 목록 리스트 -->
     <div v-for="(apply, ap_idx) in apply_lists" :key="apply.apid">
-      <div
-        no-body
-        class="applyCard mb-1"
-      >
+      <div no-body class="applyCard mb-1">
         <!-- 안되면 div로 빼주자 -->
         <b-container header-tag="header" class="applyCardHeader p-1" role="tab">
           <b-row>
             <b-col cols="4">
               <b-row>
                 <div v-if="!isEditClicked_list[ap_idx]">
-                  <h2 class="ml-4 mt-3">{{apply.apCompany}}</h2>
+                  <h2 class="ml-4 mt-3">{{ apply.apCompany }}</h2>
                 </div>
                 <div v-if="isEditClicked_list[ap_idx]" class="ml-4 mt-3">
-                  <b-form-input v-model="apply.apCompany" placeholder="제목을 입력해주세요."></b-form-input>
+                  <b-form-input
+                    v-model="apply.apCompany"
+                    placeholder="제목을 입력해주세요."
+                  ></b-form-input>
                 </div>
               </b-row>
             </b-col>
             <b-col cols="6">
               <b-row>
                 <div v-if="!isEditClicked_list[ap_idx]">
-                  <p class="mt-3" style="width:100%">{{apply.apTerm}}</p>
+                  <p class="mt-3" style="width:100%">{{ apply.apTerm }}</p>
                 </div>
                 <div v-if="isEditClicked_list[ap_idx]" style="display:inline">
                   <p class="mt-3">
-                    <b-form-input v-model="apply.apTerm" placeholder="2020_하반기"></b-form-input>
+                    <b-form-input
+                      v-model="apply.apTerm"
+                      placeholder="2020_하반기"
+                    ></b-form-input>
                   </p>
                 </div>
               </b-row>
               <b-row v-if="!isEditClicked_list[ap_idx]">
-                <p>{{apply.apDesc}}</p>
+                <p>{{ apply.apDesc }}</p>
               </b-row>
               <b-row v-if="isEditClicked_list[ap_idx]">
-                <b-form-textarea v-model="apply.apDesc" placeholder="내용을 입력하세요." rows="3"></b-form-textarea>
+                <b-form-textarea
+                  v-model="apply.apDesc"
+                  placeholder="내용을 입력하세요."
+                  rows="3"
+                ></b-form-textarea>
               </b-row>
             </b-col>
           </b-row>
@@ -239,113 +266,138 @@
               v-if="isEditClicked_list[ap_idx]"
               @click="saveEdit(apply.apid, apply, ap_idx)"
             >
-              <b-img v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px"></b-img>
+              <b-img
+                v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
+                width="15px"
+              ></b-img>
             </div>
             <div
               class="aBtn"
-              v-if="!isEditClicked_list[ap_idx]&&!isEditCheck"
+              v-if="!isEditClicked_list[ap_idx] && !isEditCheck"
               @click="clickeEdit(apply.apid, ap_idx)"
             >
-              <b-img v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)" width="15px"></b-img>
+              <b-img
+                v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
+                width="15px"
+              ></b-img>
             </div>
           </div>
           <div class="aBtn" @click="deleteA(apply.apid, ap_idx)">
-            <b-img v-bind:src="require(`@/assets/img/icons8-trash-24.png`)" width="15px"></b-img>
-          </div>
-        </div>
-       
-       
-       <transition name="fade">
-        <div v-show="isEditClicked_list_show[ap_idx]">
-          <!-- 여기에서 지원목록에 포함되어 있는 경험/포폴 보여줌 -->
-          <b-row></b-row>
-          <div class="applyCardBody">
-            <div
-              v-if="nav_ex_inlist[ap_idx]==0&&nav_port_inlist[ap_idx]==0&&!isEditClicked_list[ap_idx]"
-              style="text-align:center; margin:30px 0;"
-            >
-              <h4>수정버튼을 눌러 관련 자료들을 추가해보세요.</h4>
-            </div>
-            <div v-else>
-
-              <!-- 수정중이 아닐때 -->
-                <!-- 경험-->
-               <div v-if="!isEditClicked_list[ap_idx]">
-                <div>경험</div>
-                <div class="boardNoE">
-                  <div v-for="(ex, exid) in nav_ex_inlist[ap_idx]" :key="ex.exid">
-                   <div class="cardNoE">{{ex.title}}</div>
-                  </div>
-                </div>
-
-                <!-- 포폴 -->
-                <div>프로젝트</div>
-                <div class="boardNoP">
-                  <div v-for="(port, pid) in nav_port_inlist[ap_idx]" :key="port.pid">
-                      <div  class="cardNoP">{{port.title}}</div>
-                  </div>
-                </div>
-              </div>
-
-
-              <!-- 수정중 일때 -->
-              <!-- 경험 -->
-              <div v-if="isEditClicked_list[ap_idx]">
-                <div>경험</div>
-                <Board id="board-d-e">
-                 <div v-for="(ex, exid) in nav_ex_inlist[ap_idx]" :key="ex.exid"> 
-                    <Card :id="'card-b-e-' + ex.exid" draggable="true">
-                      <div>{{ex.title}}</div>
-                    </Card>
-                 </div> 
-                  <Board id="board-d-e" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
-                </Board>
-
-                <!-- 포폴 -->
-                <div>프로젝트</div>
-                <Board id="board-d-p">
-                  <div v-for="(port, pid) in nav_port_inlist[ap_idx]" :key="port.pid">
-                    <Card :id="'card-b-p-' + port.pid" draggable="true">
-                      <div>{{port.title}}</div>
-                    </Card>
-                  </div>
-                  <Board id="board-d-p" class="dragSpace dragText">여기에 끌어다 쓰세요.</Board>
-                </Board>
-              </div>
-              
-
-                
-
-
-            </div>
-          </div>
-           <input v-model="isEditCheck" style="display:none">
-        </div>
-       </transition>
-
-       
-            <div  @click="clickeDetail(apply.apid, ap_idx)" class ="custom-button-align col-lg-12">
-           <b-img
-              style="cursor:pointer"
-              v-bind:src="require(`@/assets/img/icons8-down-button-48.png`)"
-              width="30px"
-               
+            <b-img
+              v-bind:src="require(`@/assets/img/icons8-trash-24.png`)"
+              width="15px"
             ></b-img>
+          </div>
+        </div>
+
+        <transition name="fade">
+          <div v-show="isEditClicked_list_show[ap_idx]">
+            <!-- 여기에서 지원목록에 포함되어 있는 경험/포폴 보여줌 -->
+            <b-row></b-row>
+            <div class="applyCardBody">
+              <div
+                v-if="
+                  nav_ex_inlist[ap_idx] == 0 &&
+                    nav_port_inlist[ap_idx] == 0 &&
+                    !isEditClicked_list[ap_idx]
+                "
+                style="text-align:center; margin:30px 0;"
+              >
+                <h4>수정버튼을 눌러 관련 자료들을 추가해보세요.</h4>
+              </div>
+              <div v-else>
+                <!-- 수정중이 아닐때 -->
+                <!-- 경험-->
+                <div v-if="!isEditClicked_list[ap_idx]">
+                  <div>경험</div>
+                  <div class="boardNoE">
+                    <div
+                      v-for="(ex, exid) in nav_ex_inlist[ap_idx]"
+                      :key="ex.exid"
+                    >
+                      <div class="cardNoE">{{ ex.title }}</div>
+                    </div>
+                  </div>
+
+                  <!-- 포폴 -->
+                  <div>프로젝트</div>
+                  <div class="boardNoP">
+                    <div
+                      v-for="(port, pid) in nav_port_inlist[ap_idx]"
+                      :key="port.pid"
+                    >
+                      <div class="cardNoP">{{ port.title }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 수정중 일때 -->
+                <!-- 경험 -->
+                <div v-if="isEditClicked_list[ap_idx]">
+                  <div>경험</div>
+                  <Board id="board-d-e">
+                    <div
+                      v-for="(ex, exid) in nav_ex_inlist[ap_idx]"
+                      :key="ex.exid"
+                    >
+                      <Card :id="'card-b-e-' + ex.exid" draggable="true">
+                        <div>{{ ex.title }}</div>
+                      </Card>
+                    </div>
+                    <Board id="board-d-e" class="dragSpace dragText"
+                      >여기에 끌어다 쓰세요.</Board
+                    >
+                  </Board>
+
+                  <!-- 포폴 -->
+                  <div>프로젝트</div>
+                  <Board id="board-d-p">
+                    <div
+                      v-for="(port, pid) in nav_port_inlist[ap_idx]"
+                      :key="port.pid"
+                    >
+                      <Card :id="'card-b-p-' + port.pid" draggable="true">
+                        <div>{{ port.title }}</div>
+                      </Card>
+                    </div>
+                    <Board id="board-d-p" class="dragSpace dragText"
+                      >여기에 끌어다 쓰세요.</Board
+                    >
+                  </Board>
+                </div>
+              </div>
             </div>
-       
+            <input v-model="isEditCheck" style="display:none" />
+          </div>
+        </transition>
+
+        <div
+          @click="clickeDetail(apply.apid, ap_idx)"
+          class="custom-button-align col-lg-12"
+        >
+          <b-img
+            style="cursor:pointer"
+            v-bind:src="require(`@/assets/img/icons8-down-button-48.png`)"
+            width="30px"
+          ></b-img>
+        </div>
       </div>
     </div>
     <!-- 추가하기 버튼 -->
-    <div id="exPlusBtn" v-on:click="addApply" style="width:350px; margin: 30px auto">
+    <div
+      id="exPlusBtn"
+      v-on:click="addApply"
+      style="width:350px; margin: 50px auto"
+    >
       <div v-if="apply_lists.length == 0">
         <div class="row">
           <div class="col-button-custom">
-            <b-icon icon="journal-plus" font-scale="5"></b-icon>
+            <b-icon icon="card-checklist" font-scale="5"></b-icon>
           </div>
         </div>
 
         <div class="row">
-          <h3 class="mr-auto ml-auto mt-3">활동 경험을 기록해보세요.</h3>
+          <h3 class="mr-auto ml-auto mt-3">지원 목록을 기록해보세요.</h3>
         </div>
       </div>
       <div class="row" v-else>
@@ -411,14 +463,14 @@ export default {
       synCheck: false,
 
       changingApid: 0,
-      changinIdx:0,
+      changinIdx: 0,
 
-      count_d_e : 0,
-      count_d_p : 0,
-      count_s_e : 0,
-      count_s_p : 0,
+      count_d_e: 0,
+      count_d_p: 0,
+      count_s_e: 0,
+      count_s_p: 0,
 
-      ThreadFlag : true,
+      ThreadFlag: true,
 
       flowersImg: [
         "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg",
@@ -441,10 +493,6 @@ export default {
   created() {
     //이벤트 버스
 
-
-
-    
-
     //s -> d는 추가
     //d -> s는 삭제
     //e는 경험, p는 포트폴리오
@@ -456,40 +504,36 @@ export default {
       var myregexp2 = new RegExp("-");
       var op = payload.split(myregexp2);
 
-
-  
-
       //
-      if(this.ThreadFlag){
-          
-          this.ThreadFlag= false;
+      if (this.ThreadFlag) {
+        this.ThreadFlag = false;
 
-          //경험
-          if (op[2] == "e") {
-            //추가
-            if (op[0] == "s") {
-              this.$nextTick(() => {
-                this.addE(op[3]);
-              })
-            }
-            //삭제
-            else if (op[0] == "d") {
-              this.deleteE(op[3]);
-            }
+        //경험
+        if (op[2] == "e") {
+          //추가
+          if (op[0] == "s") {
+            this.$nextTick(() => {
+              this.addE(op[3]);
+            });
           }
-          //포트
-          else if (op[2] == "p") {
-            //추가
-            if (op[0] == "s") {
-              this.$nextTick(() => {
-                this.addP(op[3]);
-              })
-            }
-            //삭제
-            else if (op[0] == "d") {
-              this.deleteP(op[3]);
-            }
+          //삭제
+          else if (op[0] == "d") {
+            this.deleteE(op[3]);
           }
+        }
+        //포트
+        else if (op[2] == "p") {
+          //추가
+          if (op[0] == "s") {
+            this.$nextTick(() => {
+              this.addP(op[3]);
+            });
+          }
+          //삭제
+          else if (op[0] == "d") {
+            this.deleteP(op[3]);
+          }
+        }
       }
     });
 
@@ -548,10 +592,10 @@ export default {
       this.is_show = true;
       this.$modal.show("example");
     },
-    updateValue: function (period) {
+    updateValue: function(period) {
       this.search_input_period = period;
     },
-    searchByPeriod: function (period) {
+    searchByPeriod: function(period) {
       //검색어 없음, 처음 미정일때
       if (period == "") {
         alert("기간을 선택하세요.");
@@ -595,10 +639,10 @@ export default {
         },
       };
     },
-    log: function (evt) {
+    log: function(evt) {
       window.console.log(evt);
     },
-    searchA: function (text, period) {
+    searchA: function(text, period) {
       if (period == "미정") period = "";
 
       axios
@@ -627,7 +671,7 @@ export default {
           console.log(error);
         });
     },
-    clickeEdit: function (apid, idx) {
+    clickeEdit: function(apid, idx) {
       //alert(apid + " - " + idx);
 
 
@@ -638,20 +682,17 @@ export default {
       this.synCheck = !this.synCheck;
       console.log("clickeEdit이에요!");
 
-      this.getPortOutNav(apid,idx);
-      
+      this.getPortOutNav(apid, idx);
+
       this.changingApid = apid;
       this.changinIdx = idx;
 
       this.isEditClicked_list_show[idx] = true;
-      
-      
 
       // this.getExOutNav(apid);
     },
     // 이거추가
     clickeDetail(apid, idx) {
-
       //업데이트 클릭이 되어있을때 만.
         //alert("디테일 눌려요;;");
         this.isEditClicked_list_show[idx] = !this.isEditClicked_list_show[idx];
@@ -660,8 +701,8 @@ export default {
         this.synCheck = !this.synCheck;
       
       //
-      if(this.isEditCheck2){
-        this.isEditCheck2 = false;   
+      if (this.isEditCheck2) {
+        this.isEditCheck2 = false;
       }
     },
 
@@ -676,7 +717,7 @@ export default {
       //저장했을때는 작동안하게 하자..
       this.isEditCheck2 = true;
 
-      if(!this.isEditClicked_list[idx]){
+      if (!this.isEditClicked_list[idx]) {
         this.isEditClicked_list_show[idx] = false;
       }
 
@@ -696,7 +737,7 @@ export default {
         });
     },
     // 여기까지 추가
-    getPortOutNav: function (apid,idx) {
+    getPortOutNav: function(apid, idx) {
       // console.log("1)getPortOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outportfolio`, {
@@ -711,7 +752,7 @@ export default {
           var cell;
           cell = document.getElementsByClassName("toRemove");
 
-          console.log("길이" + cell.length)
+          console.log("길이" + cell.length);
           console.log(cell);
 
           var count = cell.length;
@@ -765,14 +806,14 @@ export default {
 
           //this.nav_port_outlist[idx] = temp;
           console.log(idx);
-          console.log(this.nav_port_outlist[idx])
+          console.log(this.nav_port_outlist[idx]);
 
-          this.getExOutNav(apid,idx);
+          this.getExOutNav(apid, idx);
         })
         .catch((error) => {});
     },
 
-    getExOutNav: function (apid,idx) {
+    getExOutNav: function(apid, idx) {
       // console.log("2)getExOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outexp`, {
@@ -833,13 +874,19 @@ export default {
       
       //this.nav_ex_outlist[idx] = temp;
 
+          this.nav_ex_outlist.splice(0);
 
-          this.getPortInNav(apid,idx);
+          for (var i = 0; i < this.apply_lists.length; i++) {
+            this.nav_ex_outlist.push(temp);
+          }
+          this.nav_ex_outlist[idx] = temp;
+
+          this.getPortInNav(apid, idx);
         })
         .catch((error) => {});
     },
     // 여기 수정해야돼!!!!!!!!!!!!!
-    getPortInNav: function (apid,idx) {
+    getPortInNav: function(apid, idx) {
       // console.log("3)getPortInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inportfolio`, {
@@ -905,11 +952,11 @@ export default {
             
             
           }
-          this.getExInNav(apid,idx);
+          this.getExInNav(apid, idx);
         })
         .catch((error) => {});
     },
-    getExInNav: function (apid, idx) {
+    getExInNav: function(apid, idx) {
       // console.log(apid + " - 4)getExInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inexp`, {
@@ -975,22 +1022,21 @@ export default {
         .catch((error) => {});
     },
     // 여기까지 수정해야돼!!!!!!!!!!!!
-    addApply: function () {
+    addApply: function() {
       axios
         .post(this.$SERVER_URL + `/apply`, {
           apCompany: "회사명",
           apDesc: "설명",
           apTerm: "미정",
-          apTitle:"제목",
+          apTitle: "제목",
           uid: localStorage["uid"],
         })
         .then((response) => {
-
           //빈 지원리스트일 경우
-          if(this.apply_lists == null){
+          if (this.apply_lists == null) {
             this.apply_lists = [];
           }
-          
+
           //표면상 추가
           this.apply_lists.push(response.data.object);
         })
@@ -999,7 +1045,7 @@ export default {
           console.log(error);
         });
     },
-    deleteA: function (apid, idx) {
+    deleteA: function(apid, idx) {
       axios
         .delete(this.$SERVER_URL + `/apply`, {
           params: {
@@ -1012,30 +1058,26 @@ export default {
           this.$delete(this.apply_lists, idx);
           this.$delete(this.isEditClicked_list, idx);
 
-          
           this.isEditCheck = false;
           this.isEditCheck2 = false;
-          console.log("삭제했어요");  
-          
+          console.log("삭제했어요");
 
           //바꾸고 있는게 삭제하려는 거일 경우 모두 리셋
-          if(this.changingApid == apid){
-              for (var i = 0; i < this.apply_lists.length; i++) {
-                this.isEditClicked_list[i] = false;
-                this.isEditClicked_list_show[i] = false;
-              }
+          if (this.changingApid == apid) {
+            for (var i = 0; i < this.apply_lists.length; i++) {
+              this.isEditClicked_list[i] = false;
+              this.isEditClicked_list_show[i] = false;
+            }
           }
-
         })
         .catch((error) => {});
     },
     addE(exid) {
-       console.log("경험 추가" + this.changingApid + "-" + exid);
+      console.log("경험 추가" + this.changingApid + "-" + exid);
       axios
         .post(this.$SERVER_URL + `/apply/addExp`, {
           apid: this.changingApid,
           exid: exid,
-          
         })
         .then((response) => {
           this.ThreadFlag = true;
@@ -1045,7 +1087,7 @@ export default {
         });
     },
     addP(pid) {
-       console.log("포트 추가" + this.changingApid + "-" + pid);
+      console.log("포트 추가" + this.changingApid + "-" + pid);
       axios
         .post(this.$SERVER_URL + `/apply/addPortfolio`, {
           apid: this.changingApid,
@@ -1053,13 +1095,13 @@ export default {
         })
         .then((response) => {
           this.ThreadFlag = true;
-          })
+        })
         .catch((error) => {
           this.ThreadFlag = true;
-          });
+        });
     },
     deleteE(exid) {
-       console.log("경험 삭제" + this.changingApid + "-" + exid);
+      console.log("경험 삭제" + this.changingApid + "-" + exid);
       axios
         .delete(this.$SERVER_URL + `/apply/deleteExp`, {
           data: {
@@ -1069,11 +1111,13 @@ export default {
         })
         .then((response) => {
           this.ThreadFlag = true;
-          })
-        .catch((error) => {this.ThreadFlag = true;});
+        })
+        .catch((error) => {
+          this.ThreadFlag = true;
+        });
     },
     deleteP(pid) {
-       console.log("포트 삭제" + this.changingApid + "-" + pid);
+      console.log("포트 삭제" + this.changingApid + "-" + pid);
       axios
         .delete(this.$SERVER_URL + `/apply/deletePortfolio`, {
           data: {
@@ -1083,8 +1127,10 @@ export default {
         })
         .then((response) => {
           this.ThreadFlag = true;
-          })
-        .catch((error) => {this.ThreadFlag = true;});
+        })
+        .catch((error) => {
+          this.ThreadFlag = true;
+        });
     },
   },
 };
@@ -1423,7 +1469,6 @@ export default {
   background-color: #7a63ff;
 }
 
-
 .board {
   display: flex;
   flex-direction: column;
@@ -1489,7 +1534,6 @@ export default {
   padding: 25px;
 }
 
-
 .boardNoP .cardNoP {
   padding: 15px 25px;
   background-color: #f3f3f3;
@@ -1515,18 +1559,19 @@ export default {
   justify-content: space-evenly;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 
 .fade-enter-active {
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 .fade-leave-active {
-  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .fade-enter, .fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {
@@ -1534,8 +1579,7 @@ export default {
   opacity: 0;
 }
 
-.custom-button-align{
+.custom-button-align {
   text-align: center;
 }
-
 </style>

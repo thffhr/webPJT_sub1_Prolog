@@ -1,22 +1,36 @@
 <template>
   <div id="nologinHome">
-    <b-navbar class="nologinMenue ml-auto mr-auto" type="dark" v-if="!constants.IS_LOGED_IN">
+    <b-navbar
+      class="nologinMenue ml-auto mr-auto"
+      type="dark"
+      v-if="!constants.IS_LOGED_IN"
+    >
       <b-navbar-nav class="ml-auto mr-auto">
         <b-nav-item class="mr-5" @click="scroll('Home')">Home</b-nav-item>
         <!-- <b-nav-item class="mr-5" href="#Home">Home</b-nav-item> -->
-        <b-nav-item class="mr-5" @click="scroll('AboutUs')">About Us</b-nav-item>
-        <b-nav-item class="mr-5" @click="scroll('Ourservice')">Our Service</b-nav-item>
+        <b-nav-item class="mr-5" @click="scroll('AboutUs')"
+          >About Us</b-nav-item
+        >
+        <b-nav-item class="mr-5" @click="scroll('Ourservice')"
+          >Our Service</b-nav-item
+        >
         <b-nav-item class="mr-5" @click="scroll('Contact')">Contact</b-nav-item>
       </b-navbar-nav>
     </b-navbar>
     <div id="Home">
-      <b-img :src="require(`@/assets/img/logo2-2.png`)" contain width="500" id="HomeLogo"></b-img>
+      <b-img
+        :src="require(`@/assets/img/logo2-2.png`)"
+        contain
+        width="500"
+        id="HomeLogo"
+      ></b-img>
       <div style="text-align: center;" class="mt-3">
         <b-button
           class="LoginBtn mr-5"
           @click="$bvModal.show('LoginModal')"
           style="text-align: center; cursor: pointer;"
-        >로그인</b-button>
+          >로그인</b-button
+        >
         <b-modal id="LoginModal" hide-footer>
           <template v-slot:modal-title>로그인</template>
           <div class="d-block text-center">
@@ -38,7 +52,9 @@
                 class="mt-1 mb-1"
                 style="width: 60%;"
               ></b-form-input>
-              <span class="findUser text-secondary">아이디 또는 비밀번호를 잊으셨나요?</span>
+              <span class="findUser text-secondary"
+                >아이디 또는 비밀번호를 잊으셨나요?</span
+              >
             </div>
             <b-button class="mt-3" @click="login">로그인</b-button>
           </div>
@@ -47,8 +63,14 @@
           class="JoinBtn"
           @click="$bvModal.show('JoinModal')"
           style="text-align: center; cursor: pointer;"
-        >회원가입</b-button>
-        <b-modal id="JoinModal" hide-footer v-on:close="closeModal()" ref="Modal">
+          >회원가입</b-button
+        >
+        <b-modal
+          id="JoinModal"
+          hide-footer
+          v-on:close="closeModal()"
+          ref="Modal"
+        >
           <template v-slot:modal-title>
             <p class="mt-2 mb-2">회원가입</p>
             <small class="mb-2">회원 정보를 입력해주세요.</small>
@@ -97,14 +119,21 @@
           <h5>취업을 위해 열심히 참여했던 활동과 프로젝트들...</h5>
         </b-row>
         <b-row align-h="center" class="m-1">
-          <h5>정작 필요할 땐 안보이고, 기억이 나지 않아 어려움을 겪고 계신가요?</h5>
+          <h5>
+            정작 필요할 땐 안보이고, 기억이 나지 않아 어려움을 겪고 계신가요?
+          </h5>
         </b-row>
         <b-row align-h="center" class="m-1">
           <h5>
             그렇다면
             <div id="smallLogo1">
-              <b-img :src="require(`@/assets/img/logo2-6.png`)" contain width="100"></b-img>
-            </div>에서 아래와 같은 기능을 사용해보세요.
+              <b-img
+                :src="require(`@/assets/img/logo2-6.png`)"
+                contain
+                width="100"
+              ></b-img>
+            </div>
+            에서 아래와 같은 기능을 사용해보세요.
           </h5>
         </b-row>
         <b-row align-h="center">
@@ -220,11 +249,13 @@ export default {
             localStorage.setItem("nickname", response.data.object.nickname);
             localStorage.setItem("email", response.data.object.email);
             localStorage.setItem("password", response.data.object.password);
+            localStorage.setItem("check", false);
             constants.IS_LOGED_IN = true;
             // alert("로그인 되었습니다!");
-            // location.href = "/#/logedin";
+            location.href = `http://localhost:3000/#/${response.data.object.uid}`;
 
-            this.$router.go({ path: `/${localStorage["uid"]}` });
+            // this.$router.go({ path: `/${response.data.object.uid}` });
+            // this.$router.push({ path: `/${localStorage["uid"]}` });
           } else {
             alert("이메일 또는 비밀번호가 잘못되었습니다.");
           }
