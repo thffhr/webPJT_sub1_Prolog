@@ -317,12 +317,18 @@ export default {
     },
     deleteP() {
       axios
-        .post(this.$SERVER_URL + `/account/profile/delete/${uid}`, {
+        .post(this.$SERVER_URL + `/account/profile/delete/${this.uid}`, {
           uid: localStorage["uid"],
         })
         .then((response) => {
           console.log(response);
-        });
+          let itemImage = this.$refs.uploadItemImage; //img dom 접근
+          itemImage.src =
+              "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png";
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     emailAuthentication() {
       if (localStorage["email"] != this.email) {
@@ -394,7 +400,7 @@ export default {
     },
 
     userdelete() {
-      alert("정말로 탈퇴 하시겠습니까?");
+      if (confirm("정말로 탈퇴 하시겠습니까?")){
       axios
         .delete(this.$SERVER_URL + `/account/${localStorage["uid"]}`, {
           params: { uid: localStorage["uid"] },
@@ -414,6 +420,7 @@ export default {
         .catch((error) => {
           console.log(error.response);
         });
+      }
     },
   },
 };

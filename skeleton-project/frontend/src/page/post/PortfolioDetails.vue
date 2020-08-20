@@ -500,11 +500,16 @@ export default {
           }
         )
         .then((response) => {
-          const link = document.createElement("a");
-          const url = response.request.responseURL;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
+          if (response.data.status) {
+            alert("저장된 파일이 없습니다. 파일을 추가하세요.");
+          } else {
+            console.log(response);
+            const link = document.createElement("a");
+            const url = response.request.responseURL;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+          }
         })
         .catch((error) => {
           console.log(error);
