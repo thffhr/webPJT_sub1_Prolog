@@ -188,7 +188,7 @@ export default {
   -webkit-filter: grayscale(0%);
 }
 .current {
-  background-color: #bedcff;
+  background-color: #bedcff !important;
   /* color: white; */
 }
 .noPortfolio {
