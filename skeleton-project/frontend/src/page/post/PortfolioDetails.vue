@@ -43,11 +43,9 @@
         </b-col>
         <b-col md="6">
           <div style="text-align: right;">
-
-              <b-button @click="downloadAllZip()" size="sm" variant="outline-dark">
-                <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체 파일 다운로드
-              </b-button>
-
+            <b-button @click="downloadAllZip()" size="sm" variant="outline-dark">
+              <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체 파일 다운로드
+            </b-button>
           </div>
         </b-col>
       </b-row>
@@ -486,11 +484,16 @@ export default {
           }
         )
         .then((response) => {
-          const link = document.createElement("a");
-          const url = response.request.responseURL;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
+          if (response.data.status) {
+            alert("저장된 파일이 없습니다. 파일을 추가하세요.");
+          } else {
+            console.log(response);
+            const link = document.createElement("a");
+            const url = response.request.responseURL;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+          }
         })
         .catch((error) => {
           console.log(error);

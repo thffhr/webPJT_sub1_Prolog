@@ -68,8 +68,6 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
 
     @Override
     public ResponseEntity<BasicResponse> storeFile(int pid, MultipartFile file) {
-        ResponseEntity<BasicResponse> response = null;
-        BasicResponse result = new BasicResponse();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         Date nowdate = new Date();
@@ -132,6 +130,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
             if (portfolio == null) {
                 result.data = "존재하지 않는 포트폴리오";
                 result.status = false;
+                result.object = null;
                 response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
                 // 포폴 있으면
             } else {
@@ -152,10 +151,12 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
 
                             result.data = "저장이 완료 되었습니다.";
                             result.status = true;
+                            result.object = null;
                             response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
                         } else {
                             result.status = false;
                             result.data = "이미 존재하는 파일";
+                            result.object = null;
                             response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
                         }
                     } else {
@@ -216,19 +217,19 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
                 // 지워졌으면 db에서 파일의 정보를 지워야해
                 fileDAO.deleteById(id);
 
-                result.data = "true";
-                result.object = "deleted";
+                result.data = "deleted";
+                result.object = null;
                 result.status = true;
                 response = new ResponseEntity<>(result, HttpStatus.OK);
             } else {
-                result.data = "false";
-                result.object = "파일은 삭제, 디비엔 존재";
+                result.data = "파일은 삭제, 디비엔 존재";
+                result.object = null;
                 result.status = false;
                 response = new ResponseEntity<>(result, HttpStatus.OK);
             }
         } else {
-            result.data = "false";
-            result.object = "파일이 존재하지 않아 삭제할 수 없음";
+            result.data = "파일이 존재하지 않아 삭제할 수 없음";
+            result.object = null;
             result.status = false;
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }
@@ -238,64 +239,80 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
     }
 
     @Override
-    public ResponseEntity<Resource> downloadPortfolio(HttpServletRequest request, String uid, int pid) {
+    public ResponseEntity<Object> downloadPortfolio(HttpServletRequest request, String uid, int pid) {
         Resource resource = null;
-        // 압축파일관련 클래스
-        ZipOutputStream zout = null;
-        // 생성할 압축파일 이름
+        // pid에 연결된 파일이 있는지 확인해서 없으면 return false;
         Portfolio portfolio = portfolioDao.findPortfolioByPid(pid);
-        String portfolioTitle = portfolio.getTitle();
-        // String zipName = path + {닉네임_} + {프로젝트 이름} + ".zip";
-        String zipName = this.fileLocation + "\\" + uid + "_" + portfolioTitle + ".zip";
-        File target = new File(zipName);
+        List<UploadFile> fileList = fileDAO.findUploadFileBypid(portfolio);
         HttpHeaders header = new HttpHeaders();
+        if (fileList.isEmpty()) {
+            result.status = true;
+            result.data = "연결된 파일이 없습니다.";
+            result.object = null;
+            return new ResponseEntity<>(result, HttpStatus.OK);
 
-        /* 압축파일 생성 */
-        try {
-            // zipName으로 새 ZipOutputStream 클래스를 생성하고
-            zout = new ZipOutputStream(new FileOutputStream(zipName));
-            // ?
-            byte[] buf = new byte[1024];
-            // 압축할 파일을 경로포함해서 FileInputStream 클래스로 생성한다.
-            List<UploadFile> fileList = fileDAO.findUploadFileBypid(portfolio);
-            for (UploadFile file : fileList) {
-                // 압축대상 파일
-                FileInputStream in = new FileInputStream(this.fileLocation + "\\" + file.getFileName());
-                // 압축파일에 포함시킬 새 파일 생성
-                zout.putNextEntry(new ZipEntry(file.getFileName()));
-                // 대상파일을 새파일로 복사
-                int len;
-                while ((len = in.read(buf)) > 0) {
-                    zout.write(buf, 0, len);
+        } else {
+
+            // 있으면 압축파일 생성후 다운로드 링크 전송
+            // 압축파일관련 클래스
+            ZipOutputStream zout = null;
+            // 생성할 압축파일 이름
+            // String zipName = path + {닉네임_} + {프로젝트 이름} + ".zip";
+            String portfolioTitle = portfolio.getTitle();
+            String zipName = this.fileLocation + "\\" + uid + "_" + portfolioTitle + ".zip";
+            File target = new File(zipName);
+
+            /* 압축파일 생성 */
+            try {
+                // zipName으로 새 ZipOutputStream 클래스를 생성하고
+                zout = new ZipOutputStream(new FileOutputStream(zipName));
+                // ?
+                byte[] buf = new byte[1024];
+                // 압축할 파일을 경로포함해서 FileInputStream 클래스로 생성한다.
+                for (UploadFile file : fileList) {
+                    // 압축대상 파일
+                    FileInputStream in = new FileInputStream(this.fileLocation + "\\" + file.getFileName());
+                    // 압축파일에 포함시킬 새 파일 생성
+                    zout.putNextEntry(new ZipEntry(file.getFileName()));
+                    // 대상파일을 새파일로 복사
+                    int len;
+                    while ((len = in.read(buf)) > 0) {
+                        zout.write(buf, 0, len);
+                    }
+                    zout.closeEntry();
                 }
-                zout.closeEntry();
-            }
-            /* 압축파일 다운로드 URI */
+                /* 압축파일 다운로드 URI */
 
-            String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));
-            if (mimeType == null) {
-                mimeType = "octet-stream";
-            }
-
-            resource = new UrlResource(target.toURI());
-            String fn = getDisposition(resource.getFilename(), getBrowser(request));
-            header.setCacheControl("no-cache");
-            header.set("Content-Disposition", "attachment;filename=\"" + fn + "\";");
-            header.set("Content-Transfer-Encoding", "binary");
-            header.setContentType(MediaType.parseMediaType(mimeType));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (null != zout) {
-                try {
-                    zout.close();
-                } catch (Exception e) {
+                String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));
+                if (mimeType == null) {
+                    mimeType = "octet-stream";
                 }
-                zout = null;
+
+                resource = new UrlResource(target.toURI());
+                String fn = getDisposition(resource.getFilename(), getBrowser(request));
+                header.setCacheControl("no-cache");
+                header.set("Content-Disposition", "attachment;filename=\"" + fn + "\";");
+                header.set("Content-Transfer-Encoding", "binary");
+                header.setContentType(MediaType.parseMediaType(mimeType));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (null != zout) {
+                    try {
+                        zout.close();
+                    } catch (Exception e) {
+                    }
+                    zout = null;
+                }
             }
+
+            result.status = true;
+            result.data = "파일 압축";
+            result.object = resource;
+            return new ResponseEntity<>(resource, header, HttpStatus.OK);
         }
-        return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
+
     }
 
     private String getDisposition(String filename, String browser) throws Exception {

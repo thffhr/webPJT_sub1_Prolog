@@ -285,34 +285,31 @@ export default {
         })
         .then((response) => {
           response.data.object.tag = [];
-          
-          
+
           axios
-          .get(this.$SERVER_URL + `/portfolio/Tags`, {
-            params: {
-              uid: localStorage["uid"],
-            },
-          })
-          .then((response) => {
-            this.tags = response.data.object;
-            axios
-              .get(this.$SERVER_URL + `/portfolio/all`, {
-                params: {
-                  uid: localStorage["uid"],
-                },
-              })
-              .then((response) => {
-                this.portfolios = response.data.object;
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          })
-          .catch((error) => {
-            console.log(error);
-          });    
-
-
+            .get(this.$SERVER_URL + `/portfolio/Tags`, {
+              params: {
+                uid: localStorage["uid"],
+              },
+            })
+            .then((response) => {
+              this.tags = response.data.object;
+              axios
+                .get(this.$SERVER_URL + `/portfolio/all`, {
+                  params: {
+                    uid: localStorage["uid"],
+                  },
+                })
+                .then((response) => {
+                  this.portfolios = response.data.object;
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         })
         .catch((error) => {
           console.log(error);
@@ -466,19 +463,21 @@ export default {
           }
         )
         .then((response) => {
-          const link = document.createElement("a");
-          const url = response.request.responseURL;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
+          if (response.data.status) {
+            alert("저장된 파일이 없습니다. 파일을 추가하세요.");
+          } else {
+            console.log(response);
+            const link = document.createElement("a");
+            const url = response.request.responseURL;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+          }
         })
         .catch((error) => {
           console.log(error);
         });
     },
-
-
-
 
     // change_color() {
     //   this.cardColor.background = "light gray";
