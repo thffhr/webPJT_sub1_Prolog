@@ -15,11 +15,12 @@
                 v-for="(ex, ex_idx) in nav_ex_outlist[this.changinIdx]"
                 :key="ex.exid"
               >
-                <Card :id="'card-s-e-' + ex.exid" draggable="true">
+                <Card class="card" :id="'card-s-e-' + ex.exid" draggable="true">
                   <div>
                           <div class="card_title">{{ ex.title }}</div>
                            <hr class="white_line" />
                           <div class="card_date">{{ ex.startdate }} ~ {{ex.enddate}}</div>
+                          <div class="card_contents">{{ ex.contents }}</div>
                         </div>
                 </Card>
               </div>
@@ -35,11 +36,12 @@
                 v-for="(port, p_idx) in nav_port_outlist[this.changinIdx]"
                 :key="port.pid"
               >
-                <Card :id="'card-s-p-' + port.pid" draggable="true">
+                <Card class="card" :id="'card-s-p-' + port.pid" draggable="true">
                    <div>
                           <div class="card_title">{{ port.title }}</div>
                            <hr class="white_line" />
                           <div class="card_date">{{ port.startDate }} ~ {{port.endDate}}</div>
+                          <div class="card_contents">{{ port.contents }}</div>
                         </div>
                 </Card>
               </div>
@@ -410,7 +412,7 @@
                       v-for="(ex, exid) in nav_ex_inlist[ap_idx]"
                       :key="ex.exid"
                     >
-                      <Card :id="'card-b-e-' + ex.exid" draggable="true">
+                      <Card class="card" :id="'card-b-e-' + ex.exid" draggable="true">
                         <div>
                           <div class="card_title">{{ ex.title }}</div>
                            <hr class="white_line" />
@@ -431,7 +433,7 @@
                       v-for="(port, pid) in nav_port_inlist[ap_idx]"
                       :key="port.pid"
                     >
-                      <Card :id="'card-b-p-' + port.pid" draggable="true">
+                      <Card class="card" :id="'card-b-p-' + port.pid" draggable="true">
                         <div>
                           <div class="card_title">{{ port.title }}</div>
                            <hr class="white_line" />
@@ -1219,7 +1221,7 @@ export default {
         });
     },
     test(idx, ap_term){
-      alert(idx);
+      //alert(idx);
       ap_term = idx;
     }
   },
@@ -1418,7 +1420,7 @@ export default {
   padding: 25px;
 }
 
-.board .card {
+.board .card2 {
   padding: 15px 25px;
   background-color: #999999;
   margin-bottom: 15px;
@@ -1430,7 +1432,7 @@ export default {
   cursor: pointer;
 }
 
-.board .card div {
+.board .card2 div {
   color: #ffffff;
 }
 
@@ -1500,7 +1502,7 @@ export default {
 
 
 
-.card > div{
+.card2 > div{
 
  
   transition-property: background-color, border-radius,transform;
@@ -1515,7 +1517,7 @@ export default {
 
 }
 
-.card :active {
+.card2 :active {
   -webkit-animation: wiggle 0.6s 0s infinite ease-in;
   animation: wiggle 0.6s 0s infinite ease-in;
   border: 2px solid #9c85ff;
@@ -1602,6 +1604,16 @@ export default {
     margin-bottom: 1rem;
     border: 0;
     border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#board-s-p .card_contents{
+  display: none;
+}
+
+
+#board-s-e .card_contents{
+  display: none;
+
 }
 
 </style>

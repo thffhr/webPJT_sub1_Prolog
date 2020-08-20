@@ -1,7 +1,7 @@
 <template>
     <div
         :id="id"
-        class="card"
+        class="card2"
         :draggable="draggable"
         @dragstart="dragStart"
         @dragover.stop
