@@ -93,6 +93,7 @@ export default {
     };
   },
   created() {
+
     if (!localStorage["check"]) {
       localStorage["check"] = true;
       this.$router.go();

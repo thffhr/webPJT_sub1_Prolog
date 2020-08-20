@@ -32,7 +32,7 @@
             style="width: 2rem; height: 2rem;"
           />
 
-          <div id="userName" :uid="uid">{{ nickname }}</div>
+          <div id="userName">{{ nickname }}</div>
           님, 환영합니다.
         </template>
 
@@ -63,13 +63,16 @@ export default {
   name: "Header",
   components: { ConfirmPassword },
   props: ["isHeader"],
-  computed: {},
+  computed: {
+    nickname: function() {
+        return localStorage["nickname"]
+      }
+  },
   watch: {},
   data: function() {
     return {
       constants,
       uid: localStorage["uid"],
-      nickname: localStorage["nickname"],
       profileImgsrc:
         "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png",
     };
@@ -100,6 +103,7 @@ export default {
       localStorage.removeItem("check");
       constants.IS_LOGED_IN = false;
       this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
+      this.$router.go()
     },
     goToMain() {
       this.$router.push({ path: `/${localStorage["uid"]}` });
