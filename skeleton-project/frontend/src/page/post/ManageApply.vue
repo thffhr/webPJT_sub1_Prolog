@@ -101,6 +101,7 @@
             ></b-img>
             <input
               type="text"
+              placeholder="회사명 혹은 제목"
               v-on:keyup.enter="searchA(search_input_text, search_input_period)"
               v-model="search_input_text"
               value
@@ -673,6 +674,9 @@ export default {
     clickeEdit: function(apid, idx) {
       //alert(apid + " - " + idx);
 
+
+
+
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
       this.isEditCheck = !this.isEditCheck;
       this.synCheck = !this.synCheck;
@@ -690,11 +694,12 @@ export default {
     // 이거추가
     clickeDetail(apid, idx) {
       //업데이트 클릭이 되어있을때 만.
-      //alert("디테일 눌려요;;");
-      this.isEditClicked_list_show[idx] = !this.isEditClicked_list_show[idx];
-
-      this.getPortOutNav(apid, idx);
-
+        //alert("디테일 눌려요;;");
+        this.isEditClicked_list_show[idx] = !this.isEditClicked_list_show[idx];
+        
+        this.getPortOutNav(apid,idx);
+        this.synCheck = !this.synCheck;
+      
       //
       if (this.isEditCheck2) {
         this.isEditCheck2 = false;
@@ -742,6 +747,8 @@ export default {
           },
         })
         .then((response) => {
+          
+
           var cell;
           cell = document.getElementsByClassName("toRemove");
 
@@ -750,45 +757,54 @@ export default {
 
           var count = cell.length;
 
-          while (cell.length > 0) {
-            //alert(cell.length);
+          while(cell.length>0){
             cell.parentNode.removeChild();
           }
-          /*     if(document.body.contains(document.getElementsByClassName("toRemove"))){
-            alert("hi!!!");
-          } */
+  
 
-          /* while(cell.hasChildNodes()){
-            
-            cell = document.getElementsByClassName("toRemove");
-            cell.remove;
-            console.log("hi");
-            //console.log(cell);
-          }  */
 
-          //지워야할것은 div(board) > div(card) > div
-          //지우면안되는것은 아들의 아들의 아들 div(board) > div > div(card) > div
-          /*    var cel = document.getElementById("board-s-p"); 
-              
-          //alert( cell.childElementCount);
-          
-          for(var i=0; i<this.count_s_p; i++){
-             cell.removeChild( cell.lastChild );
-          }  */
-          var temp = response.data.object;
-          /* 
 
-          for(var i = 0; i < this.nav_port_outlist.length; i++){
- */ this.nav_port_outlist.splice(
-            0
-          ); /* 
-            } */
+            // response.data.object = 경험리스트 현재 3개
+            var temp = response.data.object;
+            // nav_port_outlist = 지원목록 objects
+            var temp_list = this.nav_port_outlist;
+            // temp_list_idx = 
+            var temp_list_idx = 0;
 
-          for (var i = 0; i < this.apply_lists.length; i++) {
-            this.nav_port_outlist.push(temp);
-          }
+              //만약 없으면
+              if(this.nav_port_outlist.length == 0){
+                    //alert("gd");
 
-          this.nav_port_outlist[idx] = temp;
+                    this.nav_port_outlist = [];
+                    this.nav_port_outlist.splice(0);
+                    
+                    for(var j = 0; j< this.apply_lists.length; j++){
+                      this.nav_port_outlist.push(temp);
+                    }
+
+                    temp_list = this.nav_port_outlist;
+
+                    this.nav_port_outlist.splice(0);
+                    console.log("hi3 - " + i);
+                }
+            else{
+              this.nav_port_outlist.splice(0);
+            }
+             for(var i = 0; i < this.apply_lists.length; i++) {
+                
+                //제대로 nav_port_outlist가 초기화 되있니?
+                   if(idx == i){
+                      this.nav_port_outlist.push(temp);
+                      console.log("hi1 - " + i);
+                    }
+                    else{
+                      this.nav_port_outlist.push(temp_list[i]);
+                      console.log("hi2 - " + i);
+                    }
+            }
+
+
+          //this.nav_port_outlist[idx] = temp;
           console.log(idx);
           console.log(this.nav_port_outlist[idx]);
 
@@ -807,15 +823,56 @@ export default {
           },
         })
         .then((response) => {
-          //document.getElementById("board-s-e").remove();
 
-          /*     var cell = document.getElementById("board-s-e"); 
+             var cell;
+          cell = document.getElementsByClassName("toRemove");
 
-          for(var i=0; i<this.count_s_e; i++){
-             cell.removeChild( cell.lastChild );
+          console.log("길이" + cell.length)
+          console.log(cell);
+
+          var count = cell.length;
+
+          while(cell.length>0){
+            cell.parentNode.removeChild();
           }
- */
-          var temp = response.data.object;
+
+            var temp = response.data.object;
+            var temp_list = this.nav_ex_outlist;
+            var temp_list_idx = 0;
+
+          //만약 없으면
+              if(this.nav_ex_outlist.length == 0){
+                    //alert("gd");
+
+                    this.nav_ex_outlist = [];
+                    this.nav_ex_outlist.splice(0);
+                    
+                    for(var j = 0; j< this.apply_lists.length; j++){
+                      this.nav_ex_outlist.push(temp);
+                    }
+
+                    temp_list = this.nav_ex_outlist;
+
+                    this.nav_ex_outlist.splice(0);
+                    console.log("hi3 - " + i);
+                }
+              else{
+                this.nav_ex_outlist.splice(0);
+              }
+             for(var i = 0; i < this.apply_lists.length; i++) {
+                
+                //제대로 nav_port_outlist가 초기화 되있니?
+                   if(idx == i){
+                      this.nav_ex_outlist.push(temp);
+                      console.log("hi1 - " + i);
+                    }
+                    else{
+                      this.nav_ex_outlist.push(temp_list[i]);
+                      console.log("hi2 - " + i);
+                    }
+            }
+      
+      //this.nav_ex_outlist[idx] = temp;
 
           this.nav_ex_outlist.splice(0);
 
@@ -840,21 +897,60 @@ export default {
         })
         .then((response) => {
           if (response.data.data != "연결된 포트폴리오가 없습니다.") {
-            /*     var cell = document.getElementById("board-d-p"); 
 
-           for(var i=0; i<this.count_d_p; i++){
-             cell.removeChild( cell.lastChild );
+
+               var cell;
+          cell = document.getElementsByClassName("toRemove");
+
+          console.log("길이" + cell.length)
+          console.log(cell);
+
+          var count = cell.length;
+
+          while(cell.length>0){
+            cell.parentNode.removeChild();
           }
-              */
 
             var temp = response.data.object;
+            var temp_list = this.nav_port_inlist;
+            var temp_list_idx = 0;
 
-            this.nav_port_inlist.splice(0);
+             //만약 없으면
+              if(this.nav_port_inlist.length == 0){
+                    //alert("gd");
 
-            for (var i = 0; i < this.apply_lists.length; i++) {
-              this.nav_port_inlist.push(temp);
+                    this.nav_port_inlist = [];
+                    this.nav_port_inlist.splice(0);
+                    
+                    for(var j = 0; j< this.apply_lists.length; j++){
+                      this.nav_port_inlist.push(temp);
+                    }
+
+                    temp_list = this.nav_port_inlist;
+
+                    this.nav_port_inlist.splice(0);
+                    console.log("hi3 - " + i);
+                }
+              else{
+                  this.nav_port_inlist.splice(0);
+              }
+             for(var i = 0; i < this.apply_lists.length; i++) {
+                
+                //제대로 nav_port_outlist가 초기화 되있니?
+                   if(idx == i){
+                      this.nav_port_inlist.push(temp);
+                      console.log("hi1 - " + i);
+                    }
+                    else{
+                      this.nav_port_inlist.push(temp_list[i]);
+                      console.log("hi2 - " + i);
+                    }
             }
-            this.nav_port_inlist[idx] = response.data.object;
+
+
+            //this.nav_port_inlist[idx] = response.data.object;
+            
+            
           }
           this.getExInNav(apid, idx);
         })
@@ -871,34 +967,55 @@ export default {
         })
         .then((response) => {
           if (response.data.data != "연결된 경험이 없습니다.") {
-            /*   
-           var cell = document.getElementById("board-d-e"); 
-          //alert(cell);
- 
-          for(var i=0; i<this.count_d_e; i++){
-             cell.removeChild( cell.lastChild );
-          } */
+
+
+               var cell;
+          cell = document.getElementsByClassName("toRemove");
+
+          console.log("길이" + cell.length)
+          console.log(cell);
+
+          var count = cell.length;
+
+          while(cell.length>0){
+            cell.parentNode.removeChild();
+          }
+
             var temp = response.data.object;
             var temp_list = this.nav_ex_inlist;
             var temp_list_idx = 0;
 
-            alert(temp_list.length);
+          //만약 없으면
+              if(this.nav_ex_inlist.length == 0){
+                    //alert("gd");
 
-            this.nav_ex_inlist.splice(0);
+                    this.nav_ex_inlist = [];
+                    this.nav_ex_inlist.splice(0);
+                    
+                    for(var j = 0; j< this.apply_lists.length; j++){
+                      this.nav_ex_inlist.push(temp);
+                    }
 
-            for (var i = 0; i < this.apply_lists.length; i++) {
-              if (temp_list_idx < temp_list.length) {
-                if (idx == temp_list_idx) {
-                  this.nav_ex_inlist.push(temp);
+                    temp_list = this.nav_ex_inlist;
+
+                    this.nav_ex_inlist.splice(0);
+                    console.log("hi3 - " + i);
                 }
-                temp_list_idx++;
-                this.nav_ex_inlist.push(temp_list[i]);
-              } else {
-                this.nav_ex_inlist.push(temp);
+              else{
+               this.nav_ex_inlist.splice(0);
               }
+             for(var i = 0; i < this.apply_lists.length; i++) {
+                
+                //제대로 nav_port_outlist가 초기화 되있니?
+                   if(idx == i){
+                      this.nav_ex_inlist.push(temp);
+                      console.log("hi1 - " + i);
+                    }
+                    else{
+                      this.nav_ex_inlist.push(temp_list[i]);
+                      console.log("hi2 - " + i);
+                    }
             }
-
-            //this.nav_ex_inlist[idx] = response.data.object;
           }
           this.synCheck != this.synCheck;
         })
