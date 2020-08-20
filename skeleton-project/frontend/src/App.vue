@@ -3,6 +3,8 @@
     <Header :isHeader="isHeader" />
     <Navbar />
     <router-view />
+    <Footer />
+
   </div>
 </template>
 
@@ -14,6 +16,7 @@
 <script>
 import Header from "./components/common/Header.vue";
 import Navbar from "./components/common/Navbar.vue";
+import Footer from "./components/common/Footer.vue";
 import constants from "./lib/constants";
 
 export default {
@@ -21,6 +24,7 @@ export default {
   components: {
     Header,
     Navbar,
+    Footer,
   },
   watch: {
     $route(to) {
