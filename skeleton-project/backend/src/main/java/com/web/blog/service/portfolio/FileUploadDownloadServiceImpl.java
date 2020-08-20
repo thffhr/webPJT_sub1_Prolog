@@ -272,6 +272,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
                 for (UploadFile file : fileList) {
                     // 압축대상 파일
                     FileInputStream in = new FileInputStream(this.fileLocation + "\\" + file.getFileName());
+                    System.out.println(file.getFileName());
                     // 압축파일에 포함시킬 새 파일 생성
                     zout.putNextEntry(new ZipEntry(file.getFileName()));
                     // 대상파일을 새파일로 복사
@@ -280,6 +281,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
                         zout.write(buf, 0, len);
                     }
                     zout.closeEntry();
+                    // in.close();
                 }
                 /* 압축파일 다운로드 URI */
 
