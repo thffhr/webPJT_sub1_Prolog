@@ -1,6 +1,5 @@
 package com.web.blog.model.apply;
 
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +18,7 @@ public class ApplyUpdateRequest {
 
     private String uid;
 
+    private String apTitle;
     @NonNull
     private String apCompany;
 
@@ -27,6 +27,7 @@ public class ApplyUpdateRequest {
     private String apDesc;
 
     public Apply toReqEntity() {
-        return Apply.builder().apid(apid).uid(uid).apCompany(apCompany).apTerm(apTerm).apDesc(apDesc).build();
+        return Apply.builder().apid(apid).uid(uid).apTitle(apTitle).apCompany(apCompany).apTerm(apTerm).apDesc(apDesc)
+                .build();
     }
 }

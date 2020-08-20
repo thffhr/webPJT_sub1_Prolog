@@ -1,7 +1,7 @@
-package com.web.blog.controller.temp;
+package com.web.blog.controller.period;
 
 import com.web.blog.model.BasicResponse;
-import com.web.blog.service.temp.TempService;
+import com.web.blog.service.period.PeriodService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,18 +13,15 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-public class TempController {
-
+public class PeriodController {
     @Autowired
-    TempService tempService;
+    PeriodService periodService;
 
-    @GetMapping("/temp")
-    @ApiOperation(value = "유저의 전체 경험 목록")
+    @GetMapping("/period")
+    @ApiOperation(value = "기간 가져오기")
     public ResponseEntity<BasicResponse> findAll() {
-        return tempService.findAll();
+        return periodService.findAll();
     }
 
-
-    
 
 }

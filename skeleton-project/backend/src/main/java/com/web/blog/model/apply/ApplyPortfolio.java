@@ -13,11 +13,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.blog.model.portfolio.Portfolio;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Table(name = "apply_portfolio")
 public class ApplyPortfolio {
 
@@ -35,4 +38,10 @@ public class ApplyPortfolio {
     @ManyToOne
     @JoinColumn(name = "pid")
     private Portfolio portfolio;
+
+    @Builder
+    public ApplyPortfolio(Apply apply, Portfolio portfolio) {
+        this.apply = apply;
+        this.portfolio = portfolio;
+    }
 }

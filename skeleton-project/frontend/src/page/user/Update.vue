@@ -10,9 +10,7 @@
         <b-container>
           <b-row>
             <b-col class="my-auto" align-self="stretch center">
-              <b-form-text class="mb-2" id="profile-help">
-                프로필 클릭 시, 이미지 변경이 가능합니다.
-              </b-form-text>
+              <b-form-text class="mb-2" id="profile-help">프로필 클릭 시, 이미지 변경이 가능합니다.</b-form-text>
               <input
                 type="file"
                 ref="profileImg"
@@ -37,29 +35,19 @@
                 size="sm"
                 variant="light"
                 id="deleteImg"
-                @click=""
-              >
-                프로필 삭제
-              </b-button>
+                @click="deleteP()"
+              >프로필 삭제</b-button>
             </b-col>
             <b-col>
               <b-container>
                 <b-row class="my-1">
                   <b-col role="group" cols="8">
-                    <b-form-text id="email-help">
-                      이메일 변경 시 인증이 필요합니다.
-                    </b-form-text>
+                    <b-form-text id="email-help">이메일 변경 시 인증이 필요합니다.</b-form-text>
                   </b-col>
                 </b-row>
                 <b-row class="my-1">
                   <b-col role="group" cols="8">
-                    <b-form-input
-                      disabled
-                      id="uid"
-                      v-model="uid"
-                      trim
-                      type="text"
-                    ></b-form-input>
+                    <b-form-input disabled id="uid" v-model="uid" trim type="text"></b-form-input>
                   </b-col>
                 </b-row>
                 <b-row class="my-1">
@@ -73,9 +61,11 @@
                       trim
                       type="text"
                     ></b-form-input>
-                    <b-form-invalid-feedback id="nickName-feedback">{{
+                    <b-form-invalid-feedback id="nickName-feedback">
+                      {{
                       nicknameFeedback
-                    }}</b-form-invalid-feedback>
+                      }}
+                    </b-form-invalid-feedback>
                   </b-col>
                 </b-row>
                 <b-row class="my-1">
@@ -89,9 +79,7 @@
                       trim
                       type="text"
                     ></b-form-input>
-                    <b-form-invalid-feedback id="email-feedback">
-                      {{ emailFeedback }}
-                    </b-form-invalid-feedback>
+                    <b-form-invalid-feedback id="email-feedback">{{ emailFeedback }}</b-form-invalid-feedback>
                   </b-col>
                   <b-col class="align-self-center">
                     <b-button
@@ -99,9 +87,7 @@
                       variant="light"
                       id="emailAuthentication"
                       @click="emailAuthentication"
-                    >
-                      메일 인증
-                    </b-button>
+                    >메일 인증</b-button>
                   </b-col>
                 </b-row>
                 <b-row class="my-1">
@@ -118,9 +104,11 @@
                     <span :class="{ active: passwordType === 'text' }">
                       <i class="fas fa-eye"></i>
                     </span>
-                    <b-form-invalid-feedback id="password-feedback">{{
+                    <b-form-invalid-feedback id="password-feedback">
+                      {{
                       passwordFeedback
-                    }}</b-form-invalid-feedback>
+                      }}
+                    </b-form-invalid-feedback>
                   </b-col>
                 </b-row>
                 <b-row class="my-1">
@@ -136,9 +124,7 @@
                     <span :class="{ active: passwordConfirmType === 'text' }">
                       <i class="fas fa-eye"></i>
                     </span>
-                    <b-form-invalid-feedback id="password-feedback">
-                      비밀번호를 정확히 입력해주세요.
-                    </b-form-invalid-feedback>
+                    <b-form-invalid-feedback id="password-feedback">비밀번호를 정확히 입력해주세요.</b-form-invalid-feedback>
                   </b-col>
                 </b-row>
               </b-container>
@@ -148,9 +134,7 @@
       </b-card-text>
       <div class="ml-auto">
         <b-button @click="update" href="#" class="ml-2 mr-2">수정완료</b-button>
-        <b-button @click="userdelete" href="#" class="ml-2 mr-2"
-          >회원탈퇴</b-button
-        >
+        <b-button @click="userdelete" href="#" class="ml-2 mr-2">회원탈퇴</b-button>
       </div>
       <!-- <em>Footer Slot</em> -->
     </b-card>
@@ -331,6 +315,21 @@ export default {
           }
         });
     },
+    deleteP() {
+      axios
+        .post(this.$SERVER_URL + `/account/profile/delete/${this.uid}`, {
+          uid: localStorage["uid"],
+        })
+        .then((response) => {
+          console.log(response);
+          let itemImage = this.$refs.uploadItemImage; //img dom 접근
+          itemImage.src =
+              "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png";
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
     emailAuthentication() {
       if (localStorage["email"] != this.email) {
         axios
@@ -387,6 +386,7 @@ export default {
             console.log(response);
             if (response.data.status) {
               alert("회원정보가 수정되었습니다!");
+              this.$router.push({ name: constants.URL_TYPE.MAIN.LOGINHOME });
             } else {
               alert("수정된 정보가 반영되지 않았습니다.");
             }
@@ -400,7 +400,7 @@ export default {
     },
 
     userdelete() {
-      alert("정말로 탈퇴 하시겠습니까?");
+      if (confirm("정말로 탈퇴 하시겠습니까?")){
       axios
         .delete(this.$SERVER_URL + `/account/${localStorage["uid"]}`, {
           params: { uid: localStorage["uid"] },
@@ -413,13 +413,14 @@ export default {
             localStorage.removeItem("email");
             localStorage.removeItem("createDate");
             constants.IS_LOGED_IN = false;
+            this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
             alert("회원정보가 삭제되었습니다");
-            this.$router.push({ name: constants.URL_TYPE.MAIN.LOGINHOME });
           }
         })
         .catch((error) => {
           console.log(error.response);
         });
+      }
     },
   },
 };

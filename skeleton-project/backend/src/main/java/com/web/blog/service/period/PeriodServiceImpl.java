@@ -1,22 +1,21 @@
-package com.web.blog.service.temp;
+package com.web.blog.service.period;
 
-import java.util.*;
+import java.util.List;
 
-import com.web.blog.dao.temp.TempDao;
+import com.web.blog.dao.period.PeriodDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.apply.ApplyTerm;
-import com.web.blog.model.temp.Temp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-@Service("tempService")
-public class TempServiceImpl implements TempService {
+@Service("periodService")
+public class PeriodServiceImpl implements PeriodService {
 
     @Autowired
-    TempDao tempDao;
+    PeriodDao periodDao;
 
     // 요청과 응답
     BasicResponse result = new BasicResponse();
@@ -25,20 +24,19 @@ public class TempServiceImpl implements TempService {
     @Override
     public ResponseEntity<BasicResponse> findAll() {
         
-        List<ApplyTerm> obj = tempDao.findAll();
+        List<ApplyTerm> obj = periodDao.findAll();
 
         if (obj != null ) {
             result.status = true;
             result.data = "기간 가져오기 성공";
             result.object = obj;
-            response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
         }  else {
             result.status = false;
             result.data = "기간 가져오기 실패";
             result.object = null;
-            response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
-          
         }
+        
+        response = new ResponseEntity<BasicResponse>(result, HttpStatus.OK);
         return response;
     }
 

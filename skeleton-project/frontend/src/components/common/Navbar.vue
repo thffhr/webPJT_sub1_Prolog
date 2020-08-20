@@ -1,54 +1,53 @@
 <template>
-  <div id="navigationBar">
-    <b-collapse id="collapse_navbar" v-if="constants.IS_LOGED_IN">
+  <div id="navigationBar" @mouseover="openCol" @mouseleave="closeCol">
+    <b-collapse id="collapse_navbar" ref="navbar" v-if="constants.IS_LOGED_IN">
       <b-navbar id="pageMenue">
         <b-navbar-nav class="ml-auto mr-auto">
           <b-nav-item class="mr-5" href="#">
-            <router-link
-              :to="{ name: constants.URL_TYPE.POST.MANAGEEXPERIENCE }"
-              >📝경험 관리</router-link
-            >
+            <router-link id="rlink" :to="{ path: `/ManageExperience/${uid}` }">📝경험 관리</router-link>
           </b-nav-item>
           <b-nav-item class="mr-5">
-            <router-link :to="{ name: constants.URL_TYPE.POST.MANAGEPORTFOLIO }"
-              >📇포트폴리오 관리</router-link
-            >
+            <router-link id="rlink" :to="{ path: `/ManagePortfolio/${uid}` }">📇포트폴리오 관리</router-link>
           </b-nav-item>
           <b-nav-item class="mr-5" href="#">
-            <router-link :to="{ name: constants.URL_TYPE.POST.MANAGEAPPLY }"
-              >💼지원 목록</router-link
-            >
+            <router-link id="rlink" :to="{ path: `/ManageApply/${uid}` }">💼지원 목록</router-link>
           </b-nav-item>
           <!-- <b-nav-item class="mr-5" href="#">👥커뮤니티</b-nav-item> -->
         </b-navbar-nav>
       </b-navbar>
     </b-collapse>
-    <b-icon-arrow-up-circle-fill
-      id="navBtn"
-      v-b-toggle.collapse_navbar
-      v-if="constants.IS_LOGED_IN"
-    ></b-icon-arrow-up-circle-fill>
+    <div id="navBtn" v-if="constants.IS_LOGED_IN">
+      <!-- v-b-toggle.collapse_navbar -->
+      <!-- ref="navBtn"  -->
+      <!-- <b-icon-chevron-compact-down class="mr-auto ml-auto"> -->
+      <!-- </b-icon-chevron-compact-down> -->
+    </div>
   </div>
 </template>
 
 <script>
 import constants from "../../lib/constants";
 export default {
-  data: function() {
+  data: function () {
     return {
       constants,
+      uid: localStorage["uid"],
     };
+  },
+  methods: {
+    openCol() {
+      let navbar = this.$refs.navbar;
+      navbar.show = true;
+    },
+    closeCol() {
+      let navbar = this.$refs.navbar;
+      navbar.show = false;
+    },
   },
 };
 </script>
 
 <style>
-a:link {
-  color: white;
-}
-a:visited {
-  color: white;
-}
 #navigationBar {
   position: fixed;
   margin: 0 auto;
@@ -61,18 +60,30 @@ a:visited {
   z-index: 10;
 }
 #pageMenue {
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 4px;
+  /* border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px; */
+  background-color: #7a63ff;
+  /* color: white;
+  text-decoration-color: white; */
+}
+#rlink {
+  color: white;
+  text-decoration: none;
+}
+#navBtn {
+  padding: 0px 20px;
+  margin: 0 auto;
+  width: 100%;
+  height: 10px;
+  /* border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px; */
   background-color: #7a63ff;
   color: white;
 }
-#navBtn {
-  position: relative;
-  top: 2px;
-  left: 50%;
-  transform: translate(-50%, 0%);
+/* .collapsed {
+  transform: rotate(0deg);
 }
-.navBtn:hover {
-  transform: scale(1.2, 1.2);
-}
+.not-collapsed {
+  transform: rotate(180deg);
+} */
 </style>

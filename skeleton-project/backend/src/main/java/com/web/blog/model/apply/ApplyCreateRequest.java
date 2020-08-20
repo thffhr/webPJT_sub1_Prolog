@@ -12,6 +12,9 @@ public class ApplyCreateRequest {
     private String uid;
 
     @ApiModelProperty(required = true)
+    private String apTitle;
+
+    @ApiModelProperty(required = true)
     private String apCompany;
 
     private String apTerm;
@@ -19,6 +22,6 @@ public class ApplyCreateRequest {
     private String apDesc;
 
     public Apply toReqEntity() {
-        return Apply.builder().uid(uid).apCompany(apCompany).apTerm(apTerm).apDesc(apDesc).build();
+        return Apply.builder().uid(uid).apTitle(apTitle).apCompany(apCompany).apTerm(apTerm).apDesc(apDesc).build();
     }
 }

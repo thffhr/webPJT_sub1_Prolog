@@ -30,8 +30,8 @@ public class MailServiceImpl implements MailService {
     private final String from = "wotjd4315@gmail.com";
 
     //
-    final BasicResponse result = new BasicResponse();
-    ResponseEntity response = null;
+    BasicResponse result = new BasicResponse();
+    ResponseEntity<BasicResponse> response = null;
 
     public String MailMakeCode() {
 
@@ -53,9 +53,12 @@ public class MailServiceImpl implements MailService {
         try {
 
             final String AuthCode = MailMakeCode();// 랜덤 인증코드 생성 필요
-            // ec2 설정시 - "http://i3a605.p.ssafy.io/api/email/compare-code?code="
-            final String AuthLink = "http://i3a605.p.ssafy.io/api/email/compare-code/?code=" + AuthCode + "&email="
-                    + request.getToEmail();
+            // ec2 설정시 - "http://i3a605.p.ssafy.io/#/EmailCompare"
+            final String AuthLink = "http://localhost:3000/#/EmailCompare/" + AuthCode + "/" + request.getToEmail();
+            // // ec2 설정시 - "http://i3a605.p.ssafy.io/EmailCompare/" + AuthCode + "/" +
+            // request.getToEmail();
+            // final String AuthLink = "http://localhost:8080/api/email/compare-code/?code="
+            // + AuthCode + "&email=" + request.getToEmail();
             final String AuthSubject = "서비스 인증 메일";
             final SimpleMailMessage message = new SimpleMailMessage();
 
@@ -94,7 +97,6 @@ public class MailServiceImpl implements MailService {
     public ResponseEntity<BasicResponse> compareEmailCode(final String code, final String email) {
 
         final Optional<Mail> Opt = mailDao.findMailByEmailAndCode(email, code);
-        final BasicResponse result = new BasicResponse();
 
         if (Opt.isPresent()) { // 인증코드가 일치
 
@@ -118,8 +120,6 @@ public class MailServiceImpl implements MailService {
     @Override
     public ResponseEntity<BasicResponse> deleteEmailCode(final String email) {
         final Optional<Mail> Opt = mailDao.findMailByEmail(email);
-        ResponseEntity response = null;
-        final BasicResponse result = new BasicResponse();
 
         // 1은 인증된 데이터
         if (Opt.isPresent() && Opt.get().getAuthorized() == 1) {
@@ -129,12 +129,10 @@ public class MailServiceImpl implements MailService {
             result.status = true;
             result.data = "이메일 인증코드 테이블 삭제 성공";
             response = new ResponseEntity<>(result, HttpStatus.OK);
-            System.out.println("이메일 인증코드 테이블 삭제 성공");
         } else {
             result.status = false;
             result.data = "이메일 인증코드 테이블 삭제 실패";
             response = new ResponseEntity<>(result, HttpStatus.OK);
-            System.out.println("이메일 인증코드 테이블 삭제 실패");
             return response;
         }
 
@@ -145,7 +143,7 @@ public class MailServiceImpl implements MailService {
     public ResponseEntity<BasicResponse> sendInfoMail(final MailInfoSendRequest request) {
         try {
 
-            final String AuthCode = MailMakeCode();// 랜덤 인증코드 생성 필요
+            // final String AuthCode = MailMakeCode();// 랜덤 인증코드 생성 필요
             final String AuthSubject = "유저 정보 찾기 서비스";
             final SimpleMailMessage message = new SimpleMailMessage();
 
