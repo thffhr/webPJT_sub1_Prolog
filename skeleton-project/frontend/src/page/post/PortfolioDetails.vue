@@ -1,6 +1,11 @@
 <template>
   <div id="poDetail">
-    <b-icon id="backToList" @click="backToList" icon="chevron-left" font-scale="2"></b-icon>
+    <b-icon
+      id="backToList"
+      @click="backToList"
+      icon="chevron-left"
+      font-scale="2"
+    ></b-icon>
     <b-container>
       <b-row>
         <b-col md="1"></b-col>
@@ -12,7 +17,7 @@
             class="title"
             style="display:inline-block; margin-left: auto;"
           >
-            {{pjtDetail.title}}
+            {{ pjtDetail.title }}
             <b-img
               v-if="isLogedIn"
               @click="updateTitle()"
@@ -29,11 +34,17 @@
               size="18%"
               :value="pjtDetail.title"
               @input="pjtDetail.title = $event.target.value"
-              @keyup.enter="sendUpdateInfo(); updateTitle()"
+              @keyup.enter="
+                sendUpdateInfo();
+                updateTitle();
+              "
               style="display: inline-block;"
             />
             <b-img
-              @click="sendUpdateInfo(); updateTitle()"
+              @click="
+                sendUpdateInfo();
+                updateTitle();
+              "
               style="margin-left: 1rem; cursor: pointer;"
               v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
               width="15px"
@@ -44,8 +55,13 @@
         </b-col>
         <b-col md="6">
           <div style="text-align: right;">
-            <b-button @click="downloadAllZip()" size="sm" variant="outline-dark">
-              <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체 파일 다운로드
+            <b-button
+              @click="downloadAllZip()"
+              size="sm"
+              variant="outline-dark"
+            >
+              <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체
+              파일 다운로드
             </b-button>
           </div>
         </b-col>
@@ -59,7 +75,10 @@
           <b-container class="tabContents">
             <b-row>
               <b-col v-if="!updateDateState" class="mt-5 mb-3">
-                <span>프로젝트 진행 기간 : {{pjtDetail.start_date}} ~ {{pjtDetail.end_date}}</span>
+                <span
+                  >프로젝트 진행 기간 : {{ pjtDetail.start_date }} ~
+                  {{ pjtDetail.end_date }}</span
+                >
                 <b-img
                   v-if="isLogedIn"
                   @click="updateDate()"
@@ -76,19 +95,29 @@
                     ref="start_dateInput"
                     :value="pjtDetail.start_date"
                     @input="pjtDetail.start_date = $event.target.value"
-                    @keyup.enter="sendUpdateInfo(); updateDate()"
+                    @keyup.enter="
+                      sendUpdateInfo();
+                      updateDate();
+                    "
                     size="4"
-                  /> ~
+                  />
+                  ~
                   <input
                     :value="pjtDetail.end_date"
                     @input="pjtDetail.end_date = $event.target.value"
-                    @keyup.enter="sendUpdateInfo(); updateDate()"
+                    @keyup.enter="
+                      sendUpdateInfo();
+                      updateDate();
+                    "
                     size="4"
                   />
                 </span>
                 <!-- <b-img :src="require(`@/assets/img/icons8-save-close-64.png`)" width="15px" style="display: inline-block; margin-left: 1rem; cursor: pointer;" @click="sendUpdateInfo(); updateDate()"></b-img> -->
                 <b-img
-                  @click="sendUpdateInfo(); updateDate()"
+                  @click="
+                    sendUpdateInfo();
+                    updateDate();
+                  "
                   style="margin-left: 1rem; cursor: pointer;"
                   v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
                   width="15px"
@@ -145,10 +174,16 @@
                       @click="deleteTag(ptag.tid)"
                     ></b-icon>
                   </div>
-                  <div id="mtbauto" style="display: inline-block;">
+                  <div
+                    v-if="isLogedIn"
+                    id="mtbauto"
+                    style="display: inline-block;"
+                  >
                     <div
                       style="display: inline-block; margin-top: auto; margin-bottom: auto; padding: 12px 0;"
-                    >#</div>
+                    >
+                      #
+                    </div>
                     <b-form-input
                       class="inp_tag"
                       v-model="newTag"
@@ -181,15 +216,22 @@
                     ></b-img>
                     <b-img
                       v-else
-                      @click="sendUpdateInfo(); updateContents()"
+                      @click="
+                        sendUpdateInfo();
+                        updateContents();
+                      "
                       style="margin-left: 1rem; cursor: pointer;"
-                      v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
+                      v-bind:src="
+                        require(`@/assets/img/icons8-save-close-64.png`)
+                      "
                       width="15px"
                       class="mr-2"
                     ></b-img>
                   </div>
                 </h5>
-                <div v-if="!updateContentsState" class="mt-3 mb-3">{{ pjtDetail.contents }}</div>
+                <div v-if="!updateContentsState" class="mt-3 mb-3">
+                  {{ pjtDetail.contents }}
+                </div>
                 <div v-else class="mt-3 mb-3">
                   <textarea
                     ref="contentsInput"
@@ -206,7 +248,7 @@
         </b-tab>
         <b-tab title=" 파일 목록 ">
           <b-container class="tabContents">
-            <div v-if="pjtDetail.files.length>0">
+            <div v-if="pjtDetail.files.length > 0">
               <b-row
                 v-for="(id, m) in pjtDetail.files"
                 :key="m"
@@ -217,7 +259,12 @@
                 <b-col class="mt-4 mb-2">
                   {{ id.fileName }}
                   <!-- 파일 다운로드 -->
-                  <b-button @click="fileDownload(id)" size="sm" variant="outline-dark" class="ml-1">
+                  <b-button
+                    @click="fileDownload(id)"
+                    size="sm"
+                    variant="outline-dark"
+                    class="ml-1"
+                  >
                     <b-icon-download></b-icon-download>
                   </b-button>
                   <b-button
@@ -243,7 +290,7 @@
             />
             <b-icon
               v-if="isLogedIn"
-              @click="$refs.fileUpload.click();"
+              @click="$refs.fileUpload.click()"
               style="cursor: pointer"
               icon="plus-square"
               aria-hidden="true"
