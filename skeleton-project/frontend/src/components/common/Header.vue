@@ -75,23 +75,18 @@ export default {
     };
   },
   created() {
-    // console.log(constants.IS_PROFILEIMG_UPLOAD);
     if (constants.IS_LOGED_IN) {
       axios
         .get(this.$SERVER_URL + `/account/ckprofile/${localStorage["uid"]}`)
         .then((response) => {
           if (response.data.status) {
-            // console.log(response);
             if (response.data.object == null) {
-              // console.log("등록된 프로필 이미지가 없습니다.");
             } else {
-              // console.log("등록된 프로필 이미지가 있습니다.");
               this.profileImgsrc =
                 this.$SERVER_URL + `/account/profile/${localStorage["uid"]}`;
             }
           } else {
             console.log("프로필 이미지 가져오는 중 에러 발생");
-            console.log(response);
           }
         });
     }
@@ -110,10 +105,15 @@ export default {
       this.$router.push({ path: `/${localStorage["uid"]}` });
     },
     copyUrl() {
-      var url = this.$SERVER_URL + `/${localStorage["uid"]}`;
-      window.clipboardData.setData("Text", url);
-      console.log(url);
-      console.log(window.clipboardData.getData("Text"));
+      var url = `http://i3a605.p.ssafy.io/#/${localStorage["uid"]}`;
+      // window.clipboardData.setData("Text", url);
+      const copyURL = document.createElement("input");
+      copyURL.value = url
+      document.body.appendChild(copyURL);
+      copyURL.select();
+      document.execCommand("copy");
+      document.body.removeChild(copyURL);
+      alert("링크가 복사되었습니다")
     },
   },
 };

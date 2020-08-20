@@ -528,7 +528,11 @@ export default {
 }
 .poCard:hover {
   background-color: #bedcff;
+  box-shadow: 5px 5px 5px 0 grey;
+  transition: transform .3s ease-in;
+  transform: translate(0, -10px);
 }
+
 .poTitle {
   cursor: pointer;
 }
