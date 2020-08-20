@@ -4,13 +4,19 @@
       <b-navbar id="pageMenue">
         <b-navbar-nav class="ml-auto mr-auto">
           <b-nav-item class="mr-5" href="#">
-            <router-link id="rlink" :to="{ path: `/ManageExperience/${uid}` }">📝경험 관리</router-link>
+            <router-link id="rlink" :to="{ path: `/ManageExperience/${uid}` }"
+              >📝경험 관리</router-link
+            >
           </b-nav-item>
           <b-nav-item class="mr-5">
-            <router-link id="rlink" :to="{ path: `/ManagePortfolio/${uid}` }">📇포트폴리오 관리</router-link>
+            <router-link id="rlink" :to="{ path: `/ManagePortfolio/${uid}` }"
+              >📇프로젝트 관리</router-link
+            >
           </b-nav-item>
           <b-nav-item class="mr-5" href="#">
-            <router-link id="rlink" :to="{ path: `/ManageApply/${uid}` }">💼지원 목록</router-link>
+            <router-link id="rlink" :to="{ path: `/ManageApply/${uid}` }"
+              >💼지원 목록</router-link
+            >
           </b-nav-item>
           <!-- <b-nav-item class="mr-5" href="#">👥커뮤니티</b-nav-item> -->
         </b-navbar-nav>
@@ -28,7 +34,7 @@
 <script>
 import constants from "../../lib/constants";
 export default {
-  data: function () {
+  data: function() {
     return {
       constants,
       // uid: localStorage["uid"],
@@ -36,8 +42,8 @@ export default {
   },
   computed: {
     uid: function() {
-      return localStorage["uid"]
-    }
+      return localStorage["uid"];
+    },
   },
   methods: {
     openCol() {
