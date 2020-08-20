@@ -956,4 +956,9 @@ input::placeholder {
   vertical-align: 0;
   transform: translate(20%, 25%);
 }
+.card-copy:hover {
+  box-shadow: 5px 5px 5px 0 grey;
+  transition: transform .3s ease-in;
+  transform: translate(0, -5px);
+}
 </style>
