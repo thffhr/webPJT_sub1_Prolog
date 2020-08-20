@@ -7,7 +7,11 @@
         v-bind:to="{ name: constants.URL_TYPE.MAIN.LOGINHOME }"
       >-->
       <!-- 로고 이미지 -->
-      <b-img :src="require(`@/assets/img/logo2-5.png`)" width="50" @click="goToMain"></b-img>
+      <b-img
+        :src="require(`@/assets/img/logo2-5.png`)"
+        width="50"
+        @click="goToMain"
+      ></b-img>
       <!-- </router-link> -->
     </h1>
     <!-- 로그인 시에만 사용자 메뉴 보이기 -->
@@ -28,7 +32,8 @@
             style="width: 2rem; height: 2rem;"
           />
 
-          <div id="userName" :uid="uid">{{ nickname }}</div>님, 환영합니다.
+          <div id="userName" :uid="uid">{{ nickname }}</div>
+          님, 환영합니다.
         </template>
 
         <b-dropdown-item href="#" @click="logout">로그아웃</b-dropdown-item>
@@ -41,7 +46,9 @@
             </div>
           </b-modal>
         </b-dropdown-item>
-        <b-dropdown-item href="#" @click="copyUrl">포트폴리오 제출용 링크</b-dropdown-item>
+        <b-dropdown-item href="#" @click="copyUrl"
+          >포트폴리오 제출용 링크</b-dropdown-item
+        >
       </b-dropdown>
     </div>
   </div>
@@ -58,7 +65,7 @@ export default {
   props: ["isHeader"],
   computed: {},
   watch: {},
-  data: function () {
+  data: function() {
     return {
       constants,
       uid: localStorage["uid"],
@@ -95,6 +102,7 @@ export default {
       localStorage.removeItem("nickname");
       localStorage.removeItem("email");
       localStorage.removeItem("password");
+      localStorage.removeItem("check");
       constants.IS_LOGED_IN = false;
       this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
     },
