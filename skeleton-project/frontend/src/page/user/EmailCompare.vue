@@ -1,9 +1,15 @@
 <template>
   <div id="Compare">
     <b-img :src="require(`@/assets/img/animat-lightbulb-color.gif`)" contain width="300px"></b-img>
-    <h1 class="Message">가입 인증 단계입니다.</h1>
-    <h3 class="Message">인증을 완료하고 간편하게 IT포트폴리오를 준비해보세요!</h3>
-    <div id="Btn" @click="compare()">인증 완료</div>
+    <div v-if="!auth">
+      <h1 class="Message">가입 인증 단계입니다.</h1>
+      <h3 class="Message">인증을 완료하고 간편하게 IT포트폴리오를 준비해보세요!</h3>
+      <div id="Btn" @click="compare()">인증 완료</div>
+    </div>
+    <div v-else>
+      <h1 class="Message">인증완료 되었습니다.</h1>
+      <h3 class="Message">계속 회원가입을 진행해주세요!</h3>
+    </div>
   </div>
 </template>
 
@@ -18,6 +24,7 @@ export default {
       constants,
       code: "",
       email: "",
+      auth: false,
     };
   },
   created() {},
@@ -37,6 +44,7 @@ export default {
         .then((response) => {
           if (response.data.status) {
             alert("이메일 인증이 성공하였습니다!");
+            this.auth = true;
             // this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
           } else {
             alert("이메일 인증이 실패하였습니다.");
