@@ -385,7 +385,6 @@ export default {
           // alert('수정완료')
         })
         .catch((error) => {
-          console.log(error);
         });
     },
     deleteTag(tid) {
@@ -410,7 +409,6 @@ export default {
             });
         })
         .catch((error) => {
-          console.log(error);
         });
     },
     addNewTag(newTag) {
@@ -439,7 +437,6 @@ export default {
             this.newTag = "";
           })
           .catch((error) => {
-            console.log(error);
           });
       }
     },
@@ -473,7 +470,6 @@ export default {
             });
         })
         .catch((error) => {
-          console.log(error + "err");
         });
     },
     uploadMultipleFiles(event) {
@@ -507,7 +503,6 @@ export default {
             });
         })
         .catch((error) => {
-          console.log(error);
         });
     },
     fileDownload(id) {
@@ -521,15 +516,11 @@ export default {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
           link.href = url;
-          console.log(response);
-          console.log(url);
-          console.log(link);
           link.setAttribute("download", id.fileName);
           document.body.appendChild(link);
           link.click();
         })
         .catch((error) => {
-          console.log(error);
         });
     },
     downloadAllZip() {
@@ -550,7 +541,6 @@ export default {
           if (response.data.status) {
             alert("저장된 파일이 없습니다. 파일을 추가하세요.");
           } else {
-            console.log(response);
             const link = document.createElement("a");
             const url = response.request.responseURL;
             link.href = url;
@@ -559,7 +549,6 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
         });
     },
     fileDelete(id) {
@@ -578,7 +567,6 @@ export default {
             });
         })
         .catch((error) => {
-          console.log(error);
         });
     },
     backToList() {

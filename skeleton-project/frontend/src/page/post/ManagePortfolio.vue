@@ -227,7 +227,6 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params.uid);
     if (!constants.IS_LOGED_IN) {
       this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
     }
@@ -257,11 +256,9 @@ export default {
             this.portfolios = response.data.object;
           })
           .catch((error) => {
-            console.log(error);
           });
       })
       .catch((error) => {
-        console.log(error);
       });
   },
   methods: {
@@ -305,15 +302,12 @@ export default {
                   this.portfolios = response.data.object;
                 })
                 .catch((error) => {
-                  console.log(error);
                 });
             })
             .catch((error) => {
-              console.log(error);
             });
         })
         .catch((error) => {
-          console.log(error);
         });
     },
     // change_button: function () {
@@ -367,7 +361,6 @@ export default {
             this.portfolios = response.data.object;
           })
           .catch((error) => {
-            console.log(error);
           });
       } else {
         let tmp = [];
@@ -401,7 +394,6 @@ export default {
               // );
             })
             .catch((error) => {
-              console.log(error);
             });
 
           axios
@@ -415,12 +407,10 @@ export default {
               this.portfolios = response.data.object;
             })
             .catch((error) => {
-              console.log(error);
             });
         })
 
         .catch((error) => {
-          console.log(error);
         });
     },
     tagState(tag) {
@@ -466,7 +456,6 @@ export default {
           if (response.data.status) {
             alert("저장된 파일이 없습니다. 파일을 추가하세요.");
           } else {
-            console.log(response);
             const link = document.createElement("a");
             const url = response.request.responseURL;
             link.href = url;
@@ -475,7 +464,6 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
         });
     },
 
@@ -528,7 +516,11 @@ export default {
 }
 .poCard:hover {
   background-color: #bedcff;
+  box-shadow: 5px 5px 5px 0 grey;
+  transition: transform .3s ease-in;
+  transform: translate(0, -10px);
 }
+
 .poTitle {
   cursor: pointer;
 }

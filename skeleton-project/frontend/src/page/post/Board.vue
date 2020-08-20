@@ -28,7 +28,7 @@ export default {
       const card = document.getElementById(card_id);
       card.setAttribute('class', 'toRemove card')
       
-      alert(card.getAttribute('class'));
+      //alert(card.getAttribute('class'));
 
       card.style.display = "block";
       
