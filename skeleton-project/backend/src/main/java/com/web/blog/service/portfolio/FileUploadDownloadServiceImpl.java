@@ -246,7 +246,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
         List<UploadFile> fileList = fileDAO.findUploadFileBypid(portfolio);
         HttpHeaders header = new HttpHeaders();
         if (fileList.isEmpty()) {
-            result.status = false;
+            result.status = true;
             result.data = "연결된 파일이 없습니다.";
             result.object = null;
             return new ResponseEntity<>(result, HttpStatus.OK);
