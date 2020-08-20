@@ -1,4 +1,7 @@
 <template>
+
+
+
   <div id="manageA">
     <!-- 수정 시 사이드바 등장 -->
     <!-- 사이드바 -->
@@ -12,13 +15,18 @@
                 :key="ex.exid"
               >
                 <Card :id="'card-s-e-' + ex.exid" draggable="true">
-                  <div>{{ ex.title }}</div>
+                  <div>
+                          <div class="card_title">{{ ex.title }}</div>
+                           <hr class="featurette-divider" />
+                          <div class="card_date">{{ ex.startdate }} ~ {{ex.enddate}}</div>
+                        </div>
                 </Card>
               </div>
-            </Board>
+              
             <Board id="board-s-e" class="dragSpace dragText"
-              >여기에 끌어다 쓰세요.</Board
+              >Drag Here!</Board
             >
+            </Board>
           </b-tab>
           <b-tab title="포트폴리오">
             <Board id="board-s-p">
@@ -27,13 +35,18 @@
                 :key="port.pid"
               >
                 <Card :id="'card-s-p-' + port.pid" draggable="true">
-                  <div>{{ port.title }}</div>
+                   <div>
+                          <div class="card_title">{{ port.title }}</div>
+                           <hr class="featurette-divider" />
+                          <div class="card_date">{{ port.startDate }} ~ {{port.endDate}}</div>
+                        </div>
                 </Card>
               </div>
-            </Board>
-            <Board id="board-s-p" class="dragSpace dragText"
-              >여기에 끌어다 쓰세요.</Board
+              <Board id="board-s-p" class="dragSpace dragText"
+              >Drag Here!</Board
             >
+            </Board>
+            
           </b-tab>
           <!-- <b-tab title="Disabled" disabled><p>I'm a disabled tab!</p></b-tab> -->
         </b-tabs>
@@ -135,6 +148,15 @@
       <!--/ 검색 창 -->
     </div>
 
+    <!-- 로딩 창 -->
+
+    <div v-show="loadingFlag" class ="container marketing" style="text-align: center">
+      <div>
+        <b-img v-bind:src="require(`@/assets/gif/Ellipsis-1.3s-144px.gif`)"> </b-img>
+      </div>
+    </div>
+    <!-- /로딩 창 -->
+
     <!-- 케러셀 -->
     <!-- <div>
       <b-carousel
@@ -185,7 +207,7 @@
 
     <!-- 임시 지원목록 상세 -->
 
-    <input v-model="synCheck" style="display:flex" />
+    <input v-model="synCheck" style="display:none" />
 
     <!-- 지원목록 -->
     <div v-bind="selected_apply" v-if="isEmptyApply()">
@@ -218,17 +240,39 @@
       <div no-body class="applyCard mb-1">
         <!-- 안되면 div로 빼주자 -->
         <b-container header-tag="header" class="applyCardHeader p-1" role="tab">
+         
+          <b-row>
+            <b-col>
+                <div v-if="!isEditClicked_list[ap_idx]">
+                   <h2 class="applyTitle ml-4 mt-3">{{ apply.apTitle }}</h2>
+                </div>
+            </b-col>
+          </b-row>
+
+          <b-row class="applyTitleSize">
+            <b-col cols="4" v-if="isEditClicked_list[ap_idx]">
+              <div >
+                    <b-form-textarea
+                    class="applyTitle textArea"
+                    v-model="apply.apTitle"
+                    placeholder="제목을 입력해주세요."
+                    rows="3"
+                  ></b-form-textarea>
+              </div>
+            </b-col>
+          </b-row>
+
           <b-row>
             <b-col cols="4">
               <b-row>
                 <div v-if="!isEditClicked_list[ap_idx]">
-                  <h2 class="ml-4 mt-3">{{ apply.apCompany }}</h2>
+                   <h2 class="ml-4 mt-3">{{ apply.apCompany }}</h2>
                 </div>
                 <div v-if="isEditClicked_list[ap_idx]" class="ml-4 mt-3">
-                  <b-form-input
-                    v-model="apply.apCompany"
-                    placeholder="제목을 입력해주세요."
-                  ></b-form-input>
+                    <b-form-input
+                      v-model="apply.apCompany"
+                      placeholder="회사명을 입력해주세요."
+                    ></b-form-input>
                 </div>
               </b-row>
             </b-col>
@@ -258,6 +302,7 @@
               </b-row>
             </b-col>
           </b-row>
+
         </b-container>
         <div id="applyCardBtn">
           <div v-b-toggle.sidebar-right style="outline:none;">
@@ -309,24 +354,35 @@
                 <!-- 수정중이 아닐때 -->
                 <!-- 경험-->
                 <div v-if="!isEditClicked_list[ap_idx]">
-                  <div>경험</div>
+                  <div class="ApplysubTitle">경험</div>
                   <div class="boardNoE">
                     <div
                       v-for="(ex, exid) in nav_ex_inlist[ap_idx]"
                       :key="ex.exid"
                     >
-                      <div class="cardNoE">{{ ex.title }}</div>
+                      <div class="cardNoE">
+                        <div class="card_title">{{ ex.title }}</div>
+                         <hr class="featurette-divider" />
+                        <div class="card_date">{{ ex.startdate }} ~ {{ex.enddate}}</div>
+                        <div class="card_contents">{{ ex.contents }}</div>
+                      </div>
                     </div>
                   </div>
 
                   <!-- 포폴 -->
-                  <div>프로젝트</div>
+                  <div class="ApplysubTitle">프로젝트</div>
                   <div class="boardNoP">
                     <div
                       v-for="(port, pid) in nav_port_inlist[ap_idx]"
                       :key="port.pid"
                     >
-                      <div class="cardNoP">{{ port.title }}</div>
+                      <div class="cardNoP">
+                        <div class="card_title">{{ port.title }}</div>
+                         <hr class="featurette-divider" />
+                        <div class="card_date">{{ port.startDate }} ~ {{port.endDate}}</div>
+                        <div class="card_contents">{{ port.contents }}</div>
+                        
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -341,11 +397,16 @@
                       :key="ex.exid"
                     >
                       <Card :id="'card-b-e-' + ex.exid" draggable="true">
-                        <div>{{ ex.title }}</div>
+                        <div>
+                          <div class="card_title">{{ ex.title }}</div>
+                           <hr class="featurette-divider" />
+                          <div class="card_date">{{ ex.startdate }} ~ {{ex.enddate}}</div>
+                          <div class="card_contents">{{ ex.contents }}</div>
+                        </div>
                       </Card>
                     </div>
                     <Board id="board-d-e" class="dragSpace dragText"
-                      >여기에 끌어다 쓰세요.</Board
+                      >Drag Here!</Board
                     >
                   </Board>
 
@@ -357,11 +418,16 @@
                       :key="port.pid"
                     >
                       <Card :id="'card-b-p-' + port.pid" draggable="true">
-                        <div>{{ port.title }}</div>
+                        <div>
+                          <div class="card_title">{{ port.title }}</div>
+                           <hr class="featurette-divider" />
+                          <div class="card_date">{{ port.startDate }} ~ {{port.endDate}}</div>
+                          <div class="card_contents">{{ port.contents }}</div>
+                        </div>
                       </Card>
                     </div>
                     <Board id="board-d-p" class="dragSpace dragText"
-                      >여기에 끌어다 쓰세요.</Board
+                      >Drag Here!</Board
                     >
                   </Board>
                 </div>
@@ -472,18 +538,7 @@ export default {
 
       ThreadFlag: true,
 
-      flowersImg: [
-        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbNQI5h%2FbtqGJuUCIN5%2FemfrZIKbSQvU9AYp9xXWhK%2Fimg.jpg",
-        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbmO10q%2FbtqGSsg736Q%2F2Vk8PtXWwwroClNtBaR7lk%2Fimg.jpg",
-        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcBif9C%2FbtqGNC5EItY%2FwEwvIFxMncmII3L0G4EBKK%2Fimg.jpg",
-        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdHQToz%2FbtqGJwdLhDV%2F99NvaPkVv90sofZ4mXG2Vk%2Fimg.jpg",
-        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcIngX9%2FbtqGJwx6UEi%2F1PANxFjnZjWGq8NSUIuljK%2Fimg.jpg",
-        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FJEurJ%2FbtqGK4ajX2J%2Fj5FxtSbXqtz2qJA8nqZ8Ik%2Fimg.jpg",
-        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fcbqw1R%2FbtqGK4g25HF%2FePZlqlieqAV9yWoJRqNp90%2Fimg.jpg",
-        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg",
-      ],
-      temp:
-        "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbbxeSR%2FbtqGJFWlSNZ%2FkiqfkXc5BjdCCqOKQx2yKK%2Fimg.jpg",
+      loadingFlag: false,
     };
   },
   computed: {},
@@ -643,7 +698,12 @@ export default {
       window.console.log(evt);
     },
     searchA: function(text, period) {
+      
+      //로딩 창 키기
+      this.loadingFlag = true;
+      
       if (period == "미정") period = "";
+      this.isEditCheck = false;
 
       axios
         .get(this.$SERVER_URL + `/apply/search`, {
@@ -654,21 +714,32 @@ export default {
           },
         })
         .then((response) => {
-          console.log(response);
-          console.log(response.data.object);
-          this.apply_lists = response.data.object;
-          console.log(response.data.object[0].portfolioTags);
 
-          //수정하기 클릭햇냐
-          this.isEditClicked_list = [];
-          this.isEditClicked_list_show = [];
-          for (var i = 0; i < this.apply_lists.length; i++) {
-            this.isEditClicked_list.push(false);
-            this.isEditClicked_list_show.push(false);
+          if(response.data.status){
+            console.log(response);
+            console.log(response.data.object);
+            this.apply_lists = response.data.object;
+            console.log(response.data.object[0].portfolioTags);
+
+            //수정하기 클릭햇냐
+            this.isEditClicked_list = [];
+            this.isEditClicked_list_show = [];
+            for (var i = 0; i < this.apply_lists.length; i++) {
+              this.isEditClicked_list.push(false);
+              this.isEditClicked_list_show.push(false);
+            }
           }
+          else{
+            this.apply_lists = [];
+          }
+
+          //로딩창 끄기
+          this.loadingFlag = false;
         })
         .catch((error) => {
           console.log(error);
+          //로딩창 끄기
+          this.loadingFlag = false;
         });
     },
     clickeEdit: function(apid, idx) {
@@ -1137,6 +1208,8 @@ export default {
 </script>
 
 <style>
+ 
+
 #manageA {
   width: 70%;
   margin: 50px auto;
@@ -1205,18 +1278,6 @@ export default {
   text-align: right;
 }
 
-/* .custom-temp {
-  background: #eeeeee;
-  border-radius: 0.5em;
-  margin-top: 5%;
-
-  border-top: 1.5px solid #22222222;
-  border-left: 1.5px solid #22222222;
-  border-right: 1.5px solid #22222222;
-  border-bottom: 1.5px solid #22222222;
-  box-shadow: 0 0 4px rgb(111, 111, 111);
-} */
-
 .apply_detail {
   text-align: center;
   position: inherit;
@@ -1243,7 +1304,7 @@ export default {
   padding: 5px;
   width: 100%;
   background-color: lightgray;
-  border-radius: 5px;
+  border-radius: 30px;
   outline: none;
 }
 .applyCardHeader {
@@ -1260,56 +1321,6 @@ export default {
   outline: none !important;
   padding: 5px;
 }
-/* .left-ex {
-  text-align: center;
-  margin: auto;
-  border-right: 1.5px solid #22222222;
-  color: #000;
-  min-height: 10rem;
-  width: 50%;
-}
-
-.right-port {
-  text-align: center;
-  min-height: 10%;
-  color: #000;
-  min-height: 10rem;
-  width: 50%;
-}
-
-.temp {
-  display: -webkit-box;
-  position: fixed;
-  z-index: 11;
-}
-
-.custom-pageMenue-right {
-  border-bottom-right-radius: 30px;
-  border-top-right-radius: 30px;
-  background-color: #eeeeee;
-  color: white;
-
-  opacity: 0.9;
-  min-height: 50rem;
-  min-width: 7rem;
-  width: 50%;
-
-  border-left: 1.5px solid #22222222;
-  border-right: 1.5px solid #22222222;
-  border-bottom: 1.5px solid #22222222;
-  box-shadow: 0 0 4px rgb(111, 111, 111);
-}
-
-.custom-nav-right-contents {
-  display: flex;
-  margin-right: auto;
-}
-
-.right_btn {
-  transform: translate(0%, 50%);
-  min-height: 50rem;
-} */
-
 .contents_list {
   display: inline;
 }
@@ -1343,46 +1354,6 @@ export default {
   margin-left: 5%;
   height: 100%;
 }
-#display {
-  background: #2d2d2d;
-  border: 10px solid #000000;
-  border-radius: 5px;
-  font-size: 2em;
-  color: white;
-  height: 100px;
-  min-width: 200px;
-  text-align: center;
-  padding: 1em;
-  display: table-cell;
-  vertical-align: middle;
-}
-#drop-target {
-  border: 2px dashed #d9d9d9;
-  border-radius: 5px;
-  min-height: 50px;
-  margin: 0 auto;
-  margin-top: 10px;
-  padding: 2em;
-  display: block;
-  text-align: center;
-}
-#drop-target > div {
-  text-align: center;
-  float: left;
-  padding: 1em;
-  margin: 0 1em 1em 0;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-  border-radius: 100px;
-  border: 2px solid #ececec;
-  background: #f7f7f7;
-  transition: all 0.5s ease;
-}
-#drop-target > div:active {
-  -webkit-animation: wiggle 0.3s 0s infinite ease-in;
-  animation: wiggle 0.3s 0s infinite ease-in;
-  opacity: 0.6;
-  border: 2px solid #000;
-}
 @-webkit-keyframes wiggle {
   0% {
     -webkit-transform: rotate(0deg);
@@ -1411,63 +1382,6 @@ export default {
     transform: rotate(0deg);
   }
 }
-.gu-mirror {
-  position: fixed !important;
-  margin: 0 !important;
-  z-index: 9999 !important;
-  padding: 1em;
-}
-.gu-hide {
-  display: none !important;
-}
-.gu-unselectable {
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  -ms-user-select: none !important;
-  user-select: none !important;
-}
-.gu-transit {
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-}
-.gu-mirror {
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-}
-
-.custom-drag-elements {
-  display: inline-block;
-  height: 100%;
-  background-color: #dfdfdf;
-  border-radius: 5px;
-  min-height: 50px;
-  margin: 0 auto;
-  padding: 2em;
-}
-.custom-drag-elements > div {
-  width: 40%;
-  text-align: center;
-  float: left;
-  padding: 1em;
-  margin: 0 1em 1em 0;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-  border-radius: 100px;
-  border: 2px solid #ececec;
-  background: #f7f7f7;
-  transition: all 0.5s ease;
-}
-.custom-drag-elements > div:active {
-  -webkit-animation: wiggle 0.3s 0s infinite ease-in;
-  animation: wiggle 0.3s 0s infinite ease-in;
-  opacity: 0.6;
-  border: 2px solid #000;
-}
-.custom-drag-elements > div:hover {
-  border: 2px solid #9c85ff;
-  background-color: #7a63ff;
-}
 
 .board {
   display: flex;
@@ -1486,9 +1400,10 @@ export default {
 .board .card {
   padding: 15px 25px;
   background-color: #f3f3f3;
-
-  cursor: pointer;
   margin-bottom: 15px;
+  border-radius:15px;
+  
+  cursor: pointer;
 }
 
 .board .card div {
@@ -1514,11 +1429,10 @@ export default {
   background-color: #f3f3f3;
 
   margin-bottom: 15px;
+   border-radius:15px;
 }
 
-.boardNoE .cardNoE div {
-  color: #000000;
-}
+
 
 .boardNoP {
   display: flex;
@@ -1539,17 +1453,43 @@ export default {
   background-color: #f3f3f3;
 
   margin-bottom: 15px;
+   border-radius:15px;
 }
 
 .boardNoP .cardNoP div {
   color: #000000;
 }
 
+.card > div{
+
+ 
+  transition-property: background-color, border-radius,transform;
+  transition-duration: .2s, 1s;
+  transition-timing-function: linear;
+}
+
+.board > div:hover {
+
+  
+   transform: translate(0%, -10%);
+
+}
+
+.card :active {
+  -webkit-animation: wiggle 0.3s 0s infinite ease-in;
+  animation: wiggle 0.3s 0s infinite ease-in;
+  border: 2px solid #9c85ff;
+  background-color: #7a63ff;
+   box-shadow: 0 0 8px #7a63ff;
+  opacity: 0.6;
+}
+
+
 .dragSpace {
   font-size: x-large;
   min-height: 50%;
   border: 5px solid #bbbbbb;
-  border-radius: 5px;
+  border-radius: 15px;
   border-style: dotted;
 }
 
@@ -1582,4 +1522,30 @@ export default {
 .custom-button-align {
   text-align: center;
 }
+
+.applyTitle{
+  text-align: center;
+}
+
+.applyTitleSize{
+  text-align: center;
+}
+
+.ApplysubTitle{
+  padding-left:5%;
+}
+.card_title{
+  font-size:2em;
+  font-weight:bold;
+}
+.card_date{
+  font-size:0.5em;
+  color:#777777;
+  text-align: right;
+}
+.card_contents{
+}
+
+
+
 </style>
