@@ -17,11 +17,7 @@ export default {
   props: ['id'],
 
   created(){
-    this.msg
-    EventBus.$on("cardToBoard_cardId", (payload) => {
-     /*  this.msg = payload;
-      this.delete(this.msg) } */}
-      )
+   
   }
   ,
   methods: {
@@ -30,6 +26,9 @@ export default {
       const parent_id = e.dataTransfer.getData('parent_id');
 
       const card = document.getElementById(card_id);
+      card.setAttribute('class', 'toRemove card')
+      
+      alert(card.getAttribute('class'));
 
       card.style.display = "block";
       
@@ -44,7 +43,7 @@ export default {
       var splited_bun = card_id.split(myregexp2)[2];
       var splited_idx = card_id.split(myregexp2)[3];
 
-      alert(board_s_compare +"-" +board_d_compare);
+      //alert(board_s_compare +"-" +board_d_compare);
   /* 
       alert("시험" + start);
       alert("시험" + end);
@@ -64,7 +63,7 @@ export default {
         e.target.appendChild(card);
         document.getElementById(e.target.id).insertBefore(card, document.getElementById(e.target.id).firstElementChild);
 
-        alert("이벤트 실행 ㄱㄱ");
+        //alert("이벤트 실행 ㄱㄱ");
         //s -> d는 추가
         //d -> s는 삭제
         EventBus.$emit('BoardToApply', start + "-" + end + "-" + splited_bun + "-" + splited_idx);
