@@ -58,7 +58,7 @@ export default new Router({
     },
     // 회원정보수정
     {
-      path: "/user/update",
+      path: "/update/:uid",
       name: constants.URL_TYPE.USER.UPDATE,
       component: Update,
     },
@@ -70,7 +70,7 @@ export default new Router({
     },
     // 로그인 메인화면
     {
-      path: "/logedin",
+      path: "/:uid",
       name: constants.URL_TYPE.MAIN.LOGINHOME,
       component: LoginHome,
     },
@@ -83,26 +83,26 @@ export default new Router({
     },
     // 포트폴리오관리
     {
-      path: "/ManagePortfolio",
+      path: "/ManagePortfolio/:uid",
       name: constants.URL_TYPE.POST.MANAGEPORTFOLIO,
       component: ManagePortfolio,
     },
     // 경험관리
     {
-      path: "/ManageExperience",
+      path: "/ManageExperience/:uid",
       name: constants.URL_TYPE.POST.MANAGEEXPERIENCE,
       component: ManageExperience,
     },
     // 포트폴리오 세부정보
     {
-      path: "/PortfolioDetails/:pid",
+      path: "/PortfolioDetails/:uid/:pid",
       name: constants.URL_TYPE.POST.PORTFOLIODETAILS,
       component: PortfolioDetails,
       // props: true,
     },
     //지원목록
     {
-      path: "/ManageApply",
+      path: "/ManageApply/:uid",
       name: constants.URL_TYPE.POST.MANAGEAPPLY,
       component: ManageApply,
     },

@@ -14,6 +14,7 @@
           >
             {{pjtDetail.title}}
             <b-img
+              v-if="isLogedIn"
               @click="updateTitle()"
               style="margin-left: 1rem; cursor: pointer;"
               v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
@@ -60,6 +61,7 @@
               <b-col v-if="!updateDateState" class="mt-5 mb-3">
                 <span>프로젝트 진행 기간 : {{pjtDetail.start_date}} ~ {{pjtDetail.end_date}}</span>
                 <b-img
+                  v-if="isLogedIn"
                   @click="updateDate()"
                   style="margin-left: 1rem; cursor: pointer;"
                   v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
@@ -168,22 +170,24 @@
               <b-col class="mt-3 mb-3">
                 <h5>
                   프로젝트 정의
-                  <b-img
-                    v-if="!updateContentsState"
-                    @click="updateContents"
-                    style="margin-left: 1rem; cursor: pointer;"
-                    v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
-                    width="15px"
-                    class="mr-2"
-                  ></b-img>
-                  <b-img
-                    v-else
-                    @click="sendUpdateInfo(); updateContents()"
-                    style="margin-left: 1rem; cursor: pointer;"
-                    v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
-                    width="15px"
-                    class="mr-2"
-                  ></b-img>
+                  <div v-if="isLogedIn" style="display:inline-block;">
+                    <b-img
+                      v-if="!updateContentsState"
+                      @click="updateContents"
+                      style="margin-left: 1rem; cursor: pointer;"
+                      v-bind:src="require(`@/assets/img/icons8-pencil-24.png`)"
+                      width="15px"
+                      class="mr-2"
+                    ></b-img>
+                    <b-img
+                      v-else
+                      @click="sendUpdateInfo(); updateContents()"
+                      style="margin-left: 1rem; cursor: pointer;"
+                      v-bind:src="require(`@/assets/img/icons8-save-close-64.png`)"
+                      width="15px"
+                      class="mr-2"
+                    ></b-img>
+                  </div>
                 </h5>
                 <div v-if="!updateContentsState" class="mt-3 mb-3">{{ pjtDetail.contents }}</div>
                 <div v-else class="mt-3 mb-3">
@@ -216,7 +220,13 @@
                   <b-button @click="fileDownload(id)" size="sm" variant="outline-dark" class="ml-1">
                     <b-icon-download></b-icon-download>
                   </b-button>
-                  <b-button @click="fileDelete(id)" size="sm" variant="outline-dark" class="ml-1">
+                  <b-button
+                    @click="fileDelete(id)"
+                    v-if="isLogedIn"
+                    size="sm"
+                    variant="outline-dark"
+                    class="ml-1"
+                  >
                     <b-icon-x></b-icon-x>
                   </b-button>
                 </b-col>
@@ -224,6 +234,7 @@
             </div>
             <div v-else>파일을 추가해보세요.</div>
             <input
+              v-if="isLogedIn"
               type="file"
               ref="fileUpload"
               style="display: none"
@@ -231,6 +242,7 @@
               @change="uploadMultipleFiles($event)"
             />
             <b-icon
+              v-if="isLogedIn"
               @click="$refs.fileUpload.click();"
               style="cursor: pointer"
               icon="plus-square"
@@ -260,6 +272,7 @@ export default {
   // },
   data: () => {
     return {
+      isLogedIn: constants.IS_LOGED_IN,
       uid: localStorage["uid"],
       pjtDetail: [],
       updateP: false,
@@ -271,6 +284,9 @@ export default {
     };
   },
   created() {
+    this.uid = this.$route.params.uid;
+    this.isLogedIn = constants.IS_LOGED_IN;
+    // console.log(this.$route.params.uid);
     // console.log(this.$route.params.pid);
     axios
       .get(this.$SERVER_URL + `/portfolio/${this.$route.params.pid}`, {
@@ -476,7 +492,7 @@ export default {
           {
             params: {
               pid: this.pjtDetail.pid,
-              uid: localStorage["uid"],
+              uid: this.$route.params.uid,
             },
           },
           {

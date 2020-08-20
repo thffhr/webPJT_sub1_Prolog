@@ -223,7 +223,8 @@ export default {
             constants.IS_LOGED_IN = true;
             // alert("로그인 되었습니다!");
             // location.href = "/#/logedin";
-            this.$router.go({ name: constants.URL_TYPE.MAIN.LOGINHOME });
+
+            this.$router.go({ path: `/${localStorage["uid"]}` });
           } else {
             alert("이메일 또는 비밀번호가 잘못되었습니다.");
           }

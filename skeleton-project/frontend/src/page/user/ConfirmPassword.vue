@@ -41,8 +41,8 @@ export default {
       if (this.password === localStorage["password"]) {
         // document.getElementById("closeBtn").click();
         // localStorage.setItem("double-checked", "Y");
-        this.$router.push({ name: constants.URL_TYPE.USER.UPDATE });
         constants.IS_CONFIRMED_PASSWORD = true;
+        this.$router.push({ path: `/update/${localStorage["uid"]}` });
       } else {
         alert("비밀번호가 틀렸습니다.");
       }

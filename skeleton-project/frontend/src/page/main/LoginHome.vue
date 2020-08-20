@@ -89,7 +89,7 @@ export default {
   created() {
     axios
       .get(this.$SERVER_URL + "/portfolio/all/", {
-        params: { uid: localStorage["uid"] },
+        params: { uid: this.$route.params.uid },
       })
       .then((response) => {
         this.pjtAll = response.data.object;
@@ -97,18 +97,13 @@ export default {
       });
   },
   methods: {
-    gogo() {
-      let code = "DCJO0DK7";
-      let email = "tedy55@naver.com";
+    gotoDetail(pid) {
       this.$router.push({
-        path: `/EmailCompare/${code}/${email}`,
+        path: `/PortfolioDetails/${this.$route.params.uid}/${pid}`,
       });
     },
-    gotoDetail(pid) {
-      this.$router.push({ path: `/PortfolioDetails/${pid}` });
-    },
     gotoPortfolio() {
-      this.$router.push({ path: "/ManagePortfolio" });
+      this.$router.push({ path: `/ManagePortfolio/${this.$route.params.uid}` });
     },
     downloadAllZip(pid) {
       axios
@@ -117,7 +112,7 @@ export default {
           {
             params: {
               pid: pid,
-              uid: localStorage["uid"],
+              uid: this.$route.params.uid,
             },
           },
           {
