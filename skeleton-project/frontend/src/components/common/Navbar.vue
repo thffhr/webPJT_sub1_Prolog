@@ -31,8 +31,13 @@ export default {
   data: function () {
     return {
       constants,
-      uid: localStorage["uid"],
+      // uid: localStorage["uid"],
     };
+  },
+  computed: {
+    uid: function() {
+      return localStorage["uid"]
+    }
   },
   methods: {
     openCol() {
