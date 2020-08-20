@@ -331,7 +331,6 @@ export default {
       })
       .then((response) => {
         // alert(this.$SERVER_URL + `/experience/Tags`);
-        console.log(response.data.object);
         //
         this.tags = response.data.object;
         Array.prototype.forEach.call(this.tags, (t) =>
@@ -346,26 +345,20 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response);
-            console.log(response.data.object);
             this.experiences = response.data.object;
-            console.log(response.data.object[0].portfolioTags);
 
             Array.prototype.forEach.call(this.experiences, (t) =>
               Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
             );
           })
           .catch((error) => {
-            console.log(error);
           });
         /* 
         Array.prototype.forEach.call(this.tags, tag => 
           this.selectedTags.push(tag.tid)
         ) */
-        console.log(this.tags);
       })
       .catch((error) => {
-        console.log(error);
       });
 
     
@@ -430,7 +423,6 @@ export default {
             );
           })
           .catch((error) => {
-            console.log(error);
           });
       } else {
         let tmp = []
@@ -481,7 +473,6 @@ export default {
         })
         .then((response) => {
           // alert(this.$SERVER_URL + `/experience/Tags`);
-          console.log(response.data.object);
           //
           this.tags = response.data.object;
           Array.prototype.forEach.call(this.tags, (t) =>
@@ -492,10 +483,8 @@ export default {
           this.selectedTags.push(tag.tid)
         ) */
 
-          console.log(this.tags);
         })
         .catch((error) => {
-          console.log(error);
           //alert("실패");
         });
     },
@@ -543,7 +532,6 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response.data.object);
             this.tags = response.data.object;
             Array.prototype.forEach.call(this.tags, (t) =>
               Object.assign(t, { imgsrc: "icons8-plus-64.png" })
@@ -563,18 +551,14 @@ export default {
                 );
               })
               .catch((error) => {
-                console.log(error);
               });
-            console.log(this.tags);
           })
           .catch((error) => {
-            console.log(error);
           });
 
         })
         .catch((error) => {
           //alert("실패");
-          console.log(error);
         });
     },
 
@@ -589,7 +573,6 @@ export default {
         })
         .catch((error) => {
           //alert("실패");
-          console.log(error);
         });
     },
 
@@ -603,7 +586,6 @@ export default {
           //alert("삭제완료 " + experience.exid);
         })
         .catch((error) => {
-          console.log(error);
         });
     },
 
@@ -635,7 +617,6 @@ export default {
           //alert("성공");
         })
         .catch((error) => {
-          console.log(error);
         });
     },
 
@@ -677,9 +658,6 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
-          alert(tag.tid + " - " + experience.exid);
-          alert("삭제실패");
         });
     },
     addTag: function (tags, exid, tagText) {
@@ -721,7 +699,6 @@ export default {
           //this.selectedTags.push(response.data.object.tid);
         })
         .catch((error) => {
-          console.log(error);
         });
     },
     addTagLink: function (tags, exid, tid, tagText) {
@@ -735,7 +712,6 @@ export default {
           tags.push(temp);
         })
         .catch((error) => {
-          console.log(error);
         });
     },
   },
