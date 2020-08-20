@@ -55,7 +55,8 @@ public class MailServiceImpl implements MailService {
             final String AuthCode = MailMakeCode();// 랜덤 인증코드 생성 필요
             // ec2 설정시 - "http://i3a605.p.ssafy.io/#/EmailCompare"
             final String AuthLink = "http://localhost:3000/#/EmailCompare/" + AuthCode + "/" + request.getToEmail();
-            // // ec2 설정시 - "http://i3a605.p.ssafy.io/api/email/compare-code?code="
+            // // ec2 설정시 - "http://i3a605.p.ssafy.io/EmailCompare/" + AuthCode + "/" +
+            // request.getToEmail();
             // final String AuthLink = "http://localhost:8080/api/email/compare-code/?code="
             // + AuthCode + "&email=" + request.getToEmail();
             final String AuthSubject = "서비스 인증 메일";
