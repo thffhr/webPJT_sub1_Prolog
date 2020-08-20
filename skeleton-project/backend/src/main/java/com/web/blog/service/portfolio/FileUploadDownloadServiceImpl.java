@@ -310,7 +310,7 @@ public class FileUploadDownloadServiceImpl implements FileUploadDownloadService 
             result.status = true;
             result.data = "파일 압축";
             result.object = resource;
-            return new ResponseEntity<>(resource, header, HttpStatus.OK);
+            return new ResponseEntity<>(result, header, HttpStatus.OK);
         }
 
     }
