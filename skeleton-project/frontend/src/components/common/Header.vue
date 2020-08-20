@@ -2,13 +2,13 @@
   <div id="header" v-if="isHeader && constants.IS_LOGED_IN">
     <h1 id="blogLogo">
       <!-- 로그인 시에만 블로그 로고 보이기 -->
-      <router-link
+      <!-- <router-link
         v-if="constants.IS_LOGED_IN"
         v-bind:to="{ name: constants.URL_TYPE.MAIN.LOGINHOME }"
-      >
-        <!-- 로고 이미지 -->
-        <b-img :src="require(`@/assets/img/logo2-5.png`)" width="50"></b-img>
-      </router-link>
+      >-->
+      <!-- 로고 이미지 -->
+      <b-img :src="require(`@/assets/img/logo2-5.png`)" width="50" @click="goToMain"></b-img>
+      <!-- </router-link> -->
     </h1>
     <!-- 로그인 시에만 사용자 메뉴 보이기 -->
     <div id="userMenue">
@@ -28,8 +28,7 @@
             style="width: 2rem; height: 2rem;"
           />
 
-          <div id="userName" :uid="uid">{{ nickname }}</div>
-          님, 환영합니다.
+          <div id="userName" :uid="uid">{{ nickname }}</div>님, 환영합니다.
         </template>
 
         <b-dropdown-item href="#" @click="logout">로그아웃</b-dropdown-item>
@@ -42,6 +41,7 @@
             </div>
           </b-modal>
         </b-dropdown-item>
+        <b-dropdown-item href="#" @click="copyUrl">포트폴리오 제출용 링크</b-dropdown-item>
       </b-dropdown>
     </div>
   </div>
@@ -58,7 +58,7 @@ export default {
   props: ["isHeader"],
   computed: {},
   watch: {},
-  data: function() {
+  data: function () {
     return {
       constants,
       uid: localStorage["uid"],
@@ -98,6 +98,15 @@ export default {
       constants.IS_LOGED_IN = false;
       this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
     },
+    goToMain() {
+      this.$router.push({ path: `/${localStorage["uid"]}` });
+    },
+    copyUrl() {
+      var url = this.$SERVER_URL + `/${localStorage["uid"]}`;
+      window.clipboardData.setData("Text", url);
+      console.log(url);
+      console.log(window.clipboardData.getData("Text"));
+    },
   },
 };
 </script>
@@ -116,6 +125,9 @@ export default {
 
   padding: 5px 40px;
   margin: 0;
+}
+#blogLogo:hover {
+  cursor: pointer;
 }
 #userMenue {
   position: absolute;

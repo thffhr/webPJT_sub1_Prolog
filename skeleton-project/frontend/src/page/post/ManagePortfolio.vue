@@ -227,6 +227,7 @@ export default {
     };
   },
   created() {
+    console.log(this.$route.params.uid);
     if (!constants.IS_LOGED_IN) {
       this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
     }
@@ -234,7 +235,7 @@ export default {
     axios
       .get(this.$SERVER_URL + `/portfolio/Tags`, {
         params: {
-          uid: localStorage["uid"],
+          uid: this.$route.params.uid,
         },
       })
       .then((response) => {
@@ -248,7 +249,7 @@ export default {
         axios
           .get(this.$SERVER_URL + `/portfolio/all`, {
             params: {
-              uid: localStorage["uid"],
+              uid: this.$route.params.uid,
             },
           })
           .then((response) => {
@@ -279,40 +280,37 @@ export default {
         .post(this.$SERVER_URL + `/portfolio`, {
           contents: "내용",
           title: "제목",
-          uid: localStorage["uid"],
+          uid: this.$route.params.uid,
           startDate: startdate,
           endDate: startdate,
         })
         .then((response) => {
           response.data.object.tag = [];
-          
-          
+
           axios
-          .get(this.$SERVER_URL + `/portfolio/Tags`, {
-            params: {
-              uid: localStorage["uid"],
-            },
-          })
-          .then((response) => {
-            this.tags = response.data.object;
-            axios
-              .get(this.$SERVER_URL + `/portfolio/all`, {
-                params: {
-                  uid: localStorage["uid"],
-                },
-              })
-              .then((response) => {
-                this.portfolios = response.data.object;
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          })
-          .catch((error) => {
-            console.log(error);
-          });    
-
-
+            .get(this.$SERVER_URL + `/portfolio/Tags`, {
+              params: {
+                uid: this.$route.params.uid,
+              },
+            })
+            .then((response) => {
+              this.tags = response.data.object;
+              axios
+                .get(this.$SERVER_URL + `/portfolio/all`, {
+                  params: {
+                    uid: this.$route.params.uid,
+                  },
+                })
+                .then((response) => {
+                  this.portfolios = response.data.object;
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         })
         .catch((error) => {
           console.log(error);
@@ -361,7 +359,7 @@ export default {
         axios
           .get(this.$SERVER_URL + `/portfolio/all`, {
             params: {
-              uid: localStorage["uid"],
+              uid: this.$route.params.uid,
             },
           })
           .then((response) => {
@@ -393,7 +391,7 @@ export default {
           axios
             .get(this.$SERVER_URL + `/portfolio/Tags`, {
               params: {
-                uid: localStorage["uid"],
+                uid: this.$route.params.uid,
               },
             })
             .then((response) => {
@@ -409,7 +407,7 @@ export default {
           axios
             .get(this.$SERVER_URL + `/portfolio/all`, {
               params: {
-                uid: localStorage["uid"],
+                uid: this.$route.params.uid,
               },
             })
             .then((response) => {
@@ -447,8 +445,7 @@ export default {
     gotoDetail(pid) {
       // console.log(pid);
       this.$router.push({
-        name: constants.URL_TYPE.POST.PORTFOLIODETAILS,
-        params: { pid: pid },
+        path: `/PortfolioDetails/${this.$route.params.uid}/${pid}`,
       });
     },
     downloadAllZip(pid) {
@@ -458,7 +455,7 @@ export default {
           {
             params: {
               pid: pid,
-              uid: localStorage["uid"],
+              uid: this.$route.params.uid,
             },
           },
           {
@@ -476,9 +473,6 @@ export default {
           console.log(error);
         });
     },
-
-
-
 
     // change_color() {
     //   this.cardColor.background = "light gray";

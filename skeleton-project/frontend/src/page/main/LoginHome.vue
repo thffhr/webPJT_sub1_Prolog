@@ -38,7 +38,12 @@
                 <h6 class="mb-0" id="tags">
                   <!-- 태그 -->
                   <div v-if="pjtAll[i].tag.length > 0">
-                    <div style="display: inline-block; margin-bottom: 5px;" v-for="(ptag, j) in pjtAll[i].tag.slice(0, 3)" :key="j" class="tag mr-3">
+                    <div
+                      style="display: inline-block; margin-bottom: 5px;"
+                      v-for="(ptag, j) in pjtAll[i].tag.slice(0, 3)"
+                      :key="j"
+                      class="tag mr-3"
+                    >
                       <!-- id말고 tag_name으로 바꾸기 -->
                       # {{ ptag.tagName }}
                     </div>
@@ -84,7 +89,7 @@ export default {
   created() {
     axios
       .get(this.$SERVER_URL + "/portfolio/all/", {
-        params: { uid: localStorage["uid"] },
+        params: { uid: this.$route.params.uid },
       })
       .then((response) => {
         this.pjtAll = response.data.object;
@@ -92,18 +97,13 @@ export default {
       });
   },
   methods: {
-    gogo() {
-      let code = "DCJO0DK7";
-      let email = "tedy55@naver.com";
+    gotoDetail(pid) {
       this.$router.push({
-        path: `/EmailCompare/${code}/${email}`,
+        path: `/PortfolioDetails/${this.$route.params.uid}/${pid}`,
       });
     },
-    gotoDetail(pid) {
-      this.$router.push({ path: `/PortfolioDetails/${pid}` });
-    },
     gotoPortfolio() {
-      this.$router.push({ path: "/ManagePortfolio" });
+      this.$router.push({ path: `/ManagePortfolio/${this.$route.params.uid}` });
     },
     downloadAllZip(pid) {
       axios
@@ -112,7 +112,7 @@ export default {
           {
             params: {
               pid: pid,
-              uid: localStorage["uid"],
+              uid: this.$route.params.uid,
             },
           },
           {
