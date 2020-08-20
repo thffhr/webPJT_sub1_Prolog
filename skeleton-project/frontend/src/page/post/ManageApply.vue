@@ -7,7 +7,7 @@
         <b-tabs class="m-3" align="center">
           <b-tab title="경험" active>
             <Board id="board-s-e">
-              <div v-for="(ex, ex_idx) in nav_ex_outlist" :key="ex.exid">
+              <div v-for="(ex, ex_idx) in nav_ex_outlist[this.changinIdx]" :key="ex.exid">
                 <Card :id="'card-s-e-' + ex.exid" draggable="true">
                   <div>{{ex.title}}</div>
                 </Card>
@@ -18,7 +18,7 @@
           </b-tab>
           <b-tab title="포트폴리오">
             <Board id="board-s-p">
-              <div v-for="(port, p_idx) in nav_port_outlist" :key="port.pid">
+              <div v-for="(port, p_idx) in nav_port_outlist[this.changinIdx]" :key="port.pid">
                 <Card :id="'card-s-p-' + port.pid" draggable="true">
                   <div>{{port.title}}</div>
                 </Card>
@@ -163,6 +163,9 @@
 
     <!-- 임시 지원목록 상세 -->
 
+  
+    <input v-model="synCheck" style="display:flex">
+
     <!-- 지원목록 -->
     <div v-bind="selected_apply" v-if="isEmptyApply()">
       <div class="custom-temp col-md-12">
@@ -257,7 +260,7 @@
           <b-row></b-row>
           <div class="applyCardBody">
             <div
-              v-if="nav_ex_inlist==0&&nav_port_inlist==0&&!isEditClicked_list[ap_idx]"
+              v-if="nav_ex_inlist[ap_idx]==0&&nav_port_inlist[ap_idx]==0&&!isEditClicked_list[ap_idx]"
               style="text-align:center; margin:30px 0;"
             >
               <h4>수정버튼을 눌러 관련 자료들을 추가해보세요.</h4>
@@ -269,16 +272,16 @@
                <div v-if="!isEditClicked_list[ap_idx]">
                 <div>경험</div>
                 <div class="boardNoE">
-                  <div v-for="(ex, exid) in nav_ex_inlist" :key="ex.exid">
+                  <div v-for="(ex, exid) in nav_ex_inlist[ap_idx]" :key="ex.exid">
                    <div class="cardNoE">{{ex.title}}</div>
                   </div>
                 </div>
 
                 <!-- 포폴 -->
                 <div>프로젝트</div>
-                <div class="boardNoE">
-                  <div v-for="(port, pid) in nav_port_inlist" :key="port.pid">
-                      <div  class="cardNoE">{{port.title}}</div>
+                <div class="boardNoP">
+                  <div v-for="(port, pid) in nav_port_inlist[ap_idx]" :key="port.pid">
+                      <div  class="cardNoP">{{port.title}}</div>
                   </div>
                 </div>
               </div>
@@ -289,7 +292,7 @@
               <div v-if="isEditClicked_list[ap_idx]">
                 <div>경험</div>
                 <Board id="board-d-e">
-                 <div v-for="(ex, exid) in nav_ex_inlist" :key="ex.exid"> 
+                 <div v-for="(ex, exid) in nav_ex_inlist[ap_idx]" :key="ex.exid"> 
                     <Card :id="'card-b-e-' + ex.exid" draggable="true">
                       <div>{{ex.title}}</div>
                     </Card>
@@ -300,7 +303,7 @@
                 <!-- 포폴 -->
                 <div>프로젝트</div>
                 <Board id="board-d-p">
-                  <div v-for="(port, pid) in nav_port_inlist" :key="port.pid">
+                  <div v-for="(port, pid) in nav_port_inlist[ap_idx]" :key="port.pid">
                     <Card :id="'card-b-p-' + port.pid" draggable="true">
                       <div>{{port.title}}</div>
                     </Card>
@@ -404,8 +407,10 @@ export default {
       isEditClicked_list_show: [],
       isEditCheck: false,
       isEditCheck2: false,
+      synCheck: false,
 
       changingApid: 0,
+      changinIdx:0,
 
       count_d_e : 0,
       count_d_p : 0,
@@ -627,18 +632,16 @@ export default {
 
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
       this.isEditCheck = !this.isEditCheck;
+      this.synCheck = !this.synCheck;
       console.log("clickeEdit이에요!");
 
-      this.getPortOutNav(apid);
-
+      this.getPortOutNav(apid,idx);
+      
       this.changingApid = apid;
+      this.changinIdx = idx;
 
       this.isEditClicked_list_show[idx] = true;
-
-      this.count_d_e =0;
-      this.count_d_p =0;
-      this.count_s_e =0;
-      this.count_s_p =0;
+      
       
 
       // this.getExOutNav(apid);
@@ -649,7 +652,8 @@ export default {
       //업데이트 클릭이 되어있을때 만.
         //alert("디테일 눌려요;;");
         this.isEditClicked_list_show[idx] = !this.isEditClicked_list_show[idx];
-        this.getPortOutNav(apid);
+        
+        this.getPortOutNav(apid,idx);
       
       //
       if(this.isEditCheck2){
@@ -661,6 +665,7 @@ export default {
       //alert("저장 눌려요;;");
       this.isEditClicked_list[idx] = !this.isEditClicked_list[idx];
       this.isEditCheck = !this.isEditCheck;
+      this.synCheck = !this.synCheck;
       console.log("saveEdit이에요!");
       console.log(apply.apCompany);
 
@@ -687,7 +692,7 @@ export default {
         });
     },
     // 여기까지 추가
-    getPortOutNav: function (apid) {
+    getPortOutNav: function (apid,idx) {
       // console.log("1)getPortOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outportfolio`, {
@@ -698,25 +703,60 @@ export default {
         })
         .then((response) => {
           
+
+           var cell;
+          cell = document.getElementsByClassName("toRemove");
+
+          console.log("길이" + cell.length)
+          console.log(cell);
+
+          var count = cell.length;
+
+          while(cell.length>0){
+            //alert(cell.length);
+            cell.parentNode.removeChild();
+          }
+      /*     if(document.body.contains(document.getElementsByClassName("toRemove"))){
+            alert("hi!!!");
+          } */
+
+          /* while(cell.hasChildNodes()){
+            
+            cell = document.getElementsByClassName("toRemove");
+            cell.remove;
+            console.log("hi");
+            //console.log(cell);
+          }  */
+
           //지워야할것은 div(board) > div(card) > div
           //지우면안되는것은 아들의 아들의 아들 div(board) > div > div(card) > div
-          var cel = document.getElementById("board-s-p"); 
+       /*    var cel = document.getElementById("board-s-p"); 
               
           //alert( cell.childElementCount);
           
           for(var i=0; i<this.count_s_p; i++){
              cell.removeChild( cell.lastChild );
-          } 
-          
-          this.nav_port_outlist = response.data.object; 
-          
+          }  */
+          var temp = response.data.object;/* 
 
-          this.getExOutNav(apid);
+          for(var i = 0; i < this.nav_port_outlist.length; i++){
+ */              this.nav_port_outlist.splice(0);/* 
+            } */
+          
+            for (var i = 0; i < this.apply_lists.length; i++) {
+                this.nav_port_outlist.push(temp);
+            }
+
+          this.nav_port_outlist[idx] = temp;
+          console.log(idx);
+          console.log(this.nav_port_outlist[idx])
+
+          this.getExOutNav(apid,idx);
         })
         .catch((error) => {});
     },
 
-    getExOutNav: function (apid) {
+    getExOutNav: function (apid,idx) {
       // console.log("2)getExOutNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/outexp`, {
@@ -726,21 +766,31 @@ export default {
           },
         })
         .then((response) => {
+
+          //document.getElementById("board-s-e").remove();
           
-            var cell = document.getElementById("board-s-e"); 
+        /*     var cell = document.getElementById("board-s-e"); 
 
           for(var i=0; i<this.count_s_e; i++){
              cell.removeChild( cell.lastChild );
           }
-          this.nav_ex_outlist = response.data.object;
+ */
+          var temp = response.data.object;
+          
+           this.nav_ex_outlist.splice(0);
+          
+            for (var i = 0; i < this.apply_lists.length; i++) {
+                this.nav_ex_outlist.push(temp);
+            }
+        this.nav_ex_outlist[idx] = temp;
 
 
-          this.getPortInNav(apid);
+          this.getPortInNav(apid,idx);
         })
         .catch((error) => {});
     },
     // 여기 수정해야돼!!!!!!!!!!!!!
-    getPortInNav: function (apid) {
+    getPortInNav: function (apid,idx) {
       // console.log("3)getPortInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inportfolio`, {
@@ -752,21 +802,30 @@ export default {
         .then((response) => {
           if (response.data.data != "연결된 포트폴리오가 없습니다.") {
 
-             var cell = document.getElementById("board-d-p"); 
+         /*     var cell = document.getElementById("board-d-p"); 
 
            for(var i=0; i<this.count_d_p; i++){
              cell.removeChild( cell.lastChild );
           }
-             
-            this.nav_port_inlist = response.data.object;
+              */
+
+             var temp = response.data.object;
+          
+            this.nav_port_inlist.splice(0);
+          
+          
+            for (var i = 0; i < this.apply_lists.length; i++) {
+                this.nav_port_inlist.push(temp);
+            }
+            this.nav_port_inlist[idx] = response.data.object;
             
             
           }
-          this.getExInNav(apid);
+          this.getExInNav(apid,idx);
         })
         .catch((error) => {});
     },
-    getExInNav: function (apid) {
+    getExInNav: function (apid, idx) {
       // console.log(apid + " - 4)getExInNav왔어요");
       axios
         .get(this.$SERVER_URL + `/apply/inexp`, {
@@ -778,17 +837,39 @@ export default {
         .then((response) => {
           if (response.data.data != "연결된 경험이 없습니다.") {
 
-            
+          /*   
            var cell = document.getElementById("board-d-e"); 
           //alert(cell);
  
           for(var i=0; i<this.count_d_e; i++){
              cell.removeChild( cell.lastChild );
-          }
- 
-            this.nav_ex_inlist = response.data.object;
+          } */
+            var temp = response.data.object;
+            var temp_list = this.nav_ex_inlist;
+            var temp_list_idx = 0;
 
+            alert(temp_list.length);
+
+            this.nav_ex_inlist.splice(0);
+          
+             for (var i = 0; i < this.apply_lists.length; i++) {
+                
+                if(temp_list_idx < temp_list.length){
+                  if(idx == temp_list_idx){
+                     this.nav_ex_inlist.push(temp);
+                  }
+                  temp_list_idx++;
+                  this.nav_ex_inlist.push(temp_list[i]);
+                }
+                else{
+                  this.nav_ex_inlist.push(temp);
+                }
+            }
+ 
+            //this.nav_ex_inlist[idx] = response.data.object;
+            
           }
+          this.synCheck != this.synCheck;
         })
         .catch((error) => {});
     },
@@ -856,8 +937,6 @@ export default {
           
         })
         .then((response) => {
-          this.count_s_e--;
-          this.count_d_e++;
           this.ThreadFlag = true;
         })
         .catch((error) => {
@@ -872,8 +951,6 @@ export default {
           pid: pid,
         })
         .then((response) => {
-          this.count_s_p--;
-          this.count_d_p++;
           this.ThreadFlag = true;
           })
         .catch((error) => {
@@ -890,8 +967,6 @@ export default {
           },
         })
         .then((response) => {
-          this.count_s_e++;
-          this.count_d_e--;
           this.ThreadFlag = true;
           })
         .catch((error) => {this.ThreadFlag = true;});
@@ -906,8 +981,6 @@ export default {
           },
         })
         .then((response) => {
-          this.count_s_p++;
-          this.count_d_p--;
           this.ThreadFlag = true;
           })
         .catch((error) => {this.ThreadFlag = true;});
@@ -1298,6 +1371,32 @@ export default {
 }
 
 .boardNoE .cardNoE div {
+  color: #000000;
+}
+
+.boardNoP {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  background-color: #d4d3d3;
+
+  /* border: 1.5px solid #d4e4e4; */
+  border-radius: 5px;
+  /* border-style: dotted; */
+  padding: 25px;
+}
+
+
+.boardNoP .cardNoP {
+  padding: 15px 25px;
+  background-color: #f3f3f3;
+
+  margin-bottom: 15px;
+}
+
+.boardNoP .cardNoP div {
   color: #000000;
 }
 

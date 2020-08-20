@@ -26,6 +26,9 @@ export default {
       const parent_id = e.dataTransfer.getData('parent_id');
 
       const card = document.getElementById(card_id);
+      card.setAttribute('class', 'toRemove card')
+      
+      alert(card.getAttribute('class'));
 
       card.style.display = "block";
       
