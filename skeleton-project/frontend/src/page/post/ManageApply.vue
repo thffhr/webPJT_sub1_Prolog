@@ -1420,11 +1420,11 @@ export default {
 
 .board .card {
   padding: 15px 25px;
-  background-color: #9b77ff;
+  background-color: #999999;
   margin-bottom: 15px;
   border-radius:15px;
  
- border: 3px solid #936af4;
+ border: 3px solid #797979;
  
   
   cursor: pointer;
@@ -1450,10 +1450,15 @@ export default {
 
 .boardNoE .cardNoE {
   padding: 15px 25px;
-  background-color: #f3f3f3;
-
   margin-bottom: 15px;
    border-radius:15px;
+
+
+   background-color: #999999;
+  margin-bottom: 15px;
+  border-radius:15px;
+ 
+ border: 3px solid #797979;
 }
 
 
@@ -1474,15 +1479,26 @@ export default {
 
 .boardNoP .cardNoP {
   padding: 15px 25px;
-  background-color: #f3f3f3;
-
   margin-bottom: 15px;
    border-radius:15px;
+
+
+   background-color: #999999;
+  margin-bottom: 15px;
+  border-radius:15px;
+ 
+ border: 3px solid #797979;
 }
 
 .boardNoP .cardNoP div {
-  color: #000000;
+  color: #ffffff;
 }
+
+.boardNoE .cardNoE div {
+  color: #ffffff;
+}
+
+
 
 .card > div{
 
