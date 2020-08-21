@@ -38,7 +38,19 @@
                 class="mt-1 mb-1"
                 style="width: 60%;"
               ></b-form-input>
-              <span class="findUser text-secondary">아이디 또는 비밀번호를 잊으셨나요?</span>
+              <span
+                class="findUser text-secondary"
+                @click="$bvModal.show('Find')"
+                style="text-align: center; cursor: pointer;"
+              >아이디 또는 비밀번호를 잊으셨나요?</span>
+              <b-modal id="Find" hide-footer v-on:close="closeModal()" ref="Modal">
+                <template v-slot:modal-title>
+                  <p class="mt-2 mb-2">아이디/비밀번호 찾기</p>
+                </template>
+                <div class="d-block text-center">
+                  <FindUserByEmail />
+                </div>
+              </b-modal>
             </div>
             <b-button class="mt-3" @click="login">로그인</b-button>
           </div>
@@ -186,6 +198,8 @@ export default {
       emailOrUid: "",
       password: "",
       isLogedin: false,
+      dismissSecs: 5,
+      dismissCountDown: 0,
       // images: {
       //   logo:
       // },
@@ -193,6 +207,12 @@ export default {
   },
   mounted() {},
   methods: {
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    },
+    showAlert() {
+      this.dismissCountDown = this.dismissSecs;
+    },
     login() {
       axios
         .post(this.$SERVER_URL + "/account/login/", {
