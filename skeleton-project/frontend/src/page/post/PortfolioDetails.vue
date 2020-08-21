@@ -159,6 +159,7 @@
                     # {{ ptag.tagName }}
                     <!-- <b-img :src="require(`@/assets/img/icons8-trash-24.png`)" width="15px" style="margin-left: 5%; cursor: pointer;" @click="deleteTag(ptag.tid)"></b-img> -->
                     <b-icon
+                      v-if="isLogedIn"
                       icon="x"
                       aria-hidden="true"
                       style="margin-left: 1px; cursor: pointer;"
