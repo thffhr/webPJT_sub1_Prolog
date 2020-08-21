@@ -1,7 +1,8 @@
 <template>
   <div class="footer">
       
-      Copyright © SSAFY + TeamLP All Rights Reserved.
+      Copyright © TeamLP All Rights Reserved.
+      <!-- Made by - TeamLP -->
       <!-- Make your portfolio simple - TeamLP -->
   </div>
 </template>
