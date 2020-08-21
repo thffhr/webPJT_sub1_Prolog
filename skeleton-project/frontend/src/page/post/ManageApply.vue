@@ -1222,6 +1222,7 @@ export default {
     },
     test(idx, ap_term){
       //alert(idx);
+      //gg
       ap_term = idx;
     }
   },

@@ -36,7 +36,7 @@ export default {
       card.style.display = "block";
       
       //ex) board-d-e | board-s-e
-      //ex) card-s-e-384
+      //ex) card-s-e-384 !!
 
       var myregexp2 = new RegExp("-"); 
       var start = parent_id.split(myregexp2)[1];
