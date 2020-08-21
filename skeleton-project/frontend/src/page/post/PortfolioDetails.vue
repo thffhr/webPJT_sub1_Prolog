@@ -1,11 +1,6 @@
 <template>
   <div id="poDetail">
-    <b-icon
-      id="backToList"
-      @click="backToList"
-      icon="chevron-left"
-      font-scale="2"
-    ></b-icon>
+    <b-icon id="backToList" @click="backToList" icon="chevron-left" font-scale="2"></b-icon>
     <b-container>
       <b-row>
         <b-col md="1"></b-col>
@@ -55,11 +50,7 @@
         </b-col>
         <b-col md="6">
           <div style="text-align: right;">
-            <b-button
-              @click="downloadAllZip()"
-              size="sm"
-              variant="outline-dark"
-            >
+            <b-button @click="downloadAllZip()" size="sm" variant="outline-dark">
               <b-icon-cloud-download class="mr-1"></b-icon-cloud-download>전체
               파일 다운로드
             </b-button>
@@ -75,10 +66,10 @@
           <b-container class="tabContents">
             <b-row>
               <b-col v-if="!updateDateState" class="mt-5 mb-3">
-                <span
-                  >프로젝트 진행 기간 : {{ pjtDetail.start_date }} ~
-                  {{ pjtDetail.end_date }}</span
-                >
+                <span>
+                  프로젝트 진행 기간 : {{ pjtDetail.start_date }} ~
+                  {{ pjtDetail.end_date }}
+                </span>
                 <b-img
                   v-if="isLogedIn"
                   @click="updateDate()"
@@ -174,16 +165,10 @@
                       @click="deleteTag(ptag.tid)"
                     ></b-icon>
                   </div>
-                  <div
-                    v-if="isLogedIn"
-                    id="mtbauto"
-                    style="display: inline-block;"
-                  >
+                  <div v-if="isLogedIn" id="mtbauto" style="display: inline-block;">
                     <div
                       style="display: inline-block; margin-top: auto; margin-bottom: auto; padding: 12px 0;"
-                    >
-                      #
-                    </div>
+                    >#</div>
                     <b-form-input
                       class="inp_tag"
                       v-model="newTag"
@@ -229,9 +214,7 @@
                     ></b-img>
                   </div>
                 </h5>
-                <div v-if="!updateContentsState" class="mt-3 mb-3">
-                  {{ pjtDetail.contents }}
-                </div>
+                <div v-if="!updateContentsState" class="mt-3 mb-3">{{ pjtDetail.contents }}</div>
                 <div v-else class="mt-3 mb-3">
                   <textarea
                     ref="contentsInput"
@@ -259,12 +242,7 @@
                 <b-col class="mt-4 mb-2">
                   {{ id.fileName }}
                   <!-- 파일 다운로드 -->
-                  <b-button
-                    @click="fileDownload(id)"
-                    size="sm"
-                    variant="outline-dark"
-                    class="ml-1"
-                  >
+                  <b-button @click="fileDownload(id)" size="sm" variant="outline-dark" class="ml-1">
                     <b-icon-download></b-icon-download>
                   </b-button>
                   <b-button
@@ -384,8 +362,7 @@ export default {
         .then((response) => {
           // alert('수정완료')
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     deleteTag(tid) {
       axios
@@ -408,8 +385,7 @@ export default {
               }
             });
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     addNewTag(newTag) {
       // console.log(this.pjtDetail.pid);
@@ -436,8 +412,7 @@ export default {
               });
             this.newTag = "";
           })
-          .catch((error) => {
-          });
+          .catch((error) => {});
       }
     },
     uploadFile(event) {
@@ -469,8 +444,7 @@ export default {
               }
             });
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     uploadMultipleFiles(event) {
       const formData = new FormData();
@@ -502,8 +476,7 @@ export default {
               }
             });
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     fileDownload(id) {
       // console.log(fileName)
@@ -520,8 +493,7 @@ export default {
           document.body.appendChild(link);
           link.click();
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     downloadAllZip() {
       axios
@@ -548,8 +520,7 @@ export default {
             link.click();
           }
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     fileDelete(id) {
       axios
@@ -566,8 +537,7 @@ export default {
               }
             });
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     backToList() {
       this.$router.push({ name: constants.URL_TYPE.POST.MANAGEPORTFOLIO });
@@ -579,6 +549,7 @@ export default {
 <style>
 #poDetail {
   margin-top: 50px;
+  margin-bottom: 40px;
 }
 #backToList {
   position: absolute;

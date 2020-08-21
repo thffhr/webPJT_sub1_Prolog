@@ -255,11 +255,9 @@ export default {
             // console.log(response.data.object);
             this.portfolios = response.data.object;
           })
-          .catch((error) => {
-          });
+          .catch((error) => {});
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   },
   methods: {
     addProject() {
@@ -301,14 +299,11 @@ export default {
                 .then((response) => {
                   this.portfolios = response.data.object;
                 })
-                .catch((error) => {
-                });
+                .catch((error) => {});
             })
-            .catch((error) => {
-            });
+            .catch((error) => {});
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     // change_button: function () {
     //   this.buttonStyle.opacity = "1";
@@ -360,8 +355,7 @@ export default {
             // console.log(response.data.object);
             this.portfolios = response.data.object;
           })
-          .catch((error) => {
-          });
+          .catch((error) => {});
       } else {
         let tmp = [];
         Array.prototype.forEach.call(this.portfolios, (portfolio) => {
@@ -393,8 +387,7 @@ export default {
               //   this.selectedTags.push(tag.tid)
               // );
             })
-            .catch((error) => {
-            });
+            .catch((error) => {});
 
           axios
             .get(this.$SERVER_URL + `/portfolio/all`, {
@@ -406,12 +399,10 @@ export default {
               // console.log(response.data.object);
               this.portfolios = response.data.object;
             })
-            .catch((error) => {
-            });
+            .catch((error) => {});
         })
 
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     tagState(tag) {
       return tag.state;
@@ -463,8 +454,7 @@ export default {
             link.click();
           }
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
 
     // change_color() {
@@ -486,6 +476,7 @@ export default {
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 40px;
 }
 .box-table2 {
   border: 1px solid #888888;
@@ -517,7 +508,7 @@ export default {
 .poCard:hover {
   background-color: #bedcff;
   box-shadow: 5px 5px 5px 0 grey;
-  transition: transform .3s ease-in;
+  transition: transform 0.3s ease-in;
   transform: translate(0, -10px);
 }
 
