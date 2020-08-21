@@ -44,6 +44,15 @@
         <b-dropdown-item href="#" @click="copyUrl">포트폴리오 제출용 링크</b-dropdown-item>
       </b-dropdown>
     </div>
+    <!-- 알림 -->
+    <b-alert
+      :show="dismissCountDown"
+      dismissible
+      variant="warning"
+      @dismissed="dismissCountDown=0"
+      @dismiss-count-down="countDownChanged"
+    >{{message}}</b-alert>
+    <!-- /알림 -->
   </div>
 </template>
 
@@ -68,6 +77,11 @@ export default {
       uid: localStorage["uid"],
       profileImgsrc:
         "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png",
+      // 알림
+      dismissSecs: 5,
+      dismissCountDown: 0,
+      message: "",
+      // 알림
     };
   },
   created() {
@@ -88,6 +102,14 @@ export default {
     }
   },
   methods: {
+    // 알림
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    },
+    showAlert() {
+      this.dismissCountDown = this.dismissSecs;
+    },
+    // 알림
     logout() {
       localStorage.removeItem("uid");
       localStorage.removeItem("nickname");

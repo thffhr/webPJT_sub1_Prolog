@@ -18,6 +18,15 @@
           style="text-align: center; cursor: pointer;"
         >로그인</b-button>
         <b-modal id="LoginModal" hide-footer>
+          <!-- 알림 -->
+          <b-alert
+            :show="dismissCountDown"
+            dismissible
+            variant="warning"
+            @dismissed="dismissCountDown=0"
+            @dismiss-count-down="countDownChanged"
+          >{{message}}</b-alert>
+          <!-- /알림 -->
           <template v-slot:modal-title>로그인</template>
           <div class="d-block text-center">
             <div class="custom-login-style">
@@ -198,8 +207,11 @@ export default {
       emailOrUid: "",
       password: "",
       isLogedin: false,
+      // 알림
       dismissSecs: 5,
       dismissCountDown: 0,
+      message: "",
+      // 알림
       // images: {
       //   logo:
       // },
@@ -207,12 +219,14 @@ export default {
   },
   mounted() {},
   methods: {
+    // 알림
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
     },
     showAlert() {
       this.dismissCountDown = this.dismissSecs;
     },
+    // 알림
     login() {
       axios
         .post(this.$SERVER_URL + "/account/login/", {
@@ -234,11 +248,15 @@ export default {
             // this.$router.go({ path: `/${response.data.object.uid}` });
             this.$router.push({ path: `/${response.data.object.uid}` });
           } else {
-            alert("이메일 또는 비밀번호가 잘못되었습니다.");
+            // alert("이메일 또는 비밀번호가 잘못되었습니다.");
+            this.message = "이메일 또는 비밀번호가 잘못되었습니다.";
+            this.showAlert();
           }
         })
         .catch((error) => {
-          alert("이메일 또는 비밀번호가 잘못되었습니다.");
+          // alert("이메일 또는 비밀번호가 잘못되었습니다.");
+          this.message = "이메일 또는 비밀번호가 잘못되었습니다.";
+          this.showAlert();
           console.log(error.response);
         });
     },
