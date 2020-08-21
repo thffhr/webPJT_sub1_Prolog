@@ -18,8 +18,7 @@
                 <span
                   class="gotoDetail pr-2 pl-2"
                   @click="gotoDetail(pjtAll[i].pid)"
-                  >{{ pjtAll[i].title }}</span
-                >
+                >{{ pjtAll[i].title }}</span>
 
                 <!-- <b-button  size="sm" variant="outline-dark">상세보기</b-button> -->
               </h2>
@@ -62,18 +61,12 @@
     <!-- <router-link > -->
     <div v-else class="noPortfolio" @click="gotoPortfolio">
       <h4 class="mb-3">포트폴리오를 추가해보세요.</h4>
-      <b-img
-        :src="require(`@/assets/img/noportfolio.png`)"
-        contain
-        width="180px"
-        id="HomeLogo"
-      ></b-img>
+      <b-img :src="require(`@/assets/img/noportfolio.png`)" contain width="180px" id="HomeLogo"></b-img>
     </div>
     <!-- </router-link> -->
-    <br>
-    <br>
+    <br />
+    <br />
   </div>
-
 </template>
 
 <script>
@@ -96,7 +89,6 @@ export default {
     };
   },
   created() {
-
     if (!localStorage["check"]) {
       localStorage["check"] = true;
       this.$router.go();
@@ -151,12 +143,12 @@ export default {
     },
   },
 };
-
 </script>
 
 <style>
 .loginHome {
   margin-top: 50px;
+  margin-bottom: 40px;
 }
 #carousel_card {
   border: none;

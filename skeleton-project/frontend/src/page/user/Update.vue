@@ -324,11 +324,11 @@ export default {
           console.log(response);
           let itemImage = this.$refs.uploadItemImage; //img dom 접근
           itemImage.src =
-              "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png";
+            "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png";
         })
         .catch((error) => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     },
     emailAuthentication() {
       if (localStorage["email"] != this.email) {
@@ -400,26 +400,26 @@ export default {
     },
 
     userdelete() {
-      if (confirm("정말로 탈퇴 하시겠습니까?")){
-      axios
-        .delete(this.$SERVER_URL + `/account/${localStorage["uid"]}`, {
-          params: { uid: localStorage["uid"] },
-        })
-        .then((response) => {
-          console.log(response);
-          if (response.data.status) {
-            localStorage.removeItem("uid");
-            localStorage.removeItem("password");
-            localStorage.removeItem("email");
-            localStorage.removeItem("createDate");
-            constants.IS_LOGED_IN = false;
-            this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
-            alert("회원정보가 삭제되었습니다");
-          }
-        })
-        .catch((error) => {
-          console.log(error.response);
-        });
+      if (confirm("정말로 탈퇴 하시겠습니까?")) {
+        axios
+          .delete(this.$SERVER_URL + `/account/${localStorage["uid"]}`, {
+            params: { uid: localStorage["uid"] },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.data.status) {
+              localStorage.removeItem("uid");
+              localStorage.removeItem("password");
+              localStorage.removeItem("email");
+              localStorage.removeItem("createDate");
+              constants.IS_LOGED_IN = false;
+              this.$router.push({ name: constants.URL_TYPE.MAIN.NOLOGINHOME });
+              alert("회원정보가 삭제되었습니다");
+            }
+          })
+          .catch((error) => {
+            console.log(error.response);
+          });
       }
     },
   },
@@ -432,6 +432,7 @@ export default {
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 40px;
   text-align: center;
 }
 .update_card {

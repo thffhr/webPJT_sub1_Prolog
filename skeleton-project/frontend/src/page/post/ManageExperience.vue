@@ -3,7 +3,6 @@
     <!-- Three columns of text below the carousel -->
     <!-- 모든 태그들 -->
     <div id="tagManue">
-
       <span
         v-if="allTagState"
         @click="allTagOnOff"
@@ -22,8 +21,7 @@
             variant="secondary"
             style="display: inline-block; color: black;"
             class="m-1"
-          ># {{ tag.tagName }}
-          </b-button>
+          ># {{ tag.tagName }}</b-button>
         </div>
         <div v-else>태그가 없습니다.</div>
       </div>
@@ -40,7 +38,7 @@
           :pressed.sync="this.isIncludeNoTag"
           v-bind:src="require(`@/assets/img/${NoTagImgSrcT}`)"
           width="20px"
-        ></b-img> -->
+        ></b-img>-->
       </h6>
       <h6 v-else class="noTag mt-3 mb-3" @click="exceptNoTagClickE()">
         태그 없는 게시물 보여주기
@@ -127,13 +125,18 @@
                   <!-- 태그 수정 -->
                   <div class="editor_tag" v-if="experience.clicked">
                     <!-- exid도잇어야함 -->
-                    <div class="mt-3 mr-1;" style="display: inline-block;" v-for="(experienceTag, tid) in experience.tags" :key="experienceTag.tid">
+                    <div
+                      class="mt-3 mr-1;"
+                      style="display: inline-block;"
+                      v-for="(experienceTag, tid) in experience.tags"
+                      :key="experienceTag.tid"
+                    >
                       <span class="txt_tag" style="display: inline-block;">
-                        <div class="tag"># {{ experienceTag.tagName }}
-
-                        <b-icon
-                          icon="x"
-                          @click="
+                        <div class="tag">
+                          # {{ experienceTag.tagName }}
+                          <b-icon
+                            icon="x"
+                            @click="
                           deleteTag(
                             experience.tags,
                             experienceTag,
@@ -141,22 +144,21 @@
                             experience
                           )
                         "
-                          style="width:18px; height:18px; cursor:pointer margin-left: 5px; padding-bottom: 0;"
-                          v-bind:src="
+                            style="width:18px; height:18px; cursor:pointer margin-left: 5px; padding-bottom: 0;"
+                            v-bind:src="
                           require(`@/assets/img/icons8-close-window-50.png`)
                         "
-                        >
-                          <!-- <span>삭제</span> -->
-                        </b-icon>
+                          >
+                            <!-- <span>삭제</span> -->
+                          </b-icon>
                         </div>
                       </span>
                     </div>
 
-
                     <div id="mtbauto" style="display: inline-block;">
-                      <div style="display: inline-block; margin-top: auto; margin-bottom: auto; padding: 12px 0;">
-                        #
-                      </div>
+                      <div
+                        style="display: inline-block; margin-top: auto; margin-bottom: auto; padding: 12px 0;"
+                      >#</div>
                       <b-form-input
                         class="inp_tag"
                         v-model="tagText"
@@ -166,9 +168,7 @@
                       ></b-form-input>
                     </div>
 
-
-                          
-                      <!-- <input
+                    <!-- <input
                         id="tagText"
                         v-model="tagText"
                         v-on:keyup.enter="
@@ -178,9 +178,9 @@
                         class="tf_g"
                         placeholder="태그입력"
                         style="box-sizing: content-box; width: 100px; height:24px"
-                      />-->
-                      <!-- </div> -->
-                      <!-- </b-form-group> -->
+                    />-->
+                    <!-- </div> -->
+                    <!-- </b-form-group> -->
                   </div>
                   <!-- 태그 출력 -->
                   <div v-else>
@@ -351,17 +351,13 @@ export default {
               Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
             );
           })
-          .catch((error) => {
-          });
+          .catch((error) => {});
         /* 
         Array.prototype.forEach.call(this.tags, tag => 
           this.selectedTags.push(tag.tid)
         ) */
       })
-      .catch((error) => {
-      });
-
-    
+      .catch((error) => {});
   },
   methods: {
     editTodo: function (todo) {
@@ -383,19 +379,18 @@ export default {
     // },
 
     tagState(tag) {
-      return tag.state
+      return tag.state;
     },
 
     allTagOnOff() {
       this.allTagState = !this.allTagState;
       if (this.allTagState == true) {
-       let tmp = []
-       this.tags.forEach(function(tag)
-         { 
+        let tmp = [];
+        this.tags.forEach(function (tag) {
           tag.state = true;
           tmp.push(tag.tid);
-         });
-         this.selectedTags = tmp
+        });
+        this.selectedTags = tmp;
       } else {
         this.selectedTags = [];
         Array.prototype.forEach.call(
@@ -409,7 +404,6 @@ export default {
       //lert("바뀔 값" + this.isIncludeNoTag);
       this.isIncludeNoTag = !this.isIncludeNoTag;
       if (this.isIncludeNoTag == true) {
-
         axios
           .get(this.$SERVER_URL + `/experience/all`, {
             params: {
@@ -422,16 +416,15 @@ export default {
               Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
             );
           })
-          .catch((error) => {
-          });
+          .catch((error) => {});
       } else {
-        let tmp = []
-        Array.prototype.forEach.call(this.experiences, experience => {
+        let tmp = [];
+        Array.prototype.forEach.call(this.experiences, (experience) => {
           if (experience.tags.length > 0) {
-            tmp.push(experience)
+            tmp.push(experience);
           }
-        })
-        this.experiences = tmp
+        });
+        this.experiences = tmp;
       }
     },
 
@@ -482,7 +475,6 @@ export default {
           /*  Array.prototype.forEach.call(this.tags, tag => 
           this.selectedTags.push(tag.tid)
         ) */
-
         })
         .catch((error) => {
           //alert("실패");
@@ -526,36 +518,33 @@ export default {
           response.data.object.imgsrc = "icons8-pencil-24.png";
 
           axios
-          .get(this.$SERVER_URL + `/experience/Tags`, {
-            params: {
-              uid: localStorage["uid"],
-            },
-          })
-          .then((response) => {
-            this.tags = response.data.object;
-            Array.prototype.forEach.call(this.tags, (t) =>
-              Object.assign(t, { imgsrc: "icons8-plus-64.png" })
-            );
-            // 태그 먼저 불러오도록 하게 만들기 위해 태그 불러오기 안에 경험 불러오기 넣었음
-            // 정확한 이유를 모르겠음. 이렇게 해야 오류 없이 태그리스트가 잘 나옴
-            axios
-              .get(this.$SERVER_URL + `/experience/all`, {
-                params: {
-                  uid: localStorage["uid"],
-                },
-              })
-              .then((response) => {
-                this.experiences = response.data.object;
-                Array.prototype.forEach.call(this.experiences, (t) =>
-                  Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
-                );
-              })
-              .catch((error) => {
-              });
-          })
-          .catch((error) => {
-          });
-
+            .get(this.$SERVER_URL + `/experience/Tags`, {
+              params: {
+                uid: localStorage["uid"],
+              },
+            })
+            .then((response) => {
+              this.tags = response.data.object;
+              Array.prototype.forEach.call(this.tags, (t) =>
+                Object.assign(t, { imgsrc: "icons8-plus-64.png" })
+              );
+              // 태그 먼저 불러오도록 하게 만들기 위해 태그 불러오기 안에 경험 불러오기 넣었음
+              // 정확한 이유를 모르겠음. 이렇게 해야 오류 없이 태그리스트가 잘 나옴
+              axios
+                .get(this.$SERVER_URL + `/experience/all`, {
+                  params: {
+                    uid: localStorage["uid"],
+                  },
+                })
+                .then((response) => {
+                  this.experiences = response.data.object;
+                  Array.prototype.forEach.call(this.experiences, (t) =>
+                    Object.assign(t, { imgsrc: "icons8-pencil-24.png" })
+                  );
+                })
+                .catch((error) => {});
+            })
+            .catch((error) => {});
         })
         .catch((error) => {
           //alert("실패");
@@ -585,8 +574,7 @@ export default {
           this.getTag();
           //alert("삭제완료 " + experience.exid);
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
 
     clickeEdit: function (experience) {
@@ -616,8 +604,7 @@ export default {
         .then((response) => {
           //alert("성공");
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
 
     deleteTag: function (tags, experienceTag, idx, experience) {
@@ -657,8 +644,7 @@ export default {
             });
           }
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     addTag: function (tags, exid, tagText) {
       this.tagText = "";
@@ -698,8 +684,7 @@ export default {
           //showProject를 위함
           //this.selectedTags.push(response.data.object.tid);
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     addTagLink: function (tags, exid, tid, tagText) {
       axios
@@ -711,8 +696,7 @@ export default {
           var temp = { tid: tid, tagName: tagText, state: false };
           tags.push(temp);
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
   },
 };
@@ -725,6 +709,7 @@ export default {
   padding: 0;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 40px;
 }
 .box-table {
   border: 1px solid #888888;
@@ -934,7 +919,7 @@ input::placeholder {
 }
 .card-copy:hover {
   box-shadow: 5px 5px 5px 0 grey;
-  transition: transform .3s ease-in;
+  transition: transform 0.3s ease-in;
   transform: translate(0, -5px);
 }
 </style>

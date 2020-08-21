@@ -33,6 +33,7 @@ export default {
   width: 80%;
   margin: 50px auto;
   text-align: center;
+  margin-bottom: 40px;
 }
 #Message {
   margin-bottom: 70px;

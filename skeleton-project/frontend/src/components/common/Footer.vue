@@ -1,16 +1,15 @@
 <template>
   <div class="footer">
-      
-      Copyright © TeamLP All Rights Reserved.
-      <!-- Made by - TeamLP -->
-      <!-- Make your portfolio simple - TeamLP -->
+    Copyright © TeamLP All Rights Reserved.
+    <!-- Made by - TeamLP -->
+    <!-- Make your portfolio simple - TeamLP -->
   </div>
 </template>
 
 <script>
 export default {
-    name: "Footer"
-}
+  name: "Footer",
+};
 </script>
 
 <style>
@@ -19,8 +18,9 @@ export default {
   left: 0;
   bottom: 0;
   width: 100%;
-  background-color: grey;
+  background-color: #bfbfbf;
   color: white;
   text-align: center;
+  padding: 10px 0;
 }
 </style>
