@@ -8,8 +8,8 @@
       @keyup.enter="FindUserByEmail"
       type="text"
     ></b-form-input>
-    <b-button class="mr-2" pill @click="FindUid">아이디 찾기</b-button>
-    <b-button pill @click="FindPassword">비밀번호 찾기</b-button>
+    <b-button class="mr-2" @click="FindUid">아이디 찾기</b-button>
+    <b-button @click="FindPassword">비밀번호 찾기</b-button>
   </div>
 </template>
 
@@ -45,20 +45,20 @@ export default {
             const userEmail = response.data.object.email;
             axios
               .put(this.$SERVER_URL + "/email/sendInfo", {
-                subject: "아이디찾기 이메일",
+                subject: `[Prolog]${userId}님의 아이디입니다.`,
                 text: userId,
                 toEmail: userEmail,
               })
               .then((response) => {
                 console.log(response);
-                alert("아이디 찾기 이메일 발송");
+                alert("이메일이 발송되었습니다.");
               })
               .catch((error) => {
-                alert("아이디찾기 이메일 보내기 실패");
+                alert("이메일 발송에 실패하였습니다.");
                 console.log(error);
               });
           } else {
-            alert("이메일이 잘못되었을껄?");
+            alert("가입되지 않은 이메일입니다.");
           }
         })
         .catch((error) => {
@@ -78,20 +78,20 @@ export default {
             const userEmail = response.data.object.email;
             axios
               .put(this.$SERVER_URL + "/email/sendInfo", {
-                subject: "비밀번호찾기 이메일",
+                subject: `[Prolog]${userId}님의 비밀번호입니다.`,
                 text: userPassword,
                 toEmail: userEmail,
               })
               .then((response) => {
                 // console.log(response);
-                alert("비밀번호 찾기 이메일 발송");
+                alert("이메일이 발송되었습니다.");
               })
               .catch((error) => {
                 console.log(error);
-                alert("비밀번호 찾기 이메일 보내기 실패");
+                alert("이메일 발송에 실패하였습니다.");
               });
           } else {
-            alert("이메일이 잘못되었을껄?");
+            alert("가입되지 않은 이메일입니다.");
           }
         })
         .catch((error) => {
