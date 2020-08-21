@@ -77,11 +77,13 @@
           </div>
         </div>
         <div class="modal-contents">
+            <br>
           <select v-on:input="updateValue($event.target.value)">
             <option v-for="option in periods">{{ option.apTerm }}</option>
           </select>
 
           <div>
+            <br>
             <p>선택하신 기간은 {{ search_input_period }}입니다.</p>
             <p>맞으시면 확인 버튼을 눌러주세요.</p>
           </div>
