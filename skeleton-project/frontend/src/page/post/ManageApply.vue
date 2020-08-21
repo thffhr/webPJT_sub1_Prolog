@@ -303,10 +303,10 @@
                 </div>
               </b-row>
               <b-row v-if="!isEditClicked_list[ap_idx]">
-                <p>{{ apply.apDesc }}</p>
+                
               </b-row>
               <b-row v-if="isEditClicked_list[ap_idx]">
-                <b-col class="contents-padding" >
+                <b-col class="contents-padding " >
                   <b-form-textarea
                     v-model="apply.apDesc"
                     placeholder="내용을 입력하세요."
