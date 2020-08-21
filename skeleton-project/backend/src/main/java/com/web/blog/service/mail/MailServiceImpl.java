@@ -53,10 +53,10 @@ public class MailServiceImpl implements MailService {
         try {
 
             final String AuthCode = MailMakeCode();// 랜덤 인증코드 생성 필요
-            // final String AuthLink = "http://localhost:3000/#/EmailCompare/" + AuthCode +
-            // "/" + request.getToEmail();
+            final String AuthLink = "http://localhost:3000/#/EmailCompare/" + AuthCode + "/" + request.getToEmail();
             // ec2 설정시
-            final String AuthLink = "http://i3a605.p.ssafy.io/#/EmailCompare/" + AuthCode + "/" + request.getToEmail();
+            // final String AuthLink = "http://i3a605.p.ssafy.io/#/EmailCompare/" + AuthCode
+            // + "/" + request.getToEmail();
             final String AuthSubject = "서비스 인증 메일";
             final SimpleMailMessage message = new SimpleMailMessage();
 

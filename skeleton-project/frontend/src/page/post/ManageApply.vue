@@ -2,7 +2,8 @@
 
 
 
-  <div id="manageA">
+  <div 
+         id="manageA">
     <!-- 수정 시 사이드바 등장 -->
     <!-- 사이드바 -->
     <b-sidebar id="sidebar-right" right shadow no-header>
@@ -14,11 +15,12 @@
                 v-for="(ex, ex_idx) in nav_ex_outlist[this.changinIdx]"
                 :key="ex.exid"
               >
-                <Card :id="'card-s-e-' + ex.exid" draggable="true">
+                <Card class="card" :id="'card-s-e-' + ex.exid" draggable="true">
                   <div>
                           <div class="card_title">{{ ex.title }}</div>
-                           <hr class="featurette-divider" />
+                           <hr class="white_line" />
                           <div class="card_date">{{ ex.startdate }} ~ {{ex.enddate}}</div>
+                          <div class="card_contents">{{ ex.contents }}</div>
                         </div>
                 </Card>
               </div>
@@ -34,11 +36,12 @@
                 v-for="(port, p_idx) in nav_port_outlist[this.changinIdx]"
                 :key="port.pid"
               >
-                <Card :id="'card-s-p-' + port.pid" draggable="true">
+                <Card class="card" :id="'card-s-p-' + port.pid" draggable="true">
                    <div>
                           <div class="card_title">{{ port.title }}</div>
-                           <hr class="featurette-divider" />
+                           <hr class="white_line" />
                           <div class="card_date">{{ port.startDate }} ~ {{port.endDate}}</div>
+                          <div class="card_contents">{{ port.contents }}</div>
                         </div>
                 </Card>
               </div>
@@ -236,8 +239,9 @@
     <!-- 임시 지원목록 리스트 -->
 
     <!-- 목록 리스트 -->
-    <div v-for="(apply, ap_idx) in apply_lists" :key="apply.apid">
-      <div no-body class="applyCard mb-1">
+    <div class="applyCardList">
+    <div  v-for="(apply, ap_idx) in apply_lists" :key="apply.apid">
+      <div class="applyCard mb-3">
         <!-- 안되면 div로 빼주자 -->
         <b-container header-tag="header" class="applyCardHeader p-1" role="tab">
          
@@ -249,21 +253,22 @@
             </b-col>
           </b-row>
 
-          <b-row class="applyTitleSize">
-            <b-col cols="4" v-if="isEditClicked_list[ap_idx]">
-              <div >
-                    <b-form-textarea
-                    class="applyTitle textArea"
-                    v-model="apply.apTitle"
-                    placeholder="제목을 입력해주세요."
-                    rows="3"
-                  ></b-form-textarea>
+         
+            <div class="applyTitleSize">
+              <div  v-if="isEditClicked_list[ap_idx]">
+                <div >
+                      <b-form-textarea
+                      class="applyTitle textArea"
+                      v-model="apply.apTitle"
+                      placeholder="제목을 입력해주세요."
+                      rows="3"
+                    ></b-form-textarea>
+                </div>
               </div>
-            </b-col>
-          </b-row>
+            </div>
 
           <b-row>
-            <b-col cols="4">
+            <b-col cols="3">
               <b-row>
                 <div v-if="!isEditClicked_list[ap_idx]">
                    <h2 class="ml-4 mt-3">{{ apply.apCompany }}</h2>
@@ -281,24 +286,33 @@
                 <div v-if="!isEditClicked_list[ap_idx]">
                   <p class="mt-3" style="width:100%">{{ apply.apTerm }}</p>
                 </div>
-                <div v-if="isEditClicked_list[ap_idx]" style="display:inline">
-                  <p class="mt-3">
-                    <b-form-input
-                      v-model="apply.apTerm"
-                      placeholder="2020_하반기"
-                    ></b-form-input>
-                  </p>
+                <div v-if="isEditClicked_list[ap_idx]" style="display:contents">
+                    <b-col class="period-padding" col="3">
+                      <b-form-input
+                        v-model="apply.apTerm"
+                        placeholder="기간을 입력해주세요."
+                      ></b-form-input>
+                    </b-col>
+
+                      <b-col col="6">
+                     <select v-model="apply.apTerm" style="height: 36.5px;">
+                        <option v-for="option in periods" :key="option.aptid">{{option.apTerm}}</option>
+                     </select>
+                    </b-col>
+
                 </div>
               </b-row>
               <b-row v-if="!isEditClicked_list[ap_idx]">
                 <p>{{ apply.apDesc }}</p>
               </b-row>
               <b-row v-if="isEditClicked_list[ap_idx]">
-                <b-form-textarea
-                  v-model="apply.apDesc"
-                  placeholder="내용을 입력하세요."
-                  rows="3"
-                ></b-form-textarea>
+                <b-col class="contents-padding" >
+                  <b-form-textarea
+                    v-model="apply.apDesc"
+                    placeholder="내용을 입력하세요."
+                    rows="3"
+                  ></b-form-textarea>
+                </b-col>
               </b-row>
             </b-col>
           </b-row>
@@ -335,6 +349,8 @@
           </div>
         </div>
 
+         <hr class="featurette-divider" />
+             
         <transition name="fade">
           <div v-show="isEditClicked_list_show[ap_idx]">
             <!-- 여기에서 지원목록에 포함되어 있는 경험/포폴 보여줌 -->
@@ -390,16 +406,16 @@
                 <!-- 수정중 일때 -->
                 <!-- 경험 -->
                 <div v-if="isEditClicked_list[ap_idx]">
-                  <div>경험</div>
+                  <div class="ApplysubTitle">경험</div>
                   <Board id="board-d-e">
                     <div
                       v-for="(ex, exid) in nav_ex_inlist[ap_idx]"
                       :key="ex.exid"
                     >
-                      <Card :id="'card-b-e-' + ex.exid" draggable="true">
+                      <Card class="card" :id="'card-b-e-' + ex.exid" draggable="true">
                         <div>
                           <div class="card_title">{{ ex.title }}</div>
-                           <hr class="featurette-divider" />
+                           <hr class="white_line" />
                           <div class="card_date">{{ ex.startdate }} ~ {{ex.enddate}}</div>
                           <div class="card_contents">{{ ex.contents }}</div>
                         </div>
@@ -411,16 +427,16 @@
                   </Board>
 
                   <!-- 포폴 -->
-                  <div>프로젝트</div>
+                  <div class="ApplysubTitle">프로젝트</div>
                   <Board id="board-d-p">
                     <div
                       v-for="(port, pid) in nav_port_inlist[ap_idx]"
                       :key="port.pid"
                     >
-                      <Card :id="'card-b-p-' + port.pid" draggable="true">
+                      <Card class="card" :id="'card-b-p-' + port.pid" draggable="true">
                         <div>
                           <div class="card_title">{{ port.title }}</div>
-                           <hr class="featurette-divider" />
+                           <hr class="white_line" />
                           <div class="card_date">{{ port.startDate }} ~ {{port.endDate}}</div>
                           <div class="card_contents">{{ port.contents }}</div>
                         </div>
@@ -449,6 +465,7 @@
         </div>
       </div>
     </div>
+  </div>
     <!-- 추가하기 버튼 -->
     <div
       id="exPlusBtn"
@@ -799,6 +816,7 @@ export default {
           apCompany: apply.apCompany,
           apTerm: apply.apTerm,
           apDesc: apply.apDesc,
+          apTitle: apply.apTitle
         })
         .then((response) => {
           console.log(response);
@@ -1203,6 +1221,11 @@ export default {
           this.ThreadFlag = true;
         });
     },
+    test(idx, ap_term){
+      //alert(idx);
+      //gg
+      ap_term = idx;
+    }
   },
 };
 </script>
@@ -1301,11 +1324,13 @@ export default {
 }
 .applyCard {
   position: relative;
-  padding: 5px;
+  padding: 15px;
   width: 100%;
   background-color: lightgray;
   border-radius: 30px;
   outline: none;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+  margin-bottom: 0.5em;
 }
 .applyCardHeader {
   outline: none;
@@ -1397,17 +1422,20 @@ export default {
   padding: 25px;
 }
 
-.board .card {
+.board .card2 {
   padding: 15px 25px;
-  background-color: #f3f3f3;
+  background-color: #999999;
   margin-bottom: 15px;
   border-radius:15px;
+ 
+ border: 3px solid #797979;
+ 
   
   cursor: pointer;
 }
 
-.board .card div {
-  color: #000000;
+.board .card2 div {
+  color: #ffffff;
 }
 
 .boardNoE {
@@ -1426,10 +1454,15 @@ export default {
 
 .boardNoE .cardNoE {
   padding: 15px 25px;
-  background-color: #f3f3f3;
-
   margin-bottom: 15px;
    border-radius:15px;
+
+
+   background-color: #999999;
+  margin-bottom: 15px;
+  border-radius:15px;
+ 
+ border: 3px solid #797979;
 }
 
 
@@ -1450,22 +1483,33 @@ export default {
 
 .boardNoP .cardNoP {
   padding: 15px 25px;
-  background-color: #f3f3f3;
-
   margin-bottom: 15px;
    border-radius:15px;
+
+
+   background-color: #999999;
+  margin-bottom: 15px;
+  border-radius:15px;
+ 
+ border: 3px solid #797979;
 }
 
 .boardNoP .cardNoP div {
-  color: #000000;
+  color: #ffffff;
 }
 
-.card > div{
+.boardNoE .cardNoE div {
+  color: #ffffff;
+}
+
+
+
+.card2 > div{
 
  
   transition-property: background-color, border-radius,transform;
-  transition-duration: .2s, 1s;
-  transition-timing-function: linear;
+  transition-duration: 0.1s, 1.0s;
+  transition-timing-function:ease-in;
 }
 
 .board > div:hover {
@@ -1475,9 +1519,9 @@ export default {
 
 }
 
-.card :active {
-  -webkit-animation: wiggle 0.3s 0s infinite ease-in;
-  animation: wiggle 0.3s 0s infinite ease-in;
+.card2 :active {
+  -webkit-animation: wiggle 0.6s 0s infinite ease-in;
+  animation: wiggle 0.6s 0s infinite ease-in;
   border: 2px solid #9c85ff;
   background-color: #7a63ff;
    box-shadow: 0 0 8px #7a63ff;
@@ -1528,11 +1572,15 @@ export default {
 }
 
 .applyTitleSize{
-  text-align: center;
+      margin: auto;
+    text-align: center;
+    width: 50%;
 }
 
 .ApplysubTitle{
   padding-left:5%;
+  font-size: 2em;
+  font-family: "Noto Sans KR", "NanumGothic", "Nanum Gothic", "Malgun Gothic", "Apple SD Gothic Neo", dotum, sans-serif;
 }
 .card_title{
   font-size:2em;
@@ -1540,12 +1588,34 @@ export default {
 }
 .card_date{
   font-size:0.5em;
-  color:#777777;
+  color:#ffffff;
   text-align: right;
 }
 .card_contents{
 }
 
+.period-padding{
+  margin-left: -0.5em;
+}
+.contents-padding{
+  margin-left: -0.5em;
+}
 
+.white_line{
+  margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#board-s-p .card_contents{
+  display: none;
+}
+
+
+#board-s-e .card_contents{
+  display: none;
+
+}
 
 </style>

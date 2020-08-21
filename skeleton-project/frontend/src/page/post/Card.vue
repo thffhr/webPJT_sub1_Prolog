@@ -1,7 +1,7 @@
 <template>
     <div
         :id="id"
-        class="card"
+        class="card2"
         :draggable="draggable"
         @dragstart="dragStart"
         @dragover.stop
@@ -25,7 +25,7 @@ export default {
             const target = e.target;
 
             e.dataTransfer.setData('card_id', target.id);
-           // alert("여기요" + target.id);
+           // alert("여기요" + target.id);!!
 
             if(target.parentNode.id == ""){
                 e.dataTransfer.setData('parent_id',target.parentNode.parentNode.id);

@@ -70,7 +70,10 @@
       ></b-img>
     </div>
     <!-- </router-link> -->
+    <br>
+    <br>
   </div>
+
 </template>
 
 <script>
@@ -148,6 +151,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <style>

@@ -26,14 +26,17 @@ export default {
       const parent_id = e.dataTransfer.getData('parent_id');
 
       const card = document.getElementById(card_id);
-      card.setAttribute('class', 'toRemove card')
+      card.setAttribute('class', 'toRemove card2 card')
+
+      //var contents = document.getElementsByClassName('card_contents')[0].remove();
       
+
       //alert(card.getAttribute('class'));
 
       card.style.display = "block";
       
       //ex) board-d-e | board-s-e
-      //ex) card-s-e-384
+      //ex) card-s-e-384 !!
 
       var myregexp2 = new RegExp("-"); 
       var start = parent_id.split(myregexp2)[1];
