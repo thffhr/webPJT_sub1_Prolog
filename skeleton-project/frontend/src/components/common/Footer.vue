@@ -22,5 +22,6 @@ export default {
   color: white;
   text-align: center;
   padding: 10px 0;
+  z-index: 9;
 }
 </style>
